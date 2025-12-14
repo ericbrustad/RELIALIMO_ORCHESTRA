@@ -6,7 +6,9 @@
 ### Demo Accounts (One-Click Sign In)
 ```
 👨‍💼 Admin          📋 Dispatcher      🚗 Driver
-eric@...         dispatcher@...     driver@...
+admin@...         dispatcher@...     driver@...
+Newhouse2025!     DemoDispatcher123! DemoDriver123!
+admin@...         dispatcher@...     driver@...
 Newhouse2025!    DemoDispatcher123! DemoDriver123!
 ```
 Just click the colored button!
