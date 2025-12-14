@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounts - RELIA🐂LIMO™</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🐂</text></svg>" />
+    <link rel="stylesheet" href="accounts.css" />
+    <script>
+      // Hide main navigation if in iframe
+      if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', function() {
+          const headerContent = document.querySelector('.header-content');
+          if (headerContent) {
+            headerContent.style.display = 'none';
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Accounts Tabs -->
+      <div class="window-tabs-bar">
+        <div class="window-tabs">
+          <button class="window-tab" data-tab="companies">Companies</button>
+          <button class="window-tab active" data-tab="accounts">Accounts</button>
+          <button class="window-tab" data-tab="export-customers">Export Customers</button>
+          <button class="window-tab" data-tab="email-lists">Email Lists</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Companies Tab Content -->
+        <section id="companies-tab" class="accounts-section">
+          <div class="companies-layout">
+            <!-- Left: Companies List -->
+            <div class="companies-list-panel">
+              <h3 class="panel-title">Companies</h3>
+              <select id="companiesList" class="companies-listbox" size="20">
+                <option value="1"> 123 TRANSPORTATION CORP</option>
+                <option value="2">-ATLANTA City Limo, Inc.</option>
+                <option value="3">-When Limo Service, Inc - We are Always on TIME</option>
+                <option value="4">-Boston Professional Car Limousine & Service-</option>
+                <option value="5">12 Oaks Senior Living</option>
+                <option value="6">2350 Services Group, LLC</option>
+                <option value="7">305 Drive Inc</option>
+                <option value="8">6-VWI</option>
+                <option value="9">A & R Courier & Sedan Service</option>
+                <option value="10">A Five Star Limo</option>
+                <option value="11">A Touch of Class Transportation, Inc.</option>
+                <option value="12">A World Class Limousine Limited</option>
+                <option value="13">A&D Limousine Services, Inc.</option>
+                <option value="14">A1 Diamond Limousine</option>
+                <option value="15">AA Limo Global</option>
+                <option value="16">AA Limo Service LLC</option>
+                <option value="17">AAA Sedan</option>
+                <option value="18">Abda Transportation, LLC.</option>
+                <option value="19">Abide Limousine Inc</option>
+                <option value="20">Above & Beyond Services, Inc.</option>
+                <option value="21">Absolute Limousine Service</option>
+                <option value="22">Academy Bus</option>
+                <option value="23">Acela Car Service</option>
+                <option value="24">Ace Executive Limo</option>
+                <option value="25">Ace Limousine</option>
+              </select>
+              <div style="text-align: center; margin-top: 15px;">
+                <button class="btn btn-secondary" id="editCompanyBtn">EDIT COMPANY</button>
+              </div>
+            </div>
+
+            <!-- Right: Add New Company Form -->
+            <div class="company-form-panel">
+              <h2 class="form-title">Add New Company</h2>
+              
+              <div class="form-section">
+                <h3 class="form-section-title">Company Information</h3>
+                
+                <div class="form-group">
+                  <label class="form-label">Company Name</label>
+                  <input type="text" class="form-control form-control-full" placeholder="Enter company name" />
+                </div>
+
+                <div style="text-align: right; margin-top: 20px;">
+                  <button class="btn btn-primary" id="addCompanyBtn">ADD COMPANY</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Accounts Tab Content -->
+        <section id="accounts-tab" class="accounts-section active">
+          <div class="accounts-layout">
+            <!-- Left Sidebar -->
+            <div class="accounts-sidebar">
+              <h3 class="sidebar-title">Customer Accounts</h3>
+              
+              <!-- Display Options -->
+              <div class="sidebar-section">
+                <label class="sidebar-label">Display</label>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="display" value="active" checked />
+                    <span>Active Accounts</span>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="display" value="all" />
+                    <span>All Accounts</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Show Type -->
+              <div class="sidebar-section">
+                <label class="sidebar-label">Show Type:</label>
+                <select class="sidebar-select">
+                  <option value="any">Any</option>
+                  <option value="billing">Billing Client</option>
+                  <option value="passenger">Passenger</option>
+                  <option value="booking">Booking Contact</option>
+                </select>
+              </div>
+
+              <!-- Search By -->
+              <div class="sidebar-section">
+                <label class="sidebar-label">Search By</label>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="searchBy" value="name" checked />
+                    <span>Name</span>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="searchBy" value="phone" />
+                    <span>Phone</span>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="searchBy" value="showAll" />
+                    <span>Show All</span>
+                  </label>
+                </div>
+                <div class="checkbox-group">
+                  <label class="checkbox-option">
+                    <input type="checkbox" />
+                    <span>Company</span>
+                  </label>
+                  <label class="checkbox-option">
+                    <input type="checkbox" />
+                    <span>Account#</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Sort By -->
+              <div class="sidebar-section">
+                <label class="sidebar-label">Sort By:</label>
+                <select class="sidebar-select">
+                  <option value="name">Account #</option>
+                  <option value="company">Company</option>
+                  <option value="date">Date Created</option>
+                </select>
+              </div>
+
+              <!-- Search Field -->
+              <div class="sidebar-section">
+                <div style="display: flex; gap: 5px;">
+                  <input type="text" class="sidebar-input" placeholder="Search..." />
+                  <button class="btn-go">GO</button>
+                </div>
+              </div>
+
+              <!-- Customer Accounts List -->
+              <div class="sidebar-section" style="flex: 1;">
+                <label class="sidebar-label">Customer Accounts</label>
+                <select class="accounts-listbox" size="15">
+                  <option value="1">John Smith - ABC Corp</option>
+                  <option value="2">Sarah Johnson - Tech Solutions</option>
+                  <option value="3">Michael Brown - Enterprise Inc</option>
+                  <option value="4">Emily Davis - Global Services</option>
+                  <option value="5">David Wilson - Metro Group</option>
+                </select>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="sidebar-buttons">
+                <button class="btn btn-secondary btn-small">Delete</button>
+                <button class="btn btn-secondary btn-small">Reservation</button>
+                <button class="btn btn-secondary btn-small">Edit</button>
+              </div>
+
+              <div style="text-align: center; margin-top: 10px;">
+                <a href="#" class="link-add">Add New Account</a>
+              </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="accounts-main">
+              <!-- Account Tabs -->
+              <div class="account-tabs">
+                <button class="account-tab active" data-account-tab="info">Account Info</button>
+                <button class="account-tab" data-account-tab="financial">Financial Data</button>
+              </div>
+
+              <!-- Account Info Tab -->
+              <div id="accountInfoTab" class="account-tab-content active">
+                <div class="account-form">
+                  <!-- Left Column -->
+                  <div class="account-form-left">
+                    <!-- Account Information -->
+                    <div class="form-section">
+                      <h4 class="form-section-header">Account Information</h4>
+                      
+                      <div class="form-row-inline">
+                        <div class="form-group" style="flex: 1;">
+                          <label>First Name</label>
+                          <input type="text" id="acctFirstName" class="form-control" />
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                          <label>Last Name</label>
+                          <input type="text" id="acctLastName" class="form-control" />
+                        </div>
+                      </div>
+
+                      <div class="form-row-inline">
+                        <div class="form-group" style="flex: 1;">
+                          <label>Cell Phone</label>
+                          <input type="text" id="acctCellPhone1" class="form-control" placeholder="Enter cell phone" />
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                          <label>Email</label>
+                          <input type="text" id="acctEmail2" class="form-control" placeholder="Enter email" />
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Company Name</label>
+                        <input type="text" id="acctCompany" class="form-control" />
+                        <button class="btn-dropdown">▼</button>
+                      </div>
+
+                      <div class="form-row-inline">
+                        <div class="form-group" style="flex: 1;">
+                          <label>Department</label>
+                          <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                          <label>Job Title</label>
+                          <input type="text" class="form-control" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Account Type -->
+                    <div class="form-section">
+                      <h4 class="form-section-header">Account Type</h4>
+                      <div class="checkbox-row">
+                        <label class="checkbox-label">
+                          <input type="checkbox" />
+                          <span>Billing Client</span>
+                        </label>
+                        <label class="checkbox-label">
+                          <input type="checkbox" />
+                          <span>Passngr</span>
+                        </label>
+                        <label class="checkbox-label">
+                          <input type="checkbox" />
+                          <span>Booking Contact</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-section">
+                      <div class="form-row">
+                        <label>Primary Address</label>
+                        <input type="text" class="form-control" />
+                      </div>
+
+                      <div class="form-row">
+                        <label>Address Line 2</label>
+                        <input type="text" class="form-control" />
+                      </div>
+
+                      <div class="form-row-inline">
+                        <div class="form-group" style="flex: 2;">
+                          <label>City</label>
+                          <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                          <label>State/Prov</label>
+                          <select class="form-control">
+                            <option value="MN">MN</option>
+                            <option value="CA">CA</option>
+                            <option value="NY">NY</option>
+                          </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                          <label>Zip/Post</label>
+                          <input type="text" class="form-control" />
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Country</label>
+                        <select class="form-control">
+                          <option value="US">United States</option>
+                          <option value="CA">Canada</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-section">
+                      <div class="form-row">
+                        <label>Internal/Private Notes</label>
+                        <textarea class="form-textarea" style="background: #ffe6e6;" rows="3"></textarea>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Preferences/Trip Notes</label>
+                        <textarea class="form-textarea" style="background: #ffffcc;" rows="3"></textarea>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Notes for Others</label>
+                        <textarea class="form-textarea" rows="3"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right Column -->
+                  <div class="account-form-right">
+                    <div class="form-row">
+                      <label>Account Number</label>
+                      <input type="text" class="form-control" value="22379" />
+                    </div>
+
+                    <div class="form-row">
+                      <label>Associate With Alias</label>
+                      <select class="form-control">
+                        <option value="">-- NOT SELECTED --</option>
+                      </select>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="form-section">
+                      <h4 class="form-section-header">Contact Info</h4>
+                      
+                      <div class="contact-row">
+                        <label>Office Phone</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" id="acctPhone" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Home Phone</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Cellular Phone 1</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Cellular Phone 2</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Cellular Phone 3</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Fax line 1</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Fax line 2</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+
+                      <div class="contact-row">
+                        <label>Fax line 3</label>
+                        <select class="contact-select">
+                          <option>?</option>
+                          <option>📱</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Enter number" />
+                        <label class="ext-label">Ext</label>
+                        <input type="text" class="ext-input" />
+                      </div>
+                    </div>
+
+                    <!-- Account Emails -->
+                    <div class="form-section">
+                      <h4 class="form-section-header">Account Emails</h4>
+                      <div id="account-emails-container" style="margin-bottom: 10px;">
+                        <!-- Email Row 1 -->
+                        <div class="account-email-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px; position: relative;">
+                          <input type="checkbox" class="email-active-checkbox" style="width: 16px; height: 16px;" />
+                          <input type="text" id="acctEmail" class="form-control email-input" placeholder="Include in scheduled messaging" style="flex: 1;" />
+                          <div class="email-type-selector" style="position: relative; width: 300px;">
+                            <button type="button" class="form-control email-type-button" style="text-align: left; cursor: pointer; background: white; display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border: 1px solid #ccc;">
+                              <span class="selected-types-display">Confirmation, Payment Receipt, Invoice, Oth...</span>
+                              <span style="color: #999;">▼</span>
+                            </button>
+                            <div class="email-type-dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #666; margin-top: 1px; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                              <label style="display: flex; align-items: center; padding: 6px 12px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #e0e0e0;" onmouseover="this.style.background='#e8f4ff'" onmouseout="this.style.background='white'">
+                                <input type="checkbox" class="email-type-option" value="select-all" checked style="margin-right: 10px; width: 16px; height: 16px; cursor: pointer;" />
+                                <span class="checkbox-label" style="color: #2196F3; font-weight: 500;">☑ Select All</span>
+                              </label>
+                              <label style="display: flex; align-items: center; padding: 6px 12px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #e0e0e0;" onmouseover="this.style.background='#e8f4ff'" onmouseout="this.style.background='white'">
+                                <input type="checkbox" class="email-type-option" value="confirmation" checked style="margin-right: 10px; width: 16px; height: 16px; cursor: pointer;" />
+                                <span class="checkbox-label" style="color: #2196F3; font-weight: 500;">☑ Confirmation</span>
+                              </label>
+                              <label style="display: flex; align-items: center; padding: 6px 12px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #e0e0e0;" onmouseover="this.style.background='#e8f4ff'" onmouseout="this.style.background='white'">
+                                <input type="checkbox" class="email-type-option" value="payment-receipt" checked style="margin-right: 10px; width: 16px; height: 16px; cursor: pointer;" />
+                                <span class="checkbox-label" style="color: #2196F3; font-weight: 500;">☑ Payment Receipt</span>
+                              </label>
+                              <label style="display: flex; align-items: center; padding: 6px 12px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #e0e0e0;" onmouseover="this.style.background='#e8f4ff'" onmouseout="this.style.background='white'">
+                                <input type="checkbox" class="email-type-option" value="invoices" checked style="margin-right: 10px; width: 16px; height: 16px; cursor: pointer;" />
+                                <span class="checkbox-label" style="color: #2196F3; font-weight: 500;">☑ Invoices</span>
+                              </label>
+                              <label style="display: flex; align-items: center; padding: 6px 12px; cursor: pointer; font-size: 12px;" onmouseover="this.style.background='#e8f4ff'" onmouseout="this.style.background='white'">
+                                <input type="checkbox" class="email-type-option" value="other" checked style="margin-right: 10px; width: 16px; height: 16px; cursor: pointer;" />
+                                <span class="checkbox-label" style="color: #2196F3; font-weight: 500;">☑ Other</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="text-align: right; margin-bottom: 15px;">
+                        <a href="#" class="link-small add-new-email-btn" style="color: #2196F3; text-decoration: none; font-size: 12px;">Add New</a>
+                      </div>
+
+                      <!-- DRES4 Login -->
+                      <h4 class="form-section-header" style="margin-bottom: 10px;">DRES4 / Passenger App Email Login</h4>
+                      <div class="form-row">
+                        <label>Email:</label>
+                        <input type="text" class="form-control" />
+                      </div>
+                      <div class="form-row">
+                        <label>Password:</label>
+                        <input type="password" class="form-control" />
+                      </div>
+                    </div>
+
+                    <!-- Restrictions and Settings -->
+                    <div class="form-section">
+                      <div class="form-row">
+                        <label>Restricted drivers</label>
+                        <select class="form-control">
+                          <option>- - - NOT SELECTED - - -</option>
+                        </select>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Restricted cars</label>
+                        <select class="form-control">
+                          <option>- - - NOT SELECTED - - -</option>
+                        </select>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Source</label>
+                        <select class="form-control">
+                          <option>Select source</option>
+                        </select>
+                      </div>
+
+                      <div class="form-row">
+                        <label>Rental Agreement</label>
+                        <select class="form-control">
+                          <option>Select agreement</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Section -->
+                <div class="account-bottom">
+                  <div class="account-settings-row">
+                    <div class="form-group">
+                      <label>Account Settings</label>
+                      <select class="form-control" style="width: 250px;">
+                        <option>NORMAL</option>
+                        <option>VIP</option>
+                        <option>BLOCKED</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Status</label>
+                      <select class="form-control" style="width: 200px;">
+                        <option>ACTIVE</option>
+                        <option>INACTIVE</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Web Access</label>
+                      <select class="form-control" style="width: 200px;">
+                        <option>ALLOW</option>
+                        <option>DENY</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style="text-align: center; margin-top: 20px;">
+                    <button type="button" id="saveAccountBtn" class="btn btn-primary" style="padding: 12px 60px;">SAVE</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Financial Data Tab -->
+              <div id="financialDataTab" class="account-tab-content" style="display: none;">
+                <div style="padding: 40px; text-align: center; color: #666;">
+                  <p>Financial data content will be available here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Export Customers Tab Content -->
+        <section id="export-customers-tab" class="accounts-section" style="display: none;">
+          <div class="export-container">
+            <div class="export-layout">
+              <!-- Main Export Form -->
+              <div class="export-main">
+                <h2 class="export-title">Export Customer Account Information</h2>
+                
+                <!-- Date Range Section -->
+                <div class="export-section">
+                  <h3 class="export-section-title">Set Reservation Date Range</h3>
+                  
+                  <div class="date-range-controls">
+                    <div class="date-checkboxes">
+                      <label class="checkbox-label">
+                        <input type="checkbox" id="includeAllDates" checked />
+                        <span>Include All Dates</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" id="includeAllFields" />
+                        <span>Include All Fields</span>
+                      </label>
+                    </div>
+                    
+                    <div class="date-inputs">
+                      <div class="date-input-group">
+                        <label>Date From</label>
+                        <input type="text" class="form-control" value="ALL DATES" />
+                      </div>
+                      <div class="date-input-group">
+                        <label>Date To</label>
+                        <input type="text" class="form-control" value="ALL DATES" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fields Selection -->
+                <div class="export-section">
+                  <div class="export-fields-grid">
+                    <!-- Left Column -->
+                    <div class="export-fields-column">
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account#</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>First Name</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Last Name</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Company Name</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Department</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Job Title</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account Type</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Primary Address</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>City</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>State</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Zip</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Country</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Internal/Private Notes</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Username</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account Number</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>VIP Number</span>
+                      </label>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="export-fields-column">
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Office Phone</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Home Phone</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Cellular Phone</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Fax Number</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Email Addresses</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Referral Source</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account Priority</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account Notes</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Account Terms</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Date Created</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Internal/Private Notes</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Alias</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" />
+                        <span>Source</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Account Status Filter -->
+                <div class="export-section">
+                  <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px; background: #f9f9f9;">
+                    <label style="font-size: 13px; font-weight: 600; color: #d9534f; margin-bottom: 10px; display: block;">Accounts that are:</label>
+                    <div class="radio-group" style="flex-direction: row; gap: 20px;">
+                      <label class="radio-option">
+                        <input type="radio" name="accountStatus" value="active" />
+                        <span>Active</span>
+                      </label>
+                      <label class="radio-option">
+                        <input type="radio" name="accountStatus" value="inactive" />
+                        <span>Inactive</span>
+                      </label>
+                      <label class="radio-option">
+                        <input type="radio" name="accountStatus" value="both" checked />
+                        <span>Both</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div style="text-align: center; margin-top: 30px;">
+                  <button class="btn btn-primary" style="padding: 12px 40px;">Generate Export File</button>
+                </div>
+              </div>
+
+              <!-- Note Sidebar -->
+              <div class="export-note">
+                <div style="text-align: center; margin-bottom: 15px; color: #4a90e2; font-weight: 600;">
+                  !!! NOTE !!!
+                </div>
+                <div style="font-size: 12px; line-height: 1.6; color: #555;">
+                  <p style="margin-bottom: 10px;">
+                    Data tables are presented in Comma Delimited, CSV text file format. Although this file format can be opened into a variety of applications, they are best viewed by applications that will allow you to easily manipulate data in columnar format.
+                  </p>
+                  <p style="font-weight: 600; margin-bottom: 8px;">Most Commonly Used Applications</p>
+                  <ul style="margin-left: 20px; margin-bottom: 0;">
+                    <li>Microsoft Excel</li>
+                    <li>Microsoft Access</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Email Lists Tab Content -->
+        <section id="email-lists-tab" class="accounts-section" style="display: none;">
+          <div class="export-layout">
+            <!-- Main Export Form -->
+            <div class="export-main">
+              <h2 class="export-title">Export Emails From Passenger/Reservation/Quote Data</h2>
+              
+              <!-- Date Range Section -->
+              <div class="export-section">
+                <h3 class="export-section-title">Set Date Range</h3>
+                <div class="export-date-range">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="emailIncludeAllDates" checked>
+                    <label for="emailIncludeAllDates">Include All Dates</label>
+                  </div>
+                  <div class="date-inputs">
+                    <div class="date-field">
+                      <label for="emailDateFrom">Date From</label>
+                      <input type="text" id="emailDateFrom" value="ALL DATES" disabled>
+                    </div>
+                    <div class="date-field">
+                      <label for="emailDateTo">Date To</label>
+                      <input type="text" id="emailDateTo" value="ALL DATES" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Export Preferences Section -->
+              <div class="export-section">
+                <h3 class="export-section-title">Export Preferences</h3>
+                <div class="export-preferences-grid">
+                  <div class="form-group">
+                    <label for="emailOccasion">Occasion</label>
+                    <select id="emailOccasion">
+                      <option value="">All</option>
+                      <option value="airport">Airport Transfer</option>
+                      <option value="wedding">Wedding</option>
+                      <option value="corporate">Corporate Event</option>
+                      <option value="prom">Prom</option>
+                      <option value="special">Special Event</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="emailReferralSource">Referral Source</label>
+                    <select id="emailReferralSource">
+                      <option value="">All</option>
+                      <option value="website">Website</option>
+                      <option value="google">Google</option>
+                      <option value="referral">Referral</option>
+                      <option value="repeat">Repeat Customer</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="emailVehicleType">Vehicle Type</label>
+                    <select id="emailVehicleType">
+                      <option value="">All</option>
+                      <option value="sedan">Sedan</option>
+                      <option value="suv">SUV</option>
+                      <option value="stretch">Stretch Limo</option>
+                      <option value="van">Van</option>
+                      <option value="bus">Bus</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="emailReservationStatus">Reservation Status</label>
+                    <select id="emailReservationStatus">
+                      <option value="">All</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="pending">Pending</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Include Fields Section -->
+              <div class="export-section">
+                <h3 class="export-section-title">Include Fields In File</h3>
+                <div class="export-fields-columns">
+                  <div class="export-field-column">
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldPassengerName" checked>
+                      <label for="emailFieldPassengerName">Passenger Name</label>
+                    </div>
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldEmail">
+                      <label for="emailFieldEmail">Email</label>
+                    </div>
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldOccasion">
+                      <label for="emailFieldOccasion">Occasion</label>
+                    </div>
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldVehicleType">
+                      <label for="emailFieldVehicleType">Vehicle Type</label>
+                    </div>
+                  </div>
+                  <div class="export-field-column">
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldReferralSource">
+                      <label for="emailFieldReferralSource">Referral Source</label>
+                    </div>
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldPrimaryPhone">
+                      <label for="emailFieldPrimaryPhone">Primary Phone Number</label>
+                    </div>
+                    <div class="checkbox-row">
+                      <input type="checkbox" id="emailFieldDateOfQuote">
+                      <label for="emailFieldDateOfQuote">Date of Quote</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Export Type Radio Buttons -->
+              <div class="export-section">
+                <div class="export-type-options">
+                  <div class="radio-row">
+                    <input type="radio" id="emailRemoveDuplicates" name="emailExportType" value="remove-duplicates" checked>
+                    <label for="emailRemoveDuplicates" class="radio-label-red">Remove Duplicate Emails</label>
+                  </div>
+                  <div class="radio-row">
+                    <input type="radio" id="emailReservationsOnly" name="emailExportType" value="reservations">
+                    <label for="emailReservationsOnly">Reservations Only</label>
+                  </div>
+                  <div class="radio-row">
+                    <input type="radio" id="emailQuotesOnly" name="emailExportType" value="quotes">
+                    <label for="emailQuotesOnly" class="radio-label-blue">Quote Requests Only</label>
+                  </div>
+                  <div class="radio-row">
+                    <input type="radio" id="emailBoth" name="emailExportType" value="both">
+                    <label for="emailBoth">Both</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Generate Button -->
+              <div class="export-button-wrapper">
+                <button class="btn btn-primary export-generate-btn" id="generateEmailExportBtn">Generate Export File</button>
+              </div>
+            </div>
+
+            <!-- Right Sidebar Info -->
+            <div class="export-sidebar">
+              <div class="export-info-box">
+                <div class="export-info-header">
+                  <span class="export-info-icon">ℹ️</span>
+                  <strong>NOTE</strong>
+                  <span class="export-info-icon">ℹ️</span>
+                </div>
+                <div class="export-info-content">
+                  <p>Data tables are presented in Comma Delimited, CSV text file format. Although this file format can be imported into a variety of applications, they are best viewed by applications that will allow you to easily manipulate data in columnar format.</p>
+                  
+                  <div class="export-apps-section">
+                    <h4>Most Commonly Used Applications</h4>
+                    <ul>
+                      <li>Microsoft Excel</li>
+                      <li>Microsoft Access</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="accounts.js"></script>
+  </body>
+</html>
