@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settle - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="settle.css">
+</head>
+<body>
+    <div class="settle-container">
+        <!-- Tab Navigation -->
+        <div class="settle-tabs">
+            <button class="settle-tab active" data-tab="payments-needed">Payments Needed</button>
+            <button class="settle-tab" data-tab="ready-to-settle">Ready To Settle</button>
+            <button class="settle-tab" data-tab="settled-reservations">Settled Reservations</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Payments Needed Tab -->
+            <div id="paymentsNeededTab" class="settle-tab-content active">
+                <div class="search-section">
+                    <h2 class="section-title">Search Reservations</h2>
+                    
+                    <form class="settle-search-form" id="settleSearchForm">
+                        <div class="search-row">
+                            <div class="search-field">
+                                <label class="search-label">Search For</label>
+                                <input type="text" class="search-input" name="searchFor" placeholder="Enter search term...">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Search In</label>
+                                <select class="search-input" name="searchIn">
+                                    <option value="all">All Fields</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="passenger">Passenger Name</option>
+                                    <option value="company">Company Name</option>
+                                    <option value="driver">Driver Name</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="search-row">
+                            <div class="search-field">
+                                <label class="search-label">Date From</label>
+                                <input type="date" class="search-input" name="dateFrom">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Date To</label>
+                                <input type="date" class="search-input" name="dateTo">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Sort By</label>
+                                <select class="search-input" name="sortBy">
+                                    <option value="pickup-date">Pick-Up Date/Time</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="passenger">Passenger Name</option>
+                                    <option value="company">Company Name</option>
+                                    <option value="total">Total Due</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Order By</label>
+                                <select class="search-input" name="orderBy">
+                                    <option value="ascending">Ascending</option>
+                                    <option value="descending">Descending</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Page Size</label>
+                                <select class="search-input" name="pageSize">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="75" selected>75</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="search-field search-button-field">
+                                <button type="submit" class="btn btn-search">SEARCH</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Results Table -->
+                <div class="results-section">
+                    <div class="table-container">
+                        <table class="settle-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-col"><input type="checkbox" id="selectAll"></th>
+                                    <th>Conf #</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Pick-Up Date/Time</th>
+                                    <th>Passenger</th>
+                                    <th>Company Name</th>
+                                    <th>Driver</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Post Method</th>
+                                    <th>Post Status</th>
+                                    <th>Total Due</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="settleTableBody">
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox"></td>
+                                    <td><a href="#" class="conf-link">44289</a></td>
+                                    <td>FarmOut</td>
+                                    <td>Done</td>
+                                    <td>11/07/2018 11:00 PM</td>
+                                    <td>Gallardo, Jessie</td>
+                                    <td>Limo, Inc.</td>
+                                    <td>N/A</td>
+                                    <td>BLACK SUV</td>
+                                    <td>Credit Card</td>
+                                    <td>UNPAID</td>
+                                    <td>$250.00</td>
+                                    <td>
+                                        <button class="btn-icon" title="SETTLE">💳</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-controls">
+                        <div class="pagination-info">
+                            <span>Page</span>
+                            <select class="page-selector" id="pageSelector">
+                                <option value="1" selected>1</option>
+                            </select>
+                        </div>
+                        <div class="pagination-buttons">
+                            <a href="#" class="pagination-link" id="firstPage">« First Page</a>
+                            <a href="#" class="pagination-link" id="lastPage">Last Page »</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ready To Settle Tab -->
+            <div id="readyToSettleTab" class="settle-tab-content">
+                <div class="search-section">
+                    <h2 class="section-title">Ready To Settle Reservations</h2>
+                    <h3 class="subsection-title">Search Reservations</h3>
+                    
+                    <form class="settle-search-form">
+                        <div class="search-row">
+                            <div class="search-field">
+                                <label class="search-label">Search For</label>
+                                <input type="text" class="search-input" placeholder="">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Search In</label>
+                                <select class="search-input">
+                                    <option value="all">All Fields</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="passenger">Passenger Name</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Date From</label>
+                                <input type="date" class="search-input">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Date To</label>
+                                <input type="date" class="search-input">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Sort By</label>
+                                <select class="search-input">
+                                    <option value="pickup-date">Pick-Up Date/Time</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="total">Total Due</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Order By</label>
+                                <select class="search-input">
+                                    <option value="ascending">Ascending</option>
+                                    <option value="descending">Descending</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Page Size</label>
+                                <select class="search-input">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="75" selected>75</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="search-field search-button-field">
+                                <button type="submit" class="btn btn-search">SEARCH</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-section">
+                    <div class="table-container">
+                        <table class="settle-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-col"><input type="checkbox"></th>
+                                    <th>Conf #</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Pick-up Date/Time</th>
+                                    <th>Passenger</th>
+                                    <th>Company Name</th>
+                                    <th>Driver</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Post Method</th>
+                                    <th>Post Status</th>
+                                    <th>Total Due</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="no-data-row">
+                                    <td colspan="12" class="no-data-cell">No Data Available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settled Reservations Tab -->
+            <div id="settledReservationsTab" class="settle-tab-content">
+                <div class="search-section">
+                    <h2 class="section-title">Settled Reservations</h2>
+                    <h3 class="subsection-title">Search Reservations</h3>
+                    
+                    <form class="settle-search-form" id="settledSearchForm">
+                        <div class="search-row">
+                            <div class="search-field">
+                                <label class="search-label">Search For</label>
+                                <input type="text" class="search-input" name="searchFor" placeholder="">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Search In</label>
+                                <select class="search-input" name="searchIn">
+                                    <option value="all">All Fields</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="passenger">Passenger Name</option>
+                                    <option value="company">Company Name</option>
+                                    <option value="driver">Driver Name</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Date From</label>
+                                <input type="date" class="search-input" name="dateFrom">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Date To</label>
+                                <input type="date" class="search-input" name="dateTo">
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Sort By</label>
+                                <select class="search-input" name="sortBy">
+                                    <option value="pickup-date">Pick-Up Date/Time</option>
+                                    <option value="conf">Confirmation #</option>
+                                    <option value="passenger">Passenger Name</option>
+                                    <option value="total">Total</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Order By</label>
+                                <select class="search-input" name="orderBy">
+                                    <option value="ascending">Ascending</option>
+                                    <option value="descending">Descending</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label class="search-label">Page Size</label>
+                                <select class="search-input" name="pageSize">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="75" selected>75</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="search-field search-button-field">
+                                <button type="submit" class="btn btn-search">SEARCH</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-section">
+                    <div class="table-container">
+                        <table class="settle-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-col"><input type="checkbox" id="selectAllSettled"></th>
+                                    <th>Conf #</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Pick-up Date/Time</th>
+                                    <th>Passenger</th>
+                                    <th>Company Name</th>
+                                    <th>Driver</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Post Method</th>
+                                    <th>Post Status</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="settledTableBody">
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">44289</a></td>
+                                    <td>FarmOut</td>
+                                    <td>Done</td>
+                                    <td>11/07/2018 11:00 PM</td>
+                                    <td>Gallardo, Jessie</td>
+                                    <td>Limo, Inc.</td>
+                                    <td>N/A</td>
+                                    <td>BLACK SUV</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$250.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">44212</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>11/05/2018 02:30 PM</td>
+                                    <td>Martinez, Carlos</td>
+                                    <td>Executive Transport</td>
+                                    <td>Johnson, Mike</td>
+                                    <td>Sedan</td>
+                                    <td>Cash</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$185.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">44156</a></td>
+                                    <td>Hourly</td>
+                                    <td>Done</td>
+                                    <td>11/03/2018 09:00 AM</td>
+                                    <td>Thompson, Sarah</td>
+                                    <td>Premier Limo Services</td>
+                                    <td>Davis, Robert</td>
+                                    <td>Stretch Limo</td>
+                                    <td>Invoice</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$425.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">44098</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>11/01/2018 06:45 PM</td>
+                                    <td>Anderson, Emily</td>
+                                    <td>City Transport LLC</td>
+                                    <td>Wilson, James</td>
+                                    <td>BLACK SUV</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$295.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">44045</a></td>
+                                    <td>FarmOut</td>
+                                    <td>Done</td>
+                                    <td>10/29/2018 11:30 AM</td>
+                                    <td>Williams, Robert</td>
+                                    <td>Metro Rides Inc.</td>
+                                    <td>N/A</td>
+                                    <td>Van</td>
+                                    <td>Check</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$340.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43989</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>10/27/2018 03:15 PM</td>
+                                    <td>Brown, Jennifer</td>
+                                    <td>Executive Transport</td>
+                                    <td>Garcia, Luis</td>
+                                    <td>Sedan</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$175.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43934</a></td>
+                                    <td>Hourly</td>
+                                    <td>Done</td>
+                                    <td>10/25/2018 07:00 PM</td>
+                                    <td>Davis, Michael</td>
+                                    <td>Limo, Inc.</td>
+                                    <td>Martinez, Carlos</td>
+                                    <td>Stretch Limo</td>
+                                    <td>Invoice</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$560.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43876</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>10/23/2018 10:30 AM</td>
+                                    <td>Miller, Patricia</td>
+                                    <td>Premier Limo Services</td>
+                                    <td>Anderson, Tom</td>
+                                    <td>BLACK SUV</td>
+                                    <td>Cash</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$265.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43821</a></td>
+                                    <td>FarmOut</td>
+                                    <td>Done</td>
+                                    <td>10/21/2018 04:45 PM</td>
+                                    <td>Wilson, David</td>
+                                    <td>City Transport LLC</td>
+                                    <td>N/A</td>
+                                    <td>Sedan</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$195.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43765</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>10/19/2018 01:00 PM</td>
+                                    <td>Moore, Lisa</td>
+                                    <td>Executive Transport</td>
+                                    <td>Brown, Kevin</td>
+                                    <td>Van</td>
+                                    <td>Invoice</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$385.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43712</a></td>
+                                    <td>Hourly</td>
+                                    <td>Done</td>
+                                    <td>10/17/2018 08:30 AM</td>
+                                    <td>Taylor, James</td>
+                                    <td>Metro Rides Inc.</td>
+                                    <td>Thompson, Mark</td>
+                                    <td>Stretch Limo</td>
+                                    <td>Check</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$495.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43658</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>10/15/2018 05:15 PM</td>
+                                    <td>Jackson, Mary</td>
+                                    <td>Limo, Inc.</td>
+                                    <td>Williams, Steve</td>
+                                    <td>BLACK SUV</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$275.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43601</a></td>
+                                    <td>FarmOut</td>
+                                    <td>Done</td>
+                                    <td>10/13/2018 12:00 PM</td>
+                                    <td>White, Christopher</td>
+                                    <td>Premier Limo Services</td>
+                                    <td>N/A</td>
+                                    <td>Sedan</td>
+                                    <td>Cash</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$165.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43547</a></td>
+                                    <td>Transfer</td>
+                                    <td>Done</td>
+                                    <td>10/11/2018 09:45 AM</td>
+                                    <td>Harris, Nancy</td>
+                                    <td>City Transport LLC</td>
+                                    <td>Davis, Paul</td>
+                                    <td>Van</td>
+                                    <td>Invoice</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$320.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="row-checkbox-settled"></td>
+                                    <td><a href="#" class="conf-link">43492</a></td>
+                                    <td>Hourly</td>
+                                    <td>Done</td>
+                                    <td>10/09/2018 06:30 PM</td>
+                                    <td>Martin, Richard</td>
+                                    <td>Executive Transport</td>
+                                    <td>Martinez, Juan</td>
+                                    <td>Stretch Limo</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status-badge status-paid">PAID</span></td>
+                                    <td>$540.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-controls">
+                        <div class="pagination-info">
+                            <span>Page</span>
+                            <select class="page-selector" id="settledPageSelector">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="pagination-buttons">
+                            <a href="#" class="pagination-link" id="settledFirstPage">« First Page</a>
+                            <a href="#" class="pagination-link" id="settledLastPage">Last Page »</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="settle.js"></script>
+</body>
+</html>

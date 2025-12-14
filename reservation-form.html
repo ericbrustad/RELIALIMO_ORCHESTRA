@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <h1 class="logo">RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="RELIA bull" class="logo-bull">LIMO™</h1>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Reservation - RELIARELIA bullLIMO™</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🐂</text></svg>" />
+    <link rel="stylesheet" href="reservation-form.css" />
+    <script>
+      // Hide main navigation if in iframe
+      if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', function() {
+          const headerContent = document.querySelector('.header-content');
+          if (headerContent) {
+            headerContent.style.display = 'none';
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Attention Warning -->
+      <div class="attention-warning">
+        <strong>ATTENTION:</strong> This reservation was created but has not been saved. Be sure to save it before leaving this screen.
+      </div>
+
+      <!-- Action Buttons Bar -->
+      <div class="action-buttons-bar">
+        <div class="conf-number-section">
+          <label>Conf#</label>
+          <input type="text" id="confNumber" class="conf-input" value="22505" readonly />
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn btn-save">💾 Save</button>
+          <button class="action-btn btn-payments">💳 Payments</button>
+          <button class="action-btn btn-copy-action">📋 Copy</button>
+          <button class="action-btn btn-roundtrip">🔄 Round Trip</button>
+          <button class="action-btn btn-email">📧 Email/Fax</button>
+          <button class="action-btn btn-print">🖨️ Print</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="reservation-grid">
+          <!-- Left Column: Billing Accounts & Passenger & Booking Agent -->
+          <div class="left-column">
+            <!-- Billing Accounts Section -->
+            <section class="panel">
+              <div class="billing-tabs">
+                <button class="billing-tab active" data-billing-tab="account">Bill To & Pax</button>
+                <button class="billing-tab" data-billing-tab="payment">Payment Info</button>
+              </div>
+              
+              <div class="billing-tab-content active" id="accountTab">
+              <div class="form-section">
+                <div style="display: flex; gap: 5px; align-items: flex-start; margin-bottom: 15px;">
+                  <div class="form-group" style="position: relative; flex: 1; margin-bottom: 0;">
+                    <label>Account</label>
+                    <input type="text" id="billingAccountSearch" class="form-control" placeholder="Search or enter account" autocomplete="off" />
+                    <div id="accountSuggestions" class="suggestions-dropdown"></div>
+                  </div>
+                  <button type="button" id="addAccountBtn" class="btn-icon" title="Add New Account" style="padding: 8px 10px; font-size: 16px; margin-top: 24px;">+</button>
+                </div>
+
+                <div class="form-group">
+                  <label>Company</label>
+                  <input type="text" id="billingCompany" class="form-control" />
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="billingFirstName" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" id="billingLastName" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Cell Phone</label>
+                  <input type="tel" id="billingPhone" class="form-control" placeholder="Enter number" />
+                </div>
+
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" id="billingEmail" class="form-control" />
+                </div>
+              </div>
+              </div>
+
+              <!-- Payment Info Tab Content -->
+              <div class="billing-tab-content" id="paymentTab">
+                <div class="form-section">
+                  <div class="payment-form-row-2">
+                    <div class="payment-form-group">
+                      <label class="payment-label">Payment Method</label>
+                      <select class="payment-control">
+                        <option>---</option>
+                        <option>Cash</option>
+                        <option>Credit Card</option>
+                        <option>Check</option>
+                        <option>Account</option>
+                        <option>Voucher</option>
+                      </select>
+                    </div>
+
+                    <div class="payment-form-group">
+                      <label class="payment-label">Payment Status</label>
+                      <select class="payment-control">
+                        <option selected>UNPAID</option>
+                        <option>PAID</option>
+                        <option>PARTIALLY PAID</option>
+                        <option>REFUNDED</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="payment-form-group">
+                    <label class="payment-label">Payment Terms:</label>
+                    <input type="text" class="payment-control" placeholder="" />
+                  </div>
+
+                  <div class="payment-form-group">
+                    <label class="payment-label">Payment Gateways:</label>
+                    <select class="payment-control">
+                      <option selected>Square</option>
+                      <option>Stripe</option>
+                      <option>PayPal</option>
+                      <option>Authorize.net</option>
+                    </select>
+                  </div>
+
+                  <div class="payment-card-options">
+                    <label class="payment-radio-option">
+                      <input type="radio" name="cardOption" value="new" checked />
+                      <span>Pay with new card</span>
+                    </label>
+                    <label class="payment-radio-option">
+                      <input type="radio" name="cardOption" value="existing" />
+                      <span>Use existing card</span>
+                    </label>
+                  </div>
+
+                  <div class="payment-card-input-group">
+                    <button type="button" class="payment-card-icon-btn">💳</button>
+                    <input type="text" class="payment-control-inline" placeholder="Card number" />
+                  </div>
+
+                  <div class="payment-form-row-2">
+                    <div class="payment-form-group-inline">
+                      <input type="text" class="payment-control" placeholder="MM/YY" />
+                    </div>
+
+                    <div class="payment-form-group-inline">
+                      <input type="text" class="payment-control" placeholder="CVV" />
+                    </div>
+                  </div>
+
+                  <div class="payment-form-group">
+                    <input type="text" class="payment-control" placeholder="Name on Card" />
+                  </div>
+
+                  <div class="payment-section-title">Billing Information (optional)</div>
+
+                  <div class="payment-form-row-2">
+                    <div class="payment-form-group-inline">
+                      <input type="text" class="payment-control" placeholder="Address Line 1" />
+                    </div>
+
+                    <div class="payment-form-group-inline">
+                      <input type="text" class="payment-control" placeholder="Address Line 2" />
+                    </div>
+                  </div>
+
+                  <div class="payment-form-group">
+                    <input type="text" class="payment-control" placeholder="City" />
+                  </div>
+
+                  <div class="payment-form-row-2">
+                    <div class="payment-form-group-inline">
+                      <select class="payment-control">
+                        <option>Select country ▼</option>
+                        <option>United States</option>
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                      </select>
+                    </div>
+
+                    <div class="payment-form-group-inline">
+                      <select class="payment-control">
+                        <option>Select state ▼</option>
+                        <option>Alabama</option>
+                        <option>Alaska</option>
+                        <option>Arizona</option>
+                        <option>California</option>
+                        <option>Florida</option>
+                        <option>New York</option>
+                        <option>Texas</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="payment-form-row-2">
+                    <div class="payment-form-group-inline">
+                      <input type="email" class="payment-control" placeholder="Cardholder Email" />
+                    </div>
+
+                    <div class="payment-form-group-inline">
+                      <input type="tel" class="payment-control" placeholder="Cardholder Phone" />
+                    </div>
+                  </div>
+
+                  <button type="button" class="payment-btn-add-card">Add Card</button>
+
+                  <div class="payment-notes-section">
+                    <label class="payment-notes-label">Credit Card Notes</label>
+                    <textarea class="payment-notes-textarea" rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Passenger Section -->
+            <section class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Passenger</h2>
+                <button type="button" id="copyPassengerToAccountBtn" class="btn-icon" title="Copy passenger data to billing & create account" style="margin-left: auto;" onclick="window.copyPassengerToBillingAndOpenAccounts()">📋 Copy to Account</button>
+              </div>
+              
+              <div class="form-section">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="passengerFirstName" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" id="passengerLastName" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Passenger Phone</label>
+                  <input type="tel" id="passengerPhone" class="form-control" placeholder="Enter number" />
+                </div>
+
+                <div class="form-group">
+                  <label>Passenger Email</label>
+                  <input type="email" id="passengerEmail" class="form-control" />
+                </div>
+
+                <div class="subsection-title">Alternate Contact</div>
+
+                <div class="form-group">
+                  <label>Alt. Contact Name</label>
+                  <input type="text" id="altContactName" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label>Alt. Contact Phone</label>
+                  <input type="tel" id="altContactPhone" class="form-control" placeholder="Enter number" />
+                </div>
+              </div>
+            </section>
+
+            <!-- Booking Agent Section -->
+            <section class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Booking Agent</h2>
+              </div>
+              
+              <div class="form-section">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="bookedByFirstName" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" id="bookedByLastName" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="tel" id="bookedByPhone" class="form-control" placeholder="Enter number" />
+                </div>
+
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" id="bookedByEmail" class="form-control" />
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Middle Column: Trip Details -->
+          <div class="middle-column">
+            <!-- Trip Details Section -->
+            <section class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Trip Details</h2>
+              </div>
+
+              <div class="form-section">
+                <!-- Date and Time Fields -->
+                <div class="time-grid">
+                  <div class="form-group">
+                    <label>PU Date</label>
+                    <input type="date" id="puDate" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label>PU Time</label>
+                    <input type="time" id="puTime" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label>DO Time</label>
+                    <input type="time" id="doTime" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="time-grid">
+                  <div class="form-group">
+                    <label>Spot Time</label>
+                    <input type="time" id="spotTime" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label>Gar-Out Time</label>
+                    <input type="time" id="garOutTime" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label>Gar-In Time</label>
+                    <input type="time" id="garInTime" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Driver Should Arrive</label>
+                  <select id="driverArriveTime" class="form-control">
+                    <option value="">When your flight arrives</option>
+                    <option value="5min">5 minutes before</option>
+                    <option value="10min">10 minutes before</option>
+                    <option value="15min">15 minutes before</option>
+                    <option value="30min">30 minutes before</option>
+                  </select>
+                </div>
+
+                <div class="subsection-title" style="margin-top: 20px;">Address</div>
+
+                <!-- Location Type Icons -->
+                <div class="location-types">
+                  <div class="location-type-option">
+                    <input type="radio" name="locationType" value="stored" id="storedAddress" 
+                           onchange="handleLocationTypeChange('stored')" />
+                    <label for="storedAddress">🏠 Stored Address</label>
+                  </div>
+                  <div class="location-type-option">
+                    <input type="radio" name="locationType" value="airport" id="airport" 
+                           onchange="handleLocationTypeChange('airport')" />
+                    <label for="airport">✈️ Airport</label>
+                  </div>
+                  <div class="location-type-option">
+                    <input type="radio" name="locationType" value="fbo" id="fbo" 
+                           onchange="handleLocationTypeChange('fbo')" />
+                    <label for="fbo">🛩️ FBO</label>
+                  </div>
+                </div>
+
+                <!-- Location Type Dropdowns (shown when location type selected) -->
+                <div id="storedAddressDropdown" class="location-dropdown" style="display: none;">
+                  <div class="form-group">
+                    <label>Select Stored Address</label>
+                    <select id="storedAddressSelect" class="form-control">
+                      <option value="">Choose an address...</option>
+                      <option value="home">Home Office - 123 Main St</option>
+                      <option value="warehouse">Warehouse - 456 Industrial Ave</option>
+                      <option value="hotel1">Beverly Hills Hotel - 9641 Sunset Blvd</option>
+                      <option value="hotel2">The Ritz-Carlton - 900 W Olympic Blvd</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div id="airportDropdown" class="location-dropdown" style="display: none;">
+                  <div class="form-group" style="position: relative;">
+                    <label>Select Airport</label>
+                    <input type="text" id="airportSearch" class="form-control" placeholder="Search airport code or city name (e.g., LAX, Los Angeles)..." autocomplete="off" 
+                           oninput="handleAirportSearch(this.value)" />
+                    <div id="airportSuggestions" class="airport-suggestions"></div>
+                  </div>
+                  <input type="hidden" id="airportSelect" />
+
+                  <!-- Airline and Flight Information (shown when airport selected) -->
+                  <div id="airlineSection" style="display: none;">
+                    <div class="subsection-title" style="margin-top: 15px;">Airline Information</div>
+                    
+                    <div class="form-group" style="position: relative;">
+                      <label>Airline</label>
+                      <input type="text" id="airlineSearch" class="form-control" placeholder="Search airline..." autocomplete="off" 
+                             oninput="handleAirlineSearch(this.value)" />
+                      <div id="airlineSuggestions" class="airline-suggestions"></div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Airline Code</label>
+                        <input type="text" id="airlineCode" class="form-control" placeholder="e.g., AA" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label>Airline Name</label>
+                        <input type="text" id="airlineName" class="form-control" placeholder="Full airline name" readonly />
+                      </div>
+                    </div>
+
+                    <div class="form-group" style="position: relative;">
+                      <label>Flight Number</label>
+                      <input type="text" id="flightNumber" class="form-control" placeholder="Enter flight number..." autocomplete="off" 
+                             oninput="handleFlightNumberSearch(this.value)" />
+                      <div id="flightSuggestions" class="flight-suggestions"></div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Terminal/Gate</label>
+                        <input type="text" id="terminalGate" class="form-control" placeholder="Terminal/Gate" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label>Flight Status</label>
+                        <input type="text" id="flightStatus" class="form-control" placeholder="Status" readonly />
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Scheduled Arrival</label>
+                        <input type="text" id="scheduledArrival" class="form-control" placeholder="Scheduled" readonly />
+                      </div>
+                      <div class="form-group">
+                        <label>Estimated Arrival</label>
+                        <input type="text" id="estimatedArrival" class="form-control" placeholder="Estimated" readonly />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Origin Airport</label>
+                      <input type="text" id="originAirport" class="form-control" placeholder="Origin" readonly />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Meet Option</label>
+                      <select id="meetOption" class="form-control">
+                        <option value="curbside">Curbside Pickup</option>
+                        <option value="baggage">Baggage Claim</option>
+                        <option value="arrivals">Arrivals Hall</option>
+                        <option value="cell-lot">Cell Phone Lot</option>
+                      </select>
+                    </div>
+
+                    <div class="flight-status-indicator" id="flightStatusIndicator" style="display: none;">
+                      <div class="status-icon">✈️</div>
+                      <div class="status-text">Flight data loaded successfully</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="fboDropdown" class="location-dropdown" style="display: none;">
+                  <div class="form-group">
+                    <label>Select FBO - Minneapolis/St Paul Area</label>
+                    <select id="fboSelect" class="form-control" onchange="handleFBOSelection(this.value)">
+                      <option value="">Choose an FBO...</option>
+                      <option value="signature-msp">Signature Flight Support - MSP</option>
+                      <option value="mercury-air-center">Mercury Air Center - MSP</option>
+                      <option value="north-star">North Star Aviation - MSP</option>
+                      <option value="jetlink-aviation">JetLink Aviation - MSP</option>
+                      <option value="premier-aviation">Premier Aviation Services - MSP</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Address Entry Form -->
+                <div class="address-entry">
+                  <div class="form-group" style="position: relative; z-index: 100;">
+                    <label>Location Description/ Name</label>
+                    <input type="text" id="locationName" class="form-control location-name" placeholder="Search landmark, business, or enter name..." autocomplete="off" 
+                           oninput="handleLocationSearch(this.value)" />
+                    <div id="locationNameSuggestions" class="location-suggestions"></div>
+                  </div>
+
+                  <div class="form-group" style="position: relative; z-index: 100;">
+                    <label>Address 1</label>
+                    <input type="text" id="address1" class="form-control address-input" placeholder="Start typing address..." 
+                           oninput="handleAddressSearch(this.value)" />
+                    <div id="addressSuggestions" class="address-suggestions"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Address 2</label>
+                    <input type="text" id="address2" class="form-control" />
+                  </div>
+
+                  <div class="address-grid">
+                    <div class="form-group">
+                      <label>City</label>
+                      <input type="text" id="city" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label>State/Prov</label>
+                      <select id="state" class="form-control">
+                        <option value="">Select state</option>
+                        <option value="CA">CA</option>
+                        <option value="NY">NY</option>
+                        <option value="TX">TX</option>
+                        <option value="FL">FL</option>
+                        <!-- Add more states as needed -->
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Zip/Post</label>
+                      <input type="text" id="zipCode" class="form-control" />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Country</label>
+                    <select id="country" class="form-control">
+                      <option value="US">United States</option>
+                      <option value="CA">Canada</option>
+                      <option value="MX">Mexico</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="locationNotes" class="form-control" rows="3"></textarea>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Phone Number</label>
+                      <input type="tel" id="locationPhone" class="form-control" placeholder="? + Enter number" />
+                    </div>
+                    <div class="form-group">
+                      <label>Time In</label>
+                      <input type="time" id="timeIn" class="form-control" />
+                    </div>
+                  </div>
+
+                  <!-- Stop Type Radio Buttons -->
+                  <div class="stop-type-selector">
+                    <label class="radio-option">
+                      <input type="radio" name="stopType" value="pickup" checked />
+                      <span>Pick-up</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="stopType" value="dropoff" />
+                      <span>Drop-off</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="stopType" value="stop" />
+                      <span>Stop</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="stopType" value="wait" />
+                      <span>Wait</span>
+                    </label>
+                  </div>
+
+                  <button id="createStopBtn" class="btn btn-create" onclick="handleCreateStop()">CREATE</button>
+                </div>
+
+                <!-- Stored Routing Information -->
+                <div class="stored-routing">
+                  <div class="subsection-title">Pick-up / Drop-off / Stops</div>
+                  <div class="routing-info-box" id="routingInfoBox">
+                    <table class="address-table" style="width: 100%;">
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Location Name</th>
+                          <th>Address</th>
+                          <th>Time In</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="addressTableBody">
+                        <!-- Address rows will be added here dynamically -->
+                        <tr class="empty-row">
+                          <td colspan="5" class="empty-message">No addresses added yet. Use the form above to add addresses.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Route Information -->
+                <div id="routeInfo" class="route-info" style="display: none;">
+                  <div class="subsection-title" style="margin-top: 20px;">Route Information</div>
+                  <div class="route-details">
+                    <div class="route-detail-row">
+                      <span class="route-label">Distance:</span>
+                      <span class="route-value" id="routeDistance">-</span>
+                    </div>
+                    <div class="route-detail-row">
+                      <span class="route-label">Duration:</span>
+                      <span class="route-value" id="routeDuration">-</span>
+                    </div>
+                    <div class="route-detail-row">
+                      <span class="route-label">Directions:</span>
+                      <div id="routeDirections" class="route-directions"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Notes Tabs -->
+                <div class="notes-tabs-container">
+                  <div class="notes-tabs">
+                    <button class="notes-tab active" data-tab="trip">Trip Notes</button>
+                    <button class="notes-tab" data-tab="billpax">Bill To & Pax Notes</button>
+                  </div>
+                  <div class="notes-content">
+                    <div class="notes-panel active" id="tripNotesPanel">
+                      <textarea id="tripNotes" class="form-control notes-textarea" rows="5" placeholder="Enter trip notes..."></textarea>
+                      <div class="notes-options">
+                        <label>
+                          <input type="checkbox" id="addToTrip" />
+                          <span>Add to T/S</span>
+                        </label>
+                        <label>
+                          <input type="checkbox" id="hideFromCustomer" />
+                          <span>Hide From Customer</span>
+                        </label>
+                        <button class="btn btn-secondary btn-small">SAVE NOTES</button>
+                      </div>
+                    </div>
+                    <div class="notes-panel" id="billPaxNotesPanel">
+                      <textarea id="billPaxNotes" class="form-control notes-textarea" rows="5" placeholder="Enter bill to & pax notes..."></textarea>
+                      <button class="btn btn-secondary btn-small" style="margin-top: 10px;">SAVE NOTES</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dispatch Notes -->
+                <div class="form-group" style="margin-top: 20px;">
+                  <div class="subsection-title">Dispatch Notes</div>
+                  <textarea id="dispatchNotes" class="form-control" rows="4" placeholder="Enter dispatch notes..."></textarea>
+                  <button class="btn btn-secondary btn-small" style="margin-top: 10px;">SAVE NOTES</button>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column: Complete Reservation Details -->
+          <div class="right-column">
+            <section class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Reservation Details</h2>
+              </div>
+
+              <div class="form-section">
+                <!-- Date/Time and Status -->
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Date/Time:</label>
+                    <input type="text" id="resDateTime" class="form-control" readonly />
+                  </div>
+                  <div class="form-group">
+                    <label>Res. By:</label>
+                    <input type="text" id="resBy" class="form-control" placeholder="Unassigned" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Status:</label>
+                  <select id="resStatus" class="form-control">
+                    <option value="unassigned">Unassigned</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Trip Details -->
+                <div class="form-row-4">
+                  <div class="form-group">
+                    <label>Duration:</label>
+                    <input type="number" id="duration" class="form-control" value="1" min="0" step="0.5" />
+                  </div>
+                  <div class="form-group">
+                    <label>Est Drv Time:</label>
+                    <input type="number" id="estDrvTime" class="form-control" value="0" min="0" step="0.5" />
+                  </div>
+                  <div class="form-group">
+                    <label># of Pax:</label>
+                    <input type="number" id="numPax" class="form-control" value="1" min="1" />
+                  </div>
+                  <div class="form-group">
+                    <label>Luggage:</label>
+                    <input type="number" id="luggage" class="form-control" value="0" min="0" />
+                  </div>
+                </div>
+
+                <div class="form-row-3">
+                  <div class="form-group checkbox-group">
+                    <label>
+                      <input type="checkbox" id="accessible" />
+                      <span>Accessible:</span>
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label>Child Seat Required:</label>
+                    <select id="childSeatRequired" class="form-control">
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Child Seat Count:</label>
+                    <select id="childSeatCount" class="form-control">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="additional-link">
+                  <a href="#" id="additionalChildSeats">Additional Child Seats</a>
+                  <span class="total-indicator">Total Seats (0)</span>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Service and Vehicle - Single Row -->
+                <div class="form-row-3">
+                  <div class="form-group">
+                    <label>Service Type</label>
+                    <select id="serviceType" class="form-control">
+                      <option value="">- - - - NOT ASSIGNED - - - -</option>
+                      <option value="point-to-point">Point to Point</option>
+                      <option value="hourly">Hourly</option>
+                      <option value="airport-transfer">Airport Transfer</option>
+                      <option value="wedding">Wedding</option>
+                      <option value="corporate">Corporate</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Vehicle Type</label>
+                    <select id="vehicleTypeRes" class="form-control">
+                      <option value="">- - - - NOT ASSIGNED - - - -</option>
+                      <option value="sedan">Sedan</option>
+                      <option value="suv">SUV</option>
+                      <option value="stretch">Stretch Limousine</option>
+                      <option value="luxury">Luxury Sedan</option>
+                      <option value="van">Van</option>
+                      <option value="bus">Bus</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Promo Code</label>
+                    <select id="promoCode" class="form-control">
+                      <option value="">- - - - NOT ASSIGNED - - - -</option>
+                      <option value="WINTER20">WINTER20 - 20% Off</option>
+                      <option value="CORP10">CORP10 - Corporate 10%</option>
+                      <option value="VIP15">VIP15 - VIP Discount</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Farm Options -->
+                <div class="farm-row">
+                  <div class="farm-options">
+                    <label class="radio-inline">
+                      <input type="radio" name="farmOption" value="in-house" checked />
+                      <span>In-House</span>
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="farmOption" value="farm-in" />
+                      <span>Farm-in</span>
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="farmOption" value="farm-out" />
+                      <span>Farm-out</span>
+                    </label>
+                  </div>
+                  <div class="form-group" style="flex: 1;">
+                    <label>eFarm Status:</label>
+                    <input type="text" id="eFarmStatus" class="form-control status-indicator" value="NOT FARMED OUT" readonly />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>eFarm-out:</label>
+                    <select id="eFarmOut" class="form-control">
+                      <option value="manual">Manual</option>
+                      <option value="automatic">Automatic</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="position: relative;">
+                  <label>Affiliate:</label>
+                  <div style="display: flex; gap: 5px;">
+                    <input type="text" id="affiliate" class="form-control" placeholder="Search affiliate..." style="flex: 1;" autocomplete="off" />
+                    <button type="button" id="openAffiliateListBtn" class="btn-icon" title="View Affiliate List">...</button>
+                    <button type="button" class="btn-icon" title="Add to favorites">+1</button>
+                  </div>
+                  <div id="affiliateSuggestions" class="affiliate-suggestions"></div>
+                </div>
+
+                <div class="form-group">
+                  <label>Reference #</label>
+                  <input type="text" id="referenceNumber" class="form-control" />
+                </div>
+
+                <div class="additional-link">
+                  <a href="#" id="additionalAffiliateInfo">Additional Affiliate Information</a>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                  <button type="button" class="btn btn-secondary" style="flex: 1;">Apply Rate Table</button>
+                  <button type="button" class="btn btn-secondary" style="flex: 1;">Log Wait Time(s)</button>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Cost Tabs -->
+                <div class="cost-tabs">
+                  <button class="cost-tab active" data-tab="primary">Primary</button>
+                  <button class="cost-tab" data-tab="secondary">Secondary</button>
+                  <button class="cost-tab" data-tab="farmout">Farm-out Costs</button>
+                </div>
+
+                <div class="cost-tab-content active" id="primaryCostTab">
+                  <!-- Primary Cost Breakdown -->
+                <div class="cost-table">
+                  <div class="cost-row header">
+                    <div class="cost-cell">Charge</div>
+                    <div class="cost-cell">Qty</div>
+                    <div class="cost-cell">Rate</div>
+                    <div class="cost-cell">Ext.</div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Flat Rate</div>
+                    <div class="cost-cell"><input type="number" id="flatQty" class="cost-input" value="1" /></div>
+                    <div class="cost-cell"><input type="number" id="flatRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="flatExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Hour</div>
+                    <div class="cost-cell"><input type="number" id="hourQty" class="cost-input" value="0" step="0.5" /></div>
+                    <div class="cost-cell"><input type="number" id="hourRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="hourExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Unit</div>
+                    <div class="cost-cell"><input type="number" id="unitQty" class="cost-input" value="0" /></div>
+                    <div class="cost-cell"><input type="number" id="unitRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="unitExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">OT/Wait Time</div>
+                    <div class="cost-cell"><input type="number" id="otQty" class="cost-input" value="0" step="0.5" /></div>
+                    <div class="cost-cell"><input type="number" id="otRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="otExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Extra Stops</div>
+                    <div class="cost-cell"><input type="number" id="stopsQty" class="cost-input" value="0" /></div>
+                    <div class="cost-cell"><input type="number" id="stopsRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="stopsExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Total Gratuity (%)</div>
+                    <div class="cost-cell"><input type="number" id="gratuityQty" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" id="gratuityExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Fuel Surcharge (%)</div>
+                    <div class="cost-cell"><input type="number" id="fuelQty" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" id="fuelExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Discount (%)</div>
+                    <div class="cost-cell"><input type="number" id="discountQty" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" id="discountExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Pass</div>
+                    <div class="cost-cell"><input type="number" id="passQty" class="cost-input" value="0" /></div>
+                    <div class="cost-cell"><input type="number" id="passRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="passExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Mile</div>
+                    <div class="cost-cell"><input type="number" id="mileQty" class="cost-input" value="0" step="0.1" /></div>
+                    <div class="cost-cell"><input type="number" id="mileRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="mileExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Surface Transp. Charge (%)</div>
+                    <div class="cost-cell"><input type="number" id="surfaceQty" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" id="surfaceExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Base Rate STC (%)</div>
+                    <div class="cost-cell"><input type="number" id="baseRateQty" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" id="baseRateExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Admin Fee</div>
+                    <div class="cost-cell"><input type="number" id="adminQty" class="cost-input" value="0" /></div>
+                    <div class="cost-cell"><input type="number" id="adminRate" class="cost-input" value="0" step="0.01" /></div>
+                    <div class="cost-cell"><input type="number" id="adminExt" class="cost-input" value="0" readonly /></div>
+                  </div>
+                </div>
+
+                <div class="total-section">
+                  <div class="total-row">
+                    <div class="total-label">Grand Total (USD)</div>
+                    <div class="total-value" id="grandTotal">0.00</div>
+                  </div>
+
+                  <div class="total-row">
+                    <div class="total-label">Payments/Deposits</div>
+                    <div class="total-value" id="payments">0.00</div>
+                  </div>
+                </div>
+
+                  <!-- Additional cost rows for comprehensive breakdown -->
+                  <div class="cost-row">
+                    <div class="cost-cell">Fuel Surch</div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="4.9" step="0.1" /></div>
+                    <div class="cost-cell"><span class="percent-label">%</span></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Discount</div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"><span class="percent-label">%</span></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Base</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Base rate STC</div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="20" step="1" /></div>
+                    <div class="cost-cell"><span class="percent-label">%</span></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Mile</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Per Hour</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Admin Fee</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Base rate STC</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Fuel Surcharge</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Requested Gratuity</div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+
+                  <div class="cost-row">
+                    <div class="cost-cell">Late Night/Early/Mid Surch</div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0" step="1" /></div>
+                    <div class="cost-cell"><span class="percent-label">%</span></div>
+                    <div class="cost-cell"><input type="number" class="cost-input" value="0.00" readonly /></div>
+                  </div>
+                </div>
+
+                <!-- Grand Total Section -->
+                <div class="grand-total-section">
+                  <div class="grand-total-row">
+                    <label>Grand Total</label>
+                    <select class="currency-select">
+                      <option value="USD">USD ($)</option>
+                      <option value="EUR">EUR (€)</option>
+                      <option value="GBP">GBP (£)</option>
+                    </select>
+                    <input type="number" id="grandTotal" class="grand-total-input" value="0.00" step="0.01" readonly />
+                  </div>
+
+                  <div class="totals-row">
+                    <label>Payments/Deposits</label>
+                    <input type="number" id="paymentsDeposits" class="totals-input payments-color" value="0.00" step="0.01" readonly />
+                  </div>
+                </div>
+
+                <!-- Secondary/Farm-out tabs content (hidden by default) -->
+                </div>
+
+                <div class="cost-tab-content" id="secondaryCostTab">
+                  <p style="text-align: center; padding: 20px; color: #666;">Secondary pricing options</p>
+                </div>
+
+                <div class="cost-tab-content" id="farmoutCostTab">
+                  <p style="text-align: center; padding: 20px; color: #666;">Farm-out cost details</p>
+                </div>
+
+                <div class="form-divider" style="margin-top: 20px;"></div>
+
+                <!-- Assignment Tabs -->
+                <div class="assignment-tabs">
+                  <button class="assignment-tab active" data-tab="primary">Primary</button>
+                  <button class="assignment-tab" data-tab="secondary">Secondary</button>
+                </div>
+
+                <div class="assignment-content active" id="primaryAssignment">
+                  <div class="form-group">
+                    <label>Driver</label>
+                    <select id="driverSelect" class="form-control">
+                      <option value="">Select driver...</option>
+                      <option value="driver1">Mike Driver</option>
+                      <option value="driver2">Lisa Driver</option>
+                      <option value="driver3">Tom Driver</option>
+                      <option value="driver4">Sarah Driver</option>
+                      <option value="driver5">John Driver</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Car</label>
+                    <select id="carSelect" class="form-control">
+                      <option value="">Select vehicle...</option>
+                      <option value="car1">Black Sedan - #1234</option>
+                      <option value="car2">White SUV - #5678</option>
+                      <option value="car3">Stretch Limo - #9012</option>
+                      <option value="car4">Luxury Sedan - #3456</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="assignment-content" id="secondaryAssignment">
+                  <div class="form-group">
+                    <label>Secondary Driver</label>
+                    <select class="form-control">
+                      <option value="">Select driver...</option>
+                      <option value="driver1">Mike Driver</option>
+                      <option value="driver2">Lisa Driver</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Secondary Car</label>
+                    <select class="form-control">
+                      <option value="">Select vehicle...</option>
+                      <option value="car1">Black Sedan - #1234</option>
+                      <option value="car2">White SUV - #5678</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                  <label>Rental Agreements:</label>
+                  <select id="rentalAgreement" class="form-control">
+                    <option value="erix">Erix Coach and Car Agreement</option>
+                    <option value="standard">Standard Rental Agreement</option>
+                    <option value="corporate">Corporate Contract</option>
+                    <option value="wedding">Wedding Package Agreement</option>
+                  </select>
+                </div>
+
+                <button type="button" id="saveReservationBtn" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 12px;">
+                  SAVE RESERVATION
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div id="addContactModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Contact</h3>
+          <button class="modal-close" id="closeContactModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-section">
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" id="contactCompany" class="form-control" placeholder="Company name (optional)" />
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" id="contactFirstName" class="form-control" placeholder="First name" required />
+              </div>
+
+              <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" id="contactLastName" class="form-control" placeholder="Last name" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Cell Phone</label>
+              <input type="tel" id="contactPhone" class="form-control" placeholder="Phone number" />
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="contactEmail" class="form-control" placeholder="Email address" />
+            </div>
+
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" id="contactAddress" class="form-control" placeholder="Street address" />
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="contactCity" class="form-control" placeholder="City" />
+              </div>
+
+              <div class="form-group">
+                <label>State</label>
+                <input type="text" id="contactState" class="form-control" placeholder="State" />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Zip Code</label>
+                <input type="text" id="contactZip" class="form-control" placeholder="Zip code" />
+              </div>
+
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" id="contactCountry" class="form-control" placeholder="Country" value="United States" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea id="contactNotes" class="form-control" rows="3" placeholder="Additional notes..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelContact">Cancel</button>
+          <button class="btn btn-primary" id="saveContact">Save Contact</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div id="accountModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Account Information</h3>
+          <button class="modal-close" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Dynamic content -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelAccount">Cancel</button>
+          <button class="btn btn-primary" id="createAccount">Create Account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Affiliate List Modal -->
+    <div id="affiliateModal" class="modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3>Affiliate List</h3>
+          <button class="modal-close" id="closeAffiliateModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="affiliate-search-bar">
+            <input type="text" id="affiliateModalSearch" class="form-control" placeholder="Search affiliates by name, company, or location..." />
+          </div>
+          <div class="affiliate-list-container">
+            <table class="affiliate-table">
+              <thead>
+                <tr>
+                  <th>Company Name</th>
+                  <th>Contact</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="affiliateListBody">
+                <!-- Dynamic affiliate list -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="closeAffiliateListBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address Confirmation Modal -->
+    <div id="addressConfirmModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirm Address</h3>
+          <button class="modal-close" id="closeAddressConfirmModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 15px; font-size: 13px;">We found similar addresses. Please select one or use your custom text:</p>
+          
+          <div class="address-confirm-list" id="addressConfirmList">
+            <!-- Suggested addresses will be populated here -->
+          </div>
+
+          <div class="custom-address-option">
+            <label class="address-option-item custom-option">
+              <input type="radio" name="addressChoice" value="custom" checked />
+              <div class="address-option-content">
+                <strong>USE CUSTOM TEXT ENTERED</strong>
+                <div class="custom-address-preview" id="customAddressPreview"></div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelAddressConfirm">Cancel</button>
+          <button class="btn btn-primary" id="confirmAddressSelection">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Global stops array to store all trip stops
+      let tripStops = [];
+      
+      // Debounce timer for API searches
+      let locationSearchTimeout;
+      let addressSearchTimeout;
+
+      // Airport database
+      const airports = [
+        { code: 'MSP', name: 'Minneapolis-Saint Paul International', city: 'Minneapolis', state: 'MN' },
+        { code: 'JFK', name: 'John F. Kennedy International', city: 'New York', state: 'NY' },
+        { code: 'LAX', name: 'Los Angeles International', city: 'Los Angeles', state: 'CA' },
+        { code: 'ORD', name: 'Chicago O\'Hare International', city: 'Chicago', state: 'IL' },
+        { code: 'DFW', name: 'Dallas/Fort Worth International', city: 'Dallas', state: 'TX' },
+        { code: 'DEN', name: 'Denver International', city: 'Denver', state: 'CO' },
+        { code: 'SEA', name: 'Seattle-Tacoma International', city: 'Seattle', state: 'WA' },
+        { code: 'SFO', name: 'San Francisco International', city: 'San Francisco', state: 'CA' },
+        { code: 'LAS', name: 'Harry Reid International', city: 'Las Vegas', state: 'NV' },
+        { code: 'MIA', name: 'Miami International', city: 'Miami', state: 'FL' }
+      ];
+
+      // Airline database
+      const airlines = [
+        { code: 'AA', name: 'American Airlines' },
+        { code: 'DL', name: 'Delta Air Lines' },
+        { code: 'UA', name: 'United Airlines' },
+        { code: 'SW', name: 'Southwest Airlines' },
+        { code: 'B6', name: 'JetBlue Airways' },
+        { code: 'AS', name: 'Alaska Airlines' },
+        { code: 'F9', name: 'Frontier Airlines' },
+        { code: 'NK', name: 'Spirit Airlines' },
+        { code: 'G4', name: 'Allegiant Air' },
+        { code: 'SY', name: 'Sun Country Airlines' },
+        { code: 'BA', name: 'British Airways' },
+        { code: 'LH', name: 'Lufthansa' },
+        { code: 'AF', name: 'Air France' },
+        { code: 'KL', name: 'KLM Royal Dutch Airlines' },
+        { code: 'AC', name: 'Air Canada' }
+      ];
+
+      // Minneapolis/St Paul FBO database
+      const fboDatabase = {
+        'signature-msp': {
+          name: 'Signature Flight Support - Minneapolis',
+          address: '7955 Uniform Avenue South',
+          city: 'Minneapolis',
+          state: 'MN',
+          zip: '55450',
+          phone: '(612) 726-2000',
+          email: 'msp@signatureflight.com',
+          services: 'Fuel, Maintenance, Crew, Catering'
+        },
+        'mercury-air-center': {
+          name: 'Mercury Air Center - MSP',
+          address: '6900 Singletree Lane',
+          city: 'Bloomington',
+          state: 'MN',
+          zip: '55438',
+          phone: '(612) 978-9000',
+          email: 'info@mercuryair.com',
+          services: 'Fuel, Ground Handling, Maintenance'
+        },
+        'north-star': {
+          name: 'North Star Aviation - MSP',
+          address: '7700 Singletree Road South',
+          city: 'Bloomington',
+          state: 'MN',
+          zip: '55438',
+          phone: '(612) 941-6000',
+          email: 'ops@northstaraviation.com',
+          services: 'Jet Fuel, Hangar, Aircraft Maintenance'
+        },
+        'jetlink-aviation': {
+          name: 'JetLink Aviation - MSP',
+          address: '7600 Uniform Avenue South',
+          city: 'Minneapolis',
+          state: 'MN',
+          zip: '55450',
+          phone: '(612) 721-2200',
+          email: 'info@jetlinkaviation.com',
+          services: 'Fuel, Catering, Crew Facilities'
+        },
+        'premier-aviation': {
+          name: 'Premier Aviation Services - MSP',
+          address: '7450 Humphrey Drive',
+          city: 'Bloomington',
+          state: 'MN',
+          zip: '55438',
+          phone: '(612) 825-3700',
+          email: 'reservations@premieraviation.com',
+          services: 'Full Service FBO, Maintenance'
+        }
+      };
+
+      // Mock flight data
+      const flightDatabase = {
+        'AA100': {
+          number: '100',
+          airline: 'AA',
+          origin: 'LAX',
+          destination: 'MSP',
+          terminal: '2',
+          gate: 'B15',
+          status: 'on-time',
+          scheduled: '2:30 PM',
+          estimated: '2:30 PM'
+        },
+        'AA200': {
+          number: '200',
+          airline: 'AA',
+          origin: 'ORD',
+          destination: 'MSP',
+          terminal: '1',
+          gate: 'A22',
+          status: 'delayed',
+          scheduled: '3:15 PM',
+          estimated: '3:45 PM'
+        },
+        'DL500': {
+          number: '500',
+          airline: 'DL',
+          origin: 'ATL',
+          destination: 'MSP',
+          terminal: '3',
+          gate: 'C10',
+          status: 'on-time',
+          scheduled: '4:00 PM',
+          estimated: '4:00 PM'
+        },
+        'DL501': {
+          number: '501',
+          airline: 'DL',
+          origin: 'DEN',
+          destination: 'MSP',
+          terminal: '3',
+          gate: 'C11',
+          status: 'boarding',
+          scheduled: '5:20 PM',
+          estimated: '5:20 PM'
+        },
+        'UA1000': {
+          number: '1000',
+          airline: 'UA',
+          origin: 'SFO',
+          destination: 'MSP',
+          terminal: '1',
+          gate: 'A5',
+          status: 'on-time',
+          scheduled: '1:45 PM',
+          estimated: '1:45 PM'
+        },
+        'UA1001': {
+          number: '1001',
+          airline: 'UA',
+          origin: 'DFW',
+          destination: 'MSP',
+          terminal: '1',
+          gate: 'A10',
+          status: 'delayed',
+          scheduled: '6:00 PM',
+          estimated: '6:30 PM'
+        },
+        'SW250': {
+          number: '250',
+          airline: 'SW',
+          origin: 'LAS',
+          destination: 'MSP',
+          terminal: '2',
+          gate: 'B5',
+          status: 'on-time',
+          scheduled: '7:15 PM',
+          estimated: '7:15 PM'
+        }
+      };
+
+      // Inline handler for location type changes
+      function handleLocationTypeChange(locationType) {
+        console.log('Location type changed to:', locationType);
+        
+        // Hide all dropdowns
+        document.getElementById('storedAddressDropdown').style.display = 'none';
+        document.getElementById('airportDropdown').style.display = 'none';
+        document.getElementById('fboDropdown').style.display = 'none';
+
+        // Show the selected dropdown
+        if (locationType === 'stored') {
+          console.log('✅ Showing stored address dropdown');
+          document.getElementById('storedAddressDropdown').style.display = 'block';
+        } else if (locationType === 'airport') {
+          console.log('✅ Showing airport dropdown');
+          document.getElementById('airportDropdown').style.display = 'block';
+        } else if (locationType === 'fbo') {
+          console.log('✅ Showing FBO dropdown');
+          document.getElementById('fboDropdown').style.display = 'block';
+        }
+      }
+
+      // Airport search handler
+      function handleAirportSearch(query) {
+        console.log('🔍 Searching for:', query);
+        
+        if (query.length < 1) {
+          document.getElementById('airportSuggestions').classList.remove('active');
+          return;
+        }
+
+        // Search the airports
+        const q = query.toLowerCase();
+        const results = airports.filter(a => 
+          a.code.toLowerCase().includes(q) || 
+          a.name.toLowerCase().includes(q) ||
+          a.city.toLowerCase().includes(q)
+        );
+
+        console.log('Found results:', results);
+        displayAirportResults(results);
+      }
+
+      // Display airport results
+      function displayAirportResults(results) {
+        const container = document.getElementById('airportSuggestions');
+        
+        if (!results || results.length === 0) {
+          container.innerHTML = '<div style="padding: 10px 12px; color: #999;">No airports found</div>';
+          container.classList.add('active');
+          return;
+        }
+
+        container.innerHTML = results.slice(0, 8).map(airport => `
+          <div class="airport-suggestion-item" onclick="selectAirport('${airport.code}', '${airport.name}')">
+            <span class="airport-code">${airport.code}</span>
+            <span class="airport-name">${airport.name}</span>
+            <span class="airport-city">${airport.city}, ${airport.state}</span>
+          </div>
+        `).join('');
+
+        container.classList.add('active');
+      }
+
+      // Select airport
+      function selectAirport(code, name) {
+        console.log('✅ Selected airport:', code, name);
+        
+        document.getElementById('airportSearch').value = `${code} - ${name}`;
+        document.getElementById('airportSelect').value = code;
+        document.getElementById('airportSuggestions').classList.remove('active');
+        
+        // Show airline section
+        const airlineSection = document.getElementById('airlineSection');
+        if (airlineSection) {
+          airlineSection.style.display = 'block';
+          // Focus on airline search
+          setTimeout(() => {
+            const airlineSearchInput = document.getElementById('airlineSearch');
+            if (airlineSearchInput) {
+              airlineSearchInput.focus();
+            }
+          }, 100);
+          console.log('✅ Airline section shown');
+        }
+      }
+
+      // Airline search handler
+      function handleAirlineSearch(query) {
+        console.log('🔍 Searching for airline:', query);
+        
+        if (query.length < 1) {
+          document.getElementById('airlineSuggestions').classList.remove('active');
+          return;
+        }
+
+        // Search the airlines
+        const q = query.toLowerCase();
+        const results = airlines.filter(a => 
+          a.code.toLowerCase().includes(q) || 
+          a.name.toLowerCase().includes(q)
+        );
+
+        console.log('Found airlines:', results);
+        displayAirlineResults(results);
+      }
+
+      // Display airline results
+      function displayAirlineResults(results) {
+        const container = document.getElementById('airlineSuggestions');
+        
+        if (!results || results.length === 0) {
+          container.innerHTML = '<div style="padding: 10px 12px; color: #999;">No airlines found</div>';
+          container.classList.add('active');
+          return;
+        }
+
+        container.innerHTML = results.slice(0, 8).map(airline => `
+          <div class="airline-suggestion-item" onclick="selectAirline('${airline.code}', '${airline.name}')">
+            <span class="airline-code">${airline.code}</span>
+            <span class="airline-name">${airline.name}</span>
+          </div>
+        `).join('');
+
+        container.classList.add('active');
+      }
+
+      // Select airline
+      function selectAirline(code, name) {
+        console.log('✅ Selected airline:', code, name);
+        
+        document.getElementById('airlineSearch').value = `${code} - ${name}`;
+        document.getElementById('airlineCode').value = code;
+        document.getElementById('airlineName').value = name;
+        document.getElementById('airlineSuggestions').classList.remove('active');
+        
+        // Focus on flight number after airline selection
+        setTimeout(() => {
+          const flightInput = document.getElementById('flightNumber');
+          if (flightInput) {
+            flightInput.focus();
+          }
+        }, 100);
+        
+        console.log('✅ Airline fields populated');
+      }
+
+      // Flight number search handler
+      function handleFlightNumberSearch(flightNumber) {
+        console.log('🔍 Searching for flight:', flightNumber);
+        
+        if (!flightNumber || flightNumber.length < 1) {
+          document.getElementById('flightSuggestions').classList.remove('active');
+          return;
+        }
+
+        // Get airline code
+        const airlineCode = document.getElementById('airlineCode').value;
+        if (!airlineCode) {
+          console.log('⚠️ No airline selected');
+          return;
+        }
+
+        // Build potential flight keys
+        const flightKey = (airlineCode + flightNumber).toUpperCase();
+        const flightData = flightDatabase[flightKey];
+
+        if (flightData) {
+          console.log('✅ Flight found:', flightData);
+          autoPopulateFlightDetails(flightData);
+          showFlightSuggestion(flightData);
+        } else {
+          console.log('ℹ️ Flight not found in database, showing suggestions');
+          showFlightSuggestions(airlineCode, flightNumber);
+        }
+      }
+
+      // Show available flights for airline
+      function showFlightSuggestions(airlineCode, searchTerm) {
+        const results = Object.values(flightDatabase).filter(f => 
+          f.airline === airlineCode && 
+          f.number.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        const container = document.getElementById('flightSuggestions');
+        
+        if (results.length === 0) {
+          container.innerHTML = '<div style="padding: 10px 12px; color: #999;">No flights found. Type flight number to continue.</div>';
+          container.classList.add('active');
+          return;
+        }
+
+        container.innerHTML = results.map(flight => `
+          <div class="flight-suggestion-item" onclick="selectFlight('${flight.number}')">
+            <strong>Flight ${flight.airline}${flight.number}</strong>
+            <div>${flight.origin} → ${flight.destination} | ${flight.scheduled}</div>
+            <div style="font-size: 11px; color: #666;">Terminal ${flight.terminal}, Gate ${flight.gate} | ${flight.status}</div>
+          </div>
+        `).join('');
+
+        container.classList.add('active');
+      }
+
+      // Show single flight suggestion
+      function showFlightSuggestion(flightData) {
+        const container = document.getElementById('flightSuggestions');
+        
+        container.innerHTML = `
+          <div class="flight-suggestion-item" style="background: #e8f4f8; padding: 12px;">
+            <strong>✓ Flight ${flightData.airline}${flightData.number} - ${flightData.origin} to ${flightData.destination}</strong>
+            <div>Terminal ${flightData.terminal}, Gate ${flightData.gate}</div>
+            <div style="font-size: 11px; color: #666;">Status: ${flightData.status.toUpperCase()} | Scheduled: ${flightData.scheduled} | Est: ${flightData.estimated}</div>
+          </div>
+        `;
+        
+        container.classList.add('active');
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          container.classList.remove('active');
+        }, 3000);
+      }
+
+      // Select flight from suggestions
+      function selectFlight(flightNumber) {
+        const airlineCode = document.getElementById('airlineCode').value;
+        const flightKey = (airlineCode + flightNumber).toUpperCase();
+        const flightData = flightDatabase[flightKey];
+        
+        if (flightData) {
+          document.getElementById('flightNumber').value = flightNumber;
+          autoPopulateFlightDetails(flightData);
+          document.getElementById('flightSuggestions').classList.remove('active');
+        }
+      }
+
+      // Auto-populate flight details
+      function autoPopulateFlightDetails(flightData) {
+        console.log('📝 Auto-populating flight details:', flightData);
+        
+        // Set terminal and gate
+        const terminalGateField = document.getElementById('terminalGate');
+        if (terminalGateField) {
+          terminalGateField.value = `${flightData.terminal}/${flightData.gate}`;
+        }
+
+        // Set flight status with color coding
+        const statusField = document.getElementById('flightStatus');
+        if (statusField) {
+          statusField.value = flightData.status.toUpperCase();
+          
+          // Color code based on status
+          if (flightData.status === 'on-time') {
+            statusField.style.color = '#155724';
+            statusField.style.backgroundColor = '#d4edda';
+          } else if (flightData.status === 'delayed') {
+            statusField.style.color = '#856404';
+            statusField.style.backgroundColor = '#fff3cd';
+          } else if (flightData.status === 'boarding') {
+            statusField.style.color = '#004085';
+            statusField.style.backgroundColor = '#d1ecf1';
+          }
+          statusField.style.fontWeight = '600';
+          statusField.style.padding = '4px 8px';
+          statusField.style.borderRadius = '3px';
+        }
+
+        // Set scheduled arrival
+        const scheduledField = document.getElementById('scheduledArrival');
+        if (scheduledField) {
+          scheduledField.value = flightData.scheduled;
+        }
+
+        // Set estimated arrival
+        const estimatedField = document.getElementById('estimatedArrival');
+        if (estimatedField) {
+          estimatedField.value = flightData.estimated;
+        }
+
+        // Set origin airport
+        const originField = document.getElementById('originAirport');
+        if (originField) {
+          originField.value = flightData.origin;
+        }
+
+        // Show status indicator
+        const indicator = document.getElementById('flightStatusIndicator');
+        if (indicator) {
+          indicator.style.display = 'flex';
+          setTimeout(() => {
+            indicator.style.display = 'none';
+          }, 3000);
+        }
+
+        console.log('✅ Flight details populated successfully');
+      }
+
+      // Create stop handler - saves address, airport, and FBO to trip table
+      function handleCreateStop() {
+        console.log('➕ Creating stop...');
+        
+        // Get form values
+        const stopType = document.querySelector('input[name="stopType"]:checked').value;
+        const locationName = document.getElementById('locationName').value.trim();
+        const address1 = document.getElementById('address1').value.trim();
+        const address2 = document.getElementById('address2').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const zipCode = document.getElementById('zipCode').value.trim();
+        const country = document.getElementById('country').value.trim();
+        const phone = document.getElementById('locationPhone').value.trim();
+        const notes = document.getElementById('locationNotes').value.trim();
+        const timeIn = document.getElementById('timeIn').value.trim();
+        
+        // Get airport info if selected
+        const airportCode = document.getElementById('airportSelect').value;
+        const airlineCode = document.getElementById('airlineCode').value;
+        const flightNumber = document.getElementById('flightNumber').value.trim();
+        const terminalGate = document.getElementById('terminalGate').value.trim();
+        const flightStatus = document.getElementById('flightStatus').value.trim();
+        
+        // Get FBO info if selected
+        const fboSelect = document.getElementById('fboSelect').value;
+        let fboInfo = null;
+        if (fboSelect && fboDatabase[fboSelect]) {
+          fboInfo = fboDatabase[fboSelect];
+        }
+
+        // Validate - need either location name or address (unless airport or FBO)
+        if (!locationName && !address1 && !airportCode && !fboSelect) {
+          console.log('⚠️ Need location name, address, airport, or FBO');
+          alert('Please enter a location name, address, select an airport, or select an FBO.');
+          return;
+        }
+
+        // Build full address
+        let fullAddress = address1;
+        if (address2) fullAddress += `, ${address2}`;
+        if (city) fullAddress += `, ${city}`;
+        if (state) fullAddress += ` ${state}`;
+        if (zipCode) fullAddress += ` ${zipCode}`;
+        if (country) fullAddress += `, ${country}`;
+
+        // Create stop object with ALL details including airport and FBO
+        const stopId = 'stop_' + Date.now();
+        const stopData = {
+          id: stopId,
+          stopType: stopType,
+          locationName: locationName || (fboInfo?.name) || (airportCode ? `Airport: ${airportCode}` : ''),
+          address1: address1 || (fboInfo?.address) || '',
+          address2: address2 || (fboInfo?.address ? '' : ''),
+          city: city || (fboInfo?.city) || '',
+          state: state || (fboInfo?.state) || '',
+          zipCode: zipCode || (fboInfo?.zip) || '',
+          country: country || 'US',
+          phone: phone || (fboInfo?.phone) || '',
+          notes: notes || (fboInfo?.services ? `Services: ${fboInfo.services}` : ''),
+          timeIn: timeIn,
+          fullAddress: fullAddress || (fboInfo ? `${fboInfo.address}, ${fboInfo.city}, ${fboInfo.state} ${fboInfo.zip}` : ''),
+          // Airport info
+          airportCode: airportCode,
+          airline: airlineCode,
+          flightNumber: flightNumber,
+          terminalGate: terminalGate,
+          flightStatus: flightStatus,
+          // FBO info
+          fboId: fboSelect,
+          fboName: fboInfo?.name || '',
+          fboEmail: fboInfo?.email || '',
+          createdAt: new Date().toISOString()
+        };
+
+        // Save to global trips array
+        tripStops.push(stopData);
+        console.log('💾 Stop saved to tripStops:', tripStops);
+
+        // Get table body
+        const tableBody = document.getElementById('addressTableBody');
+        
+        // Remove empty row if it exists
+        const emptyRow = tableBody.querySelector('.empty-row');
+        if (emptyRow) {
+          emptyRow.remove();
+        }
+
+        // Create new row with stop type badge
+        const row = document.createElement('tr');
+        row.id = stopId;
+        row.dataset.stopId = stopId;
+        const badgeColor = 
+          stopType === 'pickup' ? '#28a745' :
+          stopType === 'dropoff' ? '#dc3545' :
+          stopType === 'stop' ? '#ffc107' :
+          '#17a2b8';
+        
+        // Build display content with airport and FBO info
+        let displayAddress = fullAddress;
+        let displayExtras = '';
+        
+        if (airportCode) {
+          displayAddress = `✈️ ${airportCode} Airport`;
+          displayExtras = `<div style="font-size: 11px; color: #005aa3; margin-top: 3px; font-weight: 500;">
+            Flight: ${airlineCode}${flightNumber} | Terminal: ${terminalGate} | Status: ${flightStatus}
+          </div>`;
+        }
+        
+        if (fboInfo) {
+          displayAddress = `🛩️ ${fboInfo.name}`;
+          displayExtras = `<div style="font-size: 11px; color: #005aa3; margin-top: 3px;">
+            ${fboInfo.address} | 📞 ${fboInfo.phone}
+          </div>`;
+        }
+        
+        row.innerHTML = `
+          <td><span class="stop-type-badge" style="background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 600;">${stopType.toUpperCase()}</span></td>
+          <td><strong>${stopData.locationName || 'Address'}</strong></td>
+          <td>
+            <div>${displayAddress}</div>
+            <div style="font-size: 11px; color: #666; margin-top: 3px;">
+              ${phone ? '📞 ' + phone + ' | ' : ''}
+              ${timeIn ? '⏰ ' + timeIn : ''}
+            </div>
+            ${displayExtras}
+            ${notes ? '<div style="font-size: 11px; color: #666; margin-top: 3px; font-style: italic;">📝 ' + notes + '</div>' : ''}
+          </td>
+          <td>${timeIn || 'N/A'}</td>
+          <td><button class="btn-remove" style="padding: 4px 8px; font-size: 12px; cursor: pointer;" onclick="removeStop('${stopId}')">✕ Remove</button></td>
+        `;
+        
+        tableBody.appendChild(row);
+        console.log('✅ Stop added to trip table with airport/FBO info');
+
+        // Clear the form
+        document.getElementById('locationName').value = '';
+        document.getElementById('address1').value = '';
+        document.getElementById('address2').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('zipCode').value = '';
+        document.getElementById('locationNotes').value = '';
+        document.getElementById('locationPhone').value = '';
+        document.getElementById('timeIn').value = '';
+        document.getElementById('airportSearch').value = '';
+        document.getElementById('airportSelect').value = '';
+        document.getElementById('airlineSearch').value = '';
+        document.getElementById('airlineCode').value = '';
+        document.getElementById('airlineName').value = '';
+        document.getElementById('flightNumber').value = '';
+        document.getElementById('terminalGate').value = '';
+        document.getElementById('flightStatus').value = '';
+        document.getElementById('fboSelect').value = '';
+        document.querySelector('input[name="stopType"][value="pickup"]').checked = true;
+
+        // Show success feedback
+        const createBtn = document.getElementById('createStopBtn');
+        const originalText = createBtn.textContent;
+        createBtn.textContent = '✓ Added!';
+        createBtn.style.background = '#28a745';
+        createBtn.style.color = 'white';
+        
+        setTimeout(() => {
+          createBtn.textContent = originalText;
+          createBtn.style.background = '';
+          createBtn.style.color = '';
+        }, 1500);
+
+        console.log('✅ Form cleared and ready for next stop');
+      }
+
+      // Remove stop from table and data array
+      function removeStop(stopId) {
+        console.log('🗑️ Removing stop:', stopId);
+        
+        // Remove from DOM
+        const row = document.getElementById(stopId);
+        if (row) {
+          row.remove();
+        }
+
+        // Remove from tripStops array
+        tripStops = tripStops.filter(stop => stop.id !== stopId);
+        console.log('✅ Stop removed, remaining stops:', tripStops);
+
+        // Show empty state if no stops left
+        const tableBody = document.getElementById('addressTableBody');
+        if (tableBody.children.length === 0) {
+          const emptyRow = document.createElement('tr');
+          emptyRow.className = 'empty-row';
+          emptyRow.innerHTML = '<td colspan="5" class="empty-message">No addresses added yet. Use the form below to add addresses.</td>';
+          tableBody.appendChild(emptyRow);
+        }
+      }
+
+      // Location search handler - searches for businesses and landmarks
+      function handleLocationSearch(query) {
+        console.log('🔍 Searching locations:', query);
+        
+        // Clear previous timeout
+        clearTimeout(locationSearchTimeout);
+        
+        if (query.length < 2) {
+          document.getElementById('locationNameSuggestions').classList.remove('active');
+          return;
+        }
+
+        // Debounce API call - wait 300ms after user stops typing
+        locationSearchTimeout = setTimeout(() => {
+          console.log('📡 Calling location API for:', query);
+          searchNominatimLocations(query)
+            .then(results => {
+              console.log('✅ Location results received:', results);
+              displayLocationSuggestions(results);
+            })
+            .catch(error => {
+              console.error('❌ Location search error:', error);
+              document.getElementById('locationNameSuggestions').innerHTML = '<div style="padding: 10px 12px; color: #d00; font-size: 12px;">Error searching locations. Try again.</div>';
+              document.getElementById('locationNameSuggestions').classList.add('active');
+            });
+        }, 300);
+      }
+
+      // Address search handler - searches for street addresses
+      function handleAddressSearch(query) {
+        console.log('🔍 Searching addresses:', query);
+        
+        // Clear previous timeout
+        clearTimeout(addressSearchTimeout);
+        
+        if (query.length < 3) {
+          document.getElementById('addressSuggestions').classList.remove('active');
+          return;
+        }
+
+        // Debounce API call - wait 300ms after user stops typing
+        addressSearchTimeout = setTimeout(() => {
+          console.log('📡 Calling address API for:', query);
+          searchNominatimAddresses(query)
+            .then(results => {
+              console.log('✅ Address results received:', results);
+              displayAddressSuggestions(results);
+            })
+            .catch(error => {
+              console.error('❌ Address search error:', error);
+              document.getElementById('addressSuggestions').innerHTML = '<div style="padding: 10px 12px; color: #d00; font-size: 12px;">Error searching addresses. Try again.</div>';
+              document.getElementById('addressSuggestions').classList.add('active');
+            });
+        }, 300);
+      }
+
+      // Search Nominatim API for locations and businesses
+      async function searchNominatimLocations(query) {
+        try {
+          console.log('🌐 Fetching from Nominatim API (locations)...');
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=8&type=amenity,tourism,shop,hotel,restaurant`,
+            {
+              headers: {
+                'User-Agent': 'RELIA-LIMO-RESERVATION/1.0'
+              }
+            }
+          );
+          
+          if (!response.ok) {
+            console.error('API response not ok:', response.status);
+            throw new Error(`API error: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('✅ Nominatim location results:', data);
+          
+          if (!Array.isArray(data)) {
+            console.error('Unexpected response format:', data);
+            return [];
+          }
+          
+          return data;
+        } catch (error) {
+          console.error('❌ Nominatim API error:', error);
+          throw error;
+        }
+      }
+
+      // Search Nominatim API for addresses
+      async function searchNominatimAddresses(query) {
+        try {
+          console.log('🌐 Fetching from Nominatim API (addresses)...');
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=8`,
+            {
+              headers: {
+                'User-Agent': 'RELIA-LIMO-RESERVATION/1.0'
+              }
+            }
+          );
+          
+          if (!response.ok) {
+            console.error('API response not ok:', response.status);
+            throw new Error(`API error: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('✅ Nominatim address results:', data);
+          
+          if (!Array.isArray(data)) {
+            console.error('Unexpected response format:', data);
+            return [];
+          }
+          
+          return data;
+        } catch (error) {
+          console.error('❌ Nominatim API error:', error);
+          throw error;
+        }
+      }
+
+      // Display location suggestions
+      function displayLocationSuggestions(results) {
+        const container = document.getElementById('locationNameSuggestions');
+        
+        if (!results || results.length === 0) {
+          container.innerHTML = '<div style="padding: 10px 12px; color: #999; font-size: 12px;">No locations found. Try a different search.</div>';
+          container.classList.add('active');
+          console.log('No results to display');
+          return;
+        }
+
+        console.log('Displaying', results.length, 'location suggestions');
+        
+        try {
+          container.innerHTML = results.slice(0, 8).map((result, index) => {
+            const resultStr = JSON.stringify(result).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            return `
+              <div class="location-suggestion-item" onclick="selectLocationSuggestion(${index}, JSON.parse('${resultStr}'))">
+                <div style="font-weight: 600; color: #333; font-size: 13px;">${result.name || 'Unknown'}</div>
+                <div style="font-size: 11px; color: #666;">
+                  ${result.address?.suburb || result.address?.city || ''} ${result.address?.state || ''} ${result.address?.postcode || ''}
+                </div>
+                <div style="font-size: 10px; color: #999;">
+                  ${result.type || 'Location'} • Lat: ${parseFloat(result.lat).toFixed(4)}, Lon: ${parseFloat(result.lon).toFixed(4)}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          container.classList.add('active');
+        } catch (error) {
+          console.error('Error rendering suggestions:', error);
+          container.innerHTML = '<div style="padding: 10px 12px; color: #d00; font-size: 12px;">Error displaying results.</div>';
+          container.classList.add('active');
+        }
+      }
+
+      // Display address suggestions
+      function displayAddressSuggestions(results) {
+        const container = document.getElementById('addressSuggestions');
+        
+        if (!results || results.length === 0) {
+          container.innerHTML = '<div style="padding: 10px 12px; color: #999; font-size: 12px;">No addresses found. Try a different search.</div>';
+          container.classList.add('active');
+          console.log('No results to display');
+          return;
+        }
+
+        console.log('Displaying', results.length, 'address suggestions');
+        
+        try {
+          container.innerHTML = results.slice(0, 8).map((result, index) => {
+            const resultStr = JSON.stringify(result).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            return `
+              <div class="address-suggestion-item" onclick="selectAddressSuggestion(${index}, JSON.parse('${resultStr}'))">
+                <div style="font-weight: 600; color: #333; font-size: 13px;">${result.address?.road || result.name || 'Address'}</div>
+                <div style="font-size: 11px; color: #666;">
+                  ${result.address?.city || result.address?.town || ''}, 
+                  ${result.address?.state || ''} 
+                  ${result.address?.postcode || ''}
+                </div>
+                <div style="font-size: 10px; color: #999;">
+                  ${result.address?.country || 'Unknown'} • Lat: ${parseFloat(result.lat).toFixed(4)}, Lon: ${parseFloat(result.lon).toFixed(4)}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          container.classList.add('active');
+        } catch (error) {
+          console.error('Error rendering suggestions:', error);
+          container.innerHTML = '<div style="padding: 10px 12px; color: #d00; font-size: 12px;">Error displaying results.</div>';
+          container.classList.add('active');
+        }
+      }
+
+      // Select location suggestion
+      function selectLocationSuggestion(index, result) {
+        console.log('✅ Selected location:', result);
+        
+        // Populate location name
+        document.getElementById('locationName').value = result.name || '';
+        
+        // Populate address details
+        const address = result.address || {};
+        document.getElementById('address1').value = address.road ? address.road : (address.footway || '');
+        document.getElementById('address2').value = address.house_number || '';
+        document.getElementById('city').value = address.city || address.town || address.suburb || '';
+        
+        // Set state/province
+        const stateSelect = document.getElementById('state');
+        if (address.state) {
+          // Try to find matching state code
+          const stateCode = address.state.substring(0, 2).toUpperCase();
+          stateSelect.value = stateCode;
+        }
+        
+        document.getElementById('zipCode').value = address.postcode || '';
+        document.getElementById('country').value = address.country_code ? address.country_code.toUpperCase() : 'US';
+        
+        // Clear suggestions immediately
+        document.getElementById('locationNameSuggestions').classList.remove('active');
+        document.getElementById('locationNameSuggestions').innerHTML = '';
+        
+        console.log('✅ Location details populated and suggestions cleared');
+      }
+
+      // Select address suggestion
+      function selectAddressSuggestion(index, result) {
+        console.log('✅ Selected address:', result);
+        
+        // Populate address details
+        const address = result.address || {};
+        document.getElementById('address1').value = address.road || '';
+        document.getElementById('address2').value = address.house_number || '';
+        document.getElementById('city').value = address.city || address.town || address.suburb || '';
+        
+        // Set state/province
+        const stateSelect = document.getElementById('state');
+        if (address.state) {
+          const stateCode = address.state.substring(0, 2).toUpperCase();
+          stateSelect.value = stateCode;
+        }
+        
+        document.getElementById('zipCode').value = address.postcode || '';
+        document.getElementById('country').value = address.country_code ? address.country_code.toUpperCase() : 'US';
+        
+        // Auto-populate location name if empty
+        if (!document.getElementById('locationName').value) {
+          document.getElementById('locationName').value = result.name || (address.road + ' ' + (address.house_number || ''));
+        }
+        
+        // Clear suggestions immediately
+        document.getElementById('addressSuggestions').classList.remove('active');
+        document.getElementById('addressSuggestions').innerHTML = '';
+        
+        console.log('✅ Address details populated and suggestions cleared');
+      }
+
+      // FBO selection handler
+      function handleFBOSelection(fboId) {
+        console.log('🛩️ FBO selected:', fboId);
+        
+        if (!fboId) {
+          console.log('No FBO selected');
+          return;
+        }
+
+        const fboData = fboDatabase[fboId];
+        if (!fboData) {
+          console.log('FBO not found in database');
+          return;
+        }
+
+        // Auto-populate FBO details into the address form
+        console.log('📝 Auto-populating FBO details:', fboData);
+        
+        // Set location name
+        const locationNameInput = document.getElementById('locationName');
+        if (locationNameInput) {
+          locationNameInput.value = fboData.name;
+        }
+
+        // Set address 1
+        const address1Input = document.getElementById('address1');
+        if (address1Input) {
+          address1Input.value = fboData.address;
+        }
+
+        // Set city
+        const cityInput = document.getElementById('city');
+        if (cityInput) {
+          cityInput.value = fboData.city;
+        }
+
+        // Set state
+        const stateInput = document.getElementById('state');
+        if (stateInput) {
+          stateInput.value = 'MN';
+        }
+
+        // Set zip code
+        const zipInput = document.getElementById('zipCode');
+        if (zipInput) {
+          zipInput.value = fboData.zip;
+        }
+
+        // Set phone number
+        const phoneInput = document.getElementById('locationPhone');
+        if (phoneInput) {
+          phoneInput.value = fboData.phone;
+        }
+
+        // Set services in location notes
+        const notesInput = document.getElementById('locationNotes');
+        if (notesInput) {
+          notesInput.value = `Services: ${fboData.services}\nEmail: ${fboData.email}`;
+        }
+
+        // Show success feedback
+        const fboSelect = document.getElementById('fboSelect');
+        const originalStyle = fboSelect.style.backgroundColor;
+        fboSelect.style.backgroundColor = '#d4edda';
+        
+        setTimeout(() => {
+          fboSelect.style.backgroundColor = originalStyle;
+        }, 1500);
+
+        console.log('✅ FBO details auto-populated successfully');
+      }
+    </script>
+    <script type="module" src="reservation-form.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ChatManager.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ImageGenerator.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ProgressLogger.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/OGP.js"></script>
+  </body>
+</html>

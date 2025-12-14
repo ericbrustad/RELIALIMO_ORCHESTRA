@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+    <div class="tools-container">
+        <!-- Tab Navigation -->
+        <div class="tools-tabs">
+            <button class="tools-tab active" data-tab="print-queue">Print Queue</button>
+        </div>
+
+        <!-- Print Queue Tab -->
+        <div class="tools-content active" id="print-queue">
+            <div class="print-queue-panel">
+                <div class="queue-controls">
+                    <div class="page-info">
+                        <span>Page:</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-remove" onclick="removeSelected()">Remove Selected</button>
+                        <button class="btn-print" onclick="printSelected()">Print Selected</button>
+                    </div>
+                </div>
+
+                <div class="queue-table-wrapper">
+                    <table class="queue-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="queueTableBody">
+                            <tr class="empty-row">
+                                <td colspan="4" class="empty-message">Print Queue is Empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="queue-footer">
+                    <div class="page-size">
+                        <label>Page Size:</label>
+                        <select id="pageSize" onchange="changePageSize()">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="tools.js"></script>
+</body>
+</html>

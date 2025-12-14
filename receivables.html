@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receivables - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="receivables.css">
+</head>
+<body>
+    <div class="receivables-container">
+        <!-- Tab Navigation -->
+        <div class="receivables-tabs">
+            <button class="receivables-tab active" data-tab="create-invoices">Create Invoices</button>
+            <button class="receivables-tab" data-tab="receive-payments">Receive Payments</button>
+            <button class="receivables-tab" data-tab="invoices">Invoices</button>
+            <button class="receivables-tab" data-tab="closed-invoices">Closed Invoices</button>
+            <button class="receivables-tab" data-tab="pending-transactions">Pending Transactions</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Create Invoices Tab -->
+            <div id="createInvoicesTab" class="receivables-tab-content active">
+                <div class="content-section">
+                    <h2 class="section-title">Create Invoices</h2>
+                    
+                    <div class="search-panel">
+                        <div class="search-header">
+                            <h3 class="subsection-title">Search Reservations</h3>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="includeUnconfirmed">
+                                <span>Include Unconfirmed Trips</span>
+                            </label>
+                        </div>
+                        
+                        <form class="invoice-search-form" id="invoiceSearchForm">
+                            <div class="search-row">
+                                <div class="search-field">
+                                    <label class="search-label">Group By</label>
+                                    <select class="search-input" name="groupBy">
+                                        <option value="">Select...</option>
+                                        <option value="company">Company</option>
+                                        <option value="passenger">Passenger</option>
+                                        <option value="date">Date</option>
+                                        <option value="type">Trip Type</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <label class="search-label">Search For</label>
+                                    <input type="text" class="search-input" name="searchFor" placeholder="Enter search term...">
+                                </div>
+                                <div class="search-field">
+                                    <label class="search-label">Search In</label>
+                                    <select class="search-input" name="searchIn">
+                                        <option value="all">All Fields</option>
+                                        <option value="conf">Confirmation #</option>
+                                        <option value="passenger">Passenger Name</option>
+                                        <option value="company">Company Name</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <label class="search-label">Date From</label>
+                                    <input type="date" class="search-input" name="dateFrom">
+                                </div>
+                                <div class="search-field">
+                                    <label class="search-label">Date To</label>
+                                    <input type="date" class="search-input" name="dateTo">
+                                </div>
+                                <div class="search-field search-button-field">
+                                    <button type="submit" class="btn btn-primary">GO</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-section">
+                        <div class="notice-banner notice-warning">
+                            ⚠️ No outstanding trips to be billed
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receive Payments Tab -->
+            <div id="receivePaymentsTab" class="receivables-tab-content">
+                <div class="content-section">
+                    <h2 class="section-title unpaid-invoices-title">Unpaid Invoices</h2>
+                    
+                    <div class="results-section">
+                        <div class="unpaid-accounts-list">
+                            <div class="account-row">
+                                <div class="account-checkbox">
+                                    <input type="checkbox" class="account-checkbox-input">
+                                </div>
+                                <div class="account-info">
+                                    <span class="account-name">Accounts: Payable - Limo Network Nationwide</span>
+                                </div>
+                                <div class="account-invoice-count">
+                                    <span class="invoice-count-label">Invoices: 1</span>
+                                </div>
+                                <div class="account-actions">
+                                    <a href="#" class="apply-payment-link">APPLY PAYMENT(S) TO THIS ACCOUNT >></a>
+                                </div>
+                            </div>
+
+                            <div class="account-row">
+                                <div class="account-checkbox">
+                                    <input type="checkbox" class="account-checkbox-input">
+                                </div>
+                                <div class="account-info">
+                                    <span class="account-name">Accounts: Payable - Bespoke Transportation</span>
+                                </div>
+                                <div class="account-invoice-count">
+                                    <span class="invoice-count-label">Invoices: 1</span>
+                                </div>
+                                <div class="account-actions">
+                                    <a href="#" class="apply-payment-link">APPLY PAYMENT(S) TO THIS ACCOUNT >></a>
+                                </div>
+                            </div>
+
+                            <div class="account-row">
+                                <div class="account-checkbox">
+                                    <input type="checkbox" class="account-checkbox-input">
+                                </div>
+                                <div class="account-info">
+                                    <span class="account-name">Perry, Dan - Salvation Army</span>
+                                </div>
+                                <div class="account-invoice-count">
+                                    <span class="invoice-count-label">Invoices: 1</span>
+                                </div>
+                                <div class="account-actions">
+                                    <a href="#" class="apply-payment-link">APPLY PAYMENT(S) TO THIS ACCOUNT >></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="total-outstanding">
+                            <span class="total-label">Total Amount Outstanding:</span>
+                            <span class="total-amount">$ 2485.01</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoices Tab -->
+            <div id="invoicesTab" class="receivables-tab-content">
+                <div class="content-section">
+                    <div class="invoices-header">
+                        <div class="search-panel-inline">
+                            <div class="search-inline-group">
+                                <label class="inline-label">Search</label>
+                                <input type="text" class="inline-input" placeholder="Search invoice # and bill to">
+                            </div>
+                            <div class="search-inline-group">
+                                <label class="inline-label">Date</label>
+                                <select class="inline-input inline-select-small">
+                                    <option value="bill">Bill</option>
+                                    <option value="due">Due</option>
+                                </select>
+                                <input type="date" class="inline-input inline-input-date">
+                                <span class="inline-separator">to</span>
+                                <input type="date" class="inline-input inline-input-date">
+                            </div>
+                            <div class="search-inline-group">
+                                <label class="inline-label">Finalized Status</label>
+                                <div class="button-group">
+                                    <button type="button" class="filter-btn active" data-filter="finalized-all">All</button>
+                                    <button type="button" class="filter-btn" data-filter="finalized-yes">Finalized</button>
+                                    <button type="button" class="filter-btn" data-filter="finalized-no">Unfinalized</button>
+                                </div>
+                            </div>
+                            <div class="search-inline-group">
+                                <label class="inline-label">Paid Status</label>
+                                <div class="button-group">
+                                    <button type="button" class="filter-btn active" data-filter="paid-all">All</button>
+                                    <button type="button" class="filter-btn" data-filter="paid-yes">Paid</button>
+                                    <button type="button" class="filter-btn" data-filter="paid-no">Unpaid</button>
+                                </div>
+                            </div>
+                            <div class="search-inline-group">
+                                <button type="button" class="btn btn-primary btn-search-inline">Search</button>
+                            </div>
+                        </div>
+                        <div class="bulk-actions">
+                            <button class="action-btn" id="invoiceSelected">Invoice selected</button>
+                            <button class="action-btn" id="unfinalizeSelected">Unfinalize selected</button>
+                            <button class="action-btn" id="closeSelected">Close selected</button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <div class="table-container">
+                            <table class="invoices-table">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-col"><input type="checkbox" id="selectAllInvoices"></th>
+                                        <th>Invoice #</th>
+                                        <th>Billing Contact</th>
+                                        <th>Company</th>
+                                        <th>Bill Date</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Finalized</th>
+                                        <th>Total</th>
+                                        <th>Outstanding</th>
+                                        <th class="actions-col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoicesTableBody">
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">176</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Executive Transportation</td>
+                                        <td>05/06/2021</td>
+                                        <td>05/06/2021</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 45.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">200</a></td>
+                                        <td>Rafael Machado</td>
+                                        <td>JR Copier of MN</td>
+                                        <td>08/22/2021</td>
+                                        <td>08/22/2021</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 200.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">202</a></td>
+                                        <td>Get Transfer</td>
+                                        <td>Get Transfer</td>
+                                        <td>08/22/2021</td>
+                                        <td>09/21/2021</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 76.95</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">223</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Patriot Limousine LLC</td>
+                                        <td>11/14/2021</td>
+                                        <td>11/14/2021</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 525.19</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">224</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Service Limousine LLC</td>
+                                        <td>11/16/2022</td>
+                                        <td>11/16/2022</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 274.24</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">254</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Sir Preme Executive Transportation</td>
+                                        <td>02/26/2025</td>
+                                        <td>02/26/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 85.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">327</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>TORINO - NY. LLC</td>
+                                        <td>07/20/2025</td>
+                                        <td>07/20/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 0.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">328</a></td>
+                                        <td>AJ Schaller</td>
+                                        <td>For Sure Luxury</td>
+                                        <td>07/20/2025</td>
+                                        <td>07/20/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 0.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Finalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">330</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Modern Shuttle Transportation (MST)</td>
+                                        <td>07/20/2025</td>
+                                        <td>07/20/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 125.00</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">331</a></td>
+                                        <td>Angel Fueles Mitchell</td>
+                                        <td></td>
+                                        <td>08/28/2025</td>
+                                        <td>08/28/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 279.40</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Unfinalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">332</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Limo Network Nationwide</td>
+                                        <td>08/29/2025</td>
+                                        <td>08/29/2025</td>
+                                        <td><span class="status-overdue">⚠ 102 days overdue</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 1045.70</td>
+                                        <td class="amount-overdue">$ 1045.70</td>
+                                        <td><button class="action-mini-btn">Finalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">333</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>LV VIP Concierge, LLC</td>
+                                        <td>08/31/2025</td>
+                                        <td>08/31/2025</td>
+                                        <td><span class="status-badge status-paid">✓ Paid</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 1785.60</td>
+                                        <td>$ 0.00</td>
+                                        <td><button class="action-mini-btn">Finalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">334</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Bespoke Transportation</td>
+                                        <td>11/10/2025</td>
+                                        <td>11/10/2025</td>
+                                        <td><span class="status-overdue">⚠ 32 days overdue</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 156.67</td>
+                                        <td class="amount-overdue">$ 156.67</td>
+                                        <td><button class="action-mini-btn">Finalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-invoice"></td>
+                                        <td><a href="#" class="invoice-number">335</a></td>
+                                        <td>Dan Furry</td>
+                                        <td>Salvation Army</td>
+                                        <td>11/17/2025</td>
+                                        <td>11/17/2025</td>
+                                        <td><span class="status-overdue">⚠ 25 days overdue</span></td>
+                                        <td><span class="finalized-icon">✓</span></td>
+                                        <td>$ 2246.40</td>
+                                        <td class="amount-overdue">$ 1279.64</td>
+                                        <td><button class="action-mini-btn">Finalize</button> <button class="action-mini-btn">Close</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Closed Invoices Tab -->
+            <div id="closedInvoicesTab" class="receivables-tab-content">
+                <div class="content-section">
+                    <div class="closed-invoices-header">
+                        <div class="search-panel-inline">
+                            <div class="search-inline-group">
+                                <label class="inline-label">Search</label>
+                                <input type="text" class="inline-input inline-input-wide" placeholder="Search invoice # and bill to">
+                            </div>
+                            <div class="search-inline-group">
+                                <label class="inline-label">Date</label>
+                                <select class="inline-input inline-select-small">
+                                    <option value="bill">Bill</option>
+                                    <option value="due">Due</option>
+                                </select>
+                                <input type="date" class="inline-input inline-input-date" placeholder="from">
+                                <span class="inline-separator">to</span>
+                                <input type="date" class="inline-input inline-input-date">
+                            </div>
+                            <div class="search-inline-group">
+                                <button type="button" class="btn btn-primary btn-search-inline">Search</button>
+                            </div>
+                        </div>
+                        <div class="bulk-actions">
+                            <button class="action-btn" id="reopenSelected">Reopen selected</button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <div class="table-container">
+                            <table class="invoices-table">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-col"><input type="checkbox" id="selectAllClosed"></th>
+                                        <th>Invoice #</th>
+                                        <th>Billing Contact</th>
+                                        <th>Company</th>
+                                        <th>Bill Date</th>
+                                        <th>Due Date</th>
+                                        <th>Total Amount</th>
+                                        <th class="actions-col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="closedInvoicesTableBody">
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">173</a></td>
+                                        <td>Jason St.Martin</td>
+                                        <td></td>
+                                        <td>02/02/2021</td>
+                                        <td>02/02/2021</td>
+                                        <td>$ 193.85</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">175</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Ram Transportation</td>
+                                        <td>05/02/2021</td>
+                                        <td>05/02/2021</td>
+                                        <td>$ 95.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">177</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Nordic Transportation</td>
+                                        <td>05/06/2021</td>
+                                        <td>05/06/2021</td>
+                                        <td>$ 775.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">178</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Nordic Transportation</td>
+                                        <td>05/12/2021</td>
+                                        <td>05/12/2021</td>
+                                        <td>$ 193.25</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">179</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Ram Transportation</td>
+                                        <td>06/13/2021</td>
+                                        <td>06/13/2021</td>
+                                        <td>$ 225.04</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">180</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Ram Transportation</td>
+                                        <td>06/15/2021</td>
+                                        <td>06/15/2021</td>
+                                        <td>$ 79.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">181</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Sir Preme Executive Transportation</td>
+                                        <td>06/20/2021</td>
+                                        <td>06/20/2021</td>
+                                        <td>$ 650.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">182</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Ram Transportation</td>
+                                        <td>07/06/2021</td>
+                                        <td>07/06/2021</td>
+                                        <td>$ 193.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">183</a></td>
+                                        <td>Savoya Service</td>
+                                        <td>SAVOYA</td>
+                                        <td>07/15/2021</td>
+                                        <td>08/14/2021</td>
+                                        <td>$ 879.25</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">184</a></td>
+                                        <td>Denise Thai</td>
+                                        <td></td>
+                                        <td>07/16/2021</td>
+                                        <td>07/16/2021</td>
+                                        <td>$ 220.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">185</a></td>
+                                        <td>Magdiel Maceda</td>
+                                        <td>Maceda worldwide</td>
+                                        <td>07/24/2021</td>
+                                        <td>07/24/2021</td>
+                                        <td>$ 1625.79</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">186</a></td>
+                                        <td>Andre Kasperonich</td>
+                                        <td>Eclipse Global Transportation</td>
+                                        <td>07/29/2021</td>
+                                        <td>07/29/2021</td>
+                                        <td>$ 85.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">187</a></td>
+                                        <td>AJ Schaller</td>
+                                        <td>For Sure Luxury</td>
+                                        <td>08/11/2021</td>
+                                        <td>08/11/2021</td>
+                                        <td>$ 84.80</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">188</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Sir Preme Executive Transportation</td>
+                                        <td>08/11/2021</td>
+                                        <td>08/11/2021</td>
+                                        <td>$ 240.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">189</a></td>
+                                        <td>Payable Accounts</td>
+                                        <td>Ram Transportation</td>
+                                        <td>08/15/2021</td>
+                                        <td>08/15/2021</td>
+                                        <td>$ 85.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">190</a></td>
+                                        <td>Cindy Barber</td>
+                                        <td>Committee Films</td>
+                                        <td>08/15/2021</td>
+                                        <td>08/15/2021</td>
+                                        <td>$ 96.40</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">191</a></td>
+                                        <td>Jack Culbertson</td>
+                                        <td></td>
+                                        <td>08/15/2021</td>
+                                        <td>08/15/2021</td>
+                                        <td>$ 19.87</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">192</a></td>
+                                        <td>Savoya Service</td>
+                                        <td>SAVOYA</td>
+                                        <td>08/16/2021</td>
+                                        <td>09/15/2021</td>
+                                        <td>$ 731.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">193</a></td>
+                                        <td>Andre Kasperonich</td>
+                                        <td>Eclipse Global Transportation</td>
+                                        <td>08/16/2021</td>
+                                        <td>08/16/2021</td>
+                                        <td>$ 65.00</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox-closed"></td>
+                                        <td><a href="#" class="invoice-number">195</a></td>
+                                        <td>Richard Szonholm</td>
+                                        <td>The LBS Transportation. LLC</td>
+                                        <td>08/22/2021</td>
+                                        <td>08/22/2021</td>
+                                        <td>$ 437.86</td>
+                                        <td><button class="action-mini-btn">Reopen</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Transactions Tab -->
+            <div id="pendingTransactionsTab" class="receivables-tab-content">
+                <div class="content-section">
+                    <!-- Sub-tabs -->
+                    <div class="pending-subtabs">
+                        <button class="pending-subtab active" data-subtab="invoices">Invoices</button>
+                        <button class="pending-subtab" data-subtab="reservations">Reservations</button>
+                    </div>
+
+                    <!-- Invoices Subtab -->
+                    <div id="pendingInvoicesSubtab" class="pending-subtab-content active">
+                        <h2 class="section-title pending-title">Payments Applied to Invoices</h2>
+                        
+                        <div class="pending-search-panel">
+                            <form class="pending-search-form">
+                                <div class="pending-search-row">
+                                    <div class="pending-field">
+                                        <label class="pending-label">From</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Bill To</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Inv#</label>
+                                        <input type="text" class="pending-input pending-input-short" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">CC#</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Exp Date</label>
+                                        <input type="text" class="pending-input pending-input-short" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <button type="submit" class="btn btn-primary btn-pending-search">Search</button>
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Show All</label>
+                                        <select class="pending-input pending-input-short">
+                                            <option value="all">All</option>
+                                            <option value="today">Today</option>
+                                            <option value="week">This Week</option>
+                                            <option value="month">This Month</option>
+                                        </select>
+                                    </div>
+                                    <div class="pending-field">
+                                        <button type="button" class="btn btn-primary btn-pending-search">Find</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="results-section">
+                            <div class="table-container">
+                                <table class="pending-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Bill To</th>
+                                            <th>Inv#</th>
+                                            <th>Trans Type</th>
+                                            <th>CC#</th>
+                                            <th>Exp Date</th>
+                                            <th>Auth#</th>
+                                            <th>Trans ID</th>
+                                            <th>F-ock'd By</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="no-data-row">
+                                            <td colspan="10" class="no-data-cell">--Not Found--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reservations Subtab -->
+                    <div id="pendingReservationsSubtab" class="pending-subtab-content">
+                        <h2 class="section-title pending-title">Payments Applied to Reservations</h2>
+                        
+                        <div class="pending-search-panel">
+                            <form class="pending-search-form">
+                                <div class="pending-search-row">
+                                    <div class="pending-field">
+                                        <label class="pending-label">From</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Passenger</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Conf#</label>
+                                        <input type="text" class="pending-input pending-input-short" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">CC#</label>
+                                        <input type="text" class="pending-input" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Exp Date</label>
+                                        <input type="text" class="pending-input pending-input-short" placeholder="">
+                                    </div>
+                                    <div class="pending-field">
+                                        <button type="submit" class="btn btn-primary btn-pending-search">Search</button>
+                                    </div>
+                                    <div class="pending-field">
+                                        <label class="pending-label">Show All</label>
+                                        <select class="pending-input pending-input-short">
+                                            <option value="all">All</option>
+                                            <option value="today">Today</option>
+                                            <option value="week">This Week</option>
+                                            <option value="month">This Month</option>
+                                        </select>
+                                    </div>
+                                    <div class="pending-field">
+                                        <button type="button" class="btn btn-primary btn-pending-search">Find</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="results-section">
+                            <div class="table-container">
+                                <table class="pending-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Passenger</th>
+                                            <th>Conf#</th>
+                                            <th>Trans Type</th>
+                                            <th>CC#</th>
+                                            <th>Exp Date</th>
+                                            <th>Auth#</th>
+                                            <th>Trans ID</th>
+                                            <th>F-ock'd By</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="no-data-row">
+                                            <td colspan="10" class="no-data-cell">--Not Found--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="receivables.js"></script>
+</body>
+</html>

@@ -1,0 +1,682 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.payables-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+/* Tab Navigation */
+.payables-tabs {
+    display: flex;
+    background: #e8e8e8;
+    border-bottom: 2px solid #ccc;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.payables-tab {
+    padding: 12px 24px;
+    background: #e8e8e8;
+    border: none;
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.payables-tab:hover {
+    background: #f0f0f0;
+}
+
+.payables-tab.active {
+    background: white;
+    border-bottom: 2px solid white;
+    margin-bottom: -2px;
+    font-weight: bold;
+}
+
+/* Content Areas */
+.payables-content {
+    display: none;
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+}
+
+.payables-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Search Panel */
+.search-panel {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-group label {
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.search-group select,
+.search-group input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.search-group select {
+    min-width: 150px;
+}
+
+.date-input {
+    width: 100px;
+}
+
+.to-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.percent-btn {
+    padding: 6px 12px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.percent-btn:hover {
+    background: #555;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 0;
+}
+
+.filter-btn {
+    padding: 6px 16px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.filter-btn:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+.filter-btn:last-child {
+    border-radius: 0 3px 3px 0;
+}
+
+.filter-btn:not(:last-child) {
+    border-right: none;
+}
+
+.filter-btn:hover {
+    background: #f5f5f5;
+}
+
+.filter-btn.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.search-btn {
+    padding: 6px 24px;
+    background: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.search-btn:hover {
+    background: #4cae4c;
+}
+
+/* Drivers Table */
+.drivers-table {
+    flex: 1;
+    overflow: auto;
+}
+
+.drivers-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.driver-row {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.15s;
+}
+
+.driver-row:hover {
+    background: #f9f9f9;
+}
+
+.driver-row td {
+    padding: 12px 15px;
+}
+
+.expand-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.expand-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    text-align: center;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+
+.expand-icon:hover {
+    background: #e8e8e8;
+}
+
+.driver-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.trip-count {
+    color: #666;
+    font-size: 13px;
+}
+
+.trip-count strong {
+    color: #333;
+    font-weight: bold;
+}
+
+.action-cell {
+    text-align: right;
+    width: 150px;
+}
+
+.pay-driver-btn {
+    padding: 6px 16px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pay-driver-btn:hover {
+    background: #555;
+}
+
+/* Affiliates Table */
+.affiliates-table {
+    flex: 1;
+    overflow: auto;
+}
+
+.affiliates-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.affiliate-row {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.15s;
+}
+
+.affiliate-row:hover {
+    background: #f9f9f9;
+}
+
+.affiliate-row td {
+    padding: 12px 15px;
+}
+
+.affiliate-info {
+    width: 60%;
+}
+
+.affiliate-name {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.affiliate-location {
+    color: #888;
+    font-size: 12px;
+}
+
+.amount-cell {
+    color: #666;
+    font-size: 13px;
+}
+
+.amount-due {
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.search-input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+    min-width: 150px;
+}
+
+.pay-affiliate-btn {
+    padding: 6px 16px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pay-affiliate-btn:hover {
+    background: #555;
+}
+
+/* Agents Table */
+.agents-table {
+    flex: 1;
+    overflow: auto;
+}
+
+.agents-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.agent-row {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.15s;
+}
+
+.agent-row:hover {
+    background: #f9f9f9;
+}
+
+.agent-row td {
+    padding: 12px 15px;
+}
+
+.agent-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.pay-agent-btn {
+    padding: 6px 16px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pay-agent-btn:hover {
+    background: #555;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    padding-left: 5px;
+}
+
+/* Date and Name Inputs */
+.date-input-wide {
+    width: 140px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.name-input {
+    width: 180px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* Payroll Logs Table */
+.payroll-logs-table {
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+.payroll-logs-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.payroll-logs-table thead {
+    background: #f0f0f0;
+    border-bottom: 2px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.payroll-logs-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+    border-right: 1px solid #ddd;
+}
+
+.payroll-logs-table th:last-child {
+    border-right: none;
+}
+
+.payroll-logs-table tbody tr {
+    border-bottom: 1px solid #e8e8e8;
+    transition: background-color 0.15s;
+}
+
+.payroll-logs-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.payroll-logs-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #333;
+}
+
+.submit-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.submit-link:hover {
+    text-decoration: underline;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 5px;
+    background: #f9f9f9;
+    border-top: 1px solid #ddd;
+}
+
+.pagination span {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.page-selector {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.page-nav {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 8px;
+}
+
+.page-nav:hover {
+    text-decoration: underline;
+}
+
+/* Empty State */
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    padding: 60px 20px;
+}
+
+.empty-state p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.empty-hint {
+    font-size: 13px;
+    color: #bbb;
+}
+
+/* Show Filters */
+.show-filters {
+    display: flex;
+    gap: 20px;
+    padding: 15px 5px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+/* Bills Search Panel */
+.bills-search {
+    padding: 12px 15px;
+}
+
+.bills-filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-item label {
+    font-size: 11px;
+    font-weight: normal;
+    color: #666;
+}
+
+.small-input {
+    width: 80px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.medium-input {
+    width: 140px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* Paid Bills Table */
+.paid-bills-table {
+    flex: 1;
+    overflow: auto;
+}
+
+.paid-bills-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.paid-bills-table thead {
+    background: #404040;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.paid-bills-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
+    border-right: 1px solid #555;
+}
+
+.paid-bills-table th:last-child {
+    border-right: none;
+}
+
+.paid-bills-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.15s;
+}
+
+.paid-bills-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.paid-bills-table td {
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.type-badge.driver {
+    background: #d9edf7;
+    color: #31708f;
+}
+
+.type-badge.affiliate {
+    background: #fcf8e3;
+    color: #8a6d3b;
+}
+
+.type-badge.agent {
+    background: #dff0d8;
+    color: #3c763d;
+}
+
+.view-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.view-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-group {
+        width: 100%;
+    }
+    
+    .search-group select,
+    .search-group input[type="text"] {
+        flex: 1;
+    }
+}

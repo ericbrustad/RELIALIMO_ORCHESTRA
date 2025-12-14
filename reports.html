@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" href="reports.css">
+</head>
+<body>
+    <div class="reports-container">
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="main-reports">Main Reports</button>
+            <button class="tab-button" data-tab="driver-payment">View Driver Paycmt</button>
+            <button class="tab-button" data-tab="analytics">Reporting & Analytics</button>
+        </div>
+
+        <!-- Main Reports Tab -->
+        <div id="main-reports" class="tab-content active">
+            <div class="reports-layout">
+                <!-- Left Column -->
+                <div class="reports-column left-column">
+                    <!-- Make Revenue Reports -->
+                    <div class="report-section">
+                        <h3>Make Revenue Reports</h3>
+                        <div class="date-range-inline">
+                            <label>From/Until (Day):</label>
+                            <input type="date" id="revenue-from" value="2025-01-01">
+                            <span>to</span>
+                            <input type="date" id="revenue-to" value="2025-12-31">
+                        </div>
+                        
+                        <div class="filter-grid">
+                            <div class="filter-row">
+                                <label>First Name:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Last Name:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>All:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Address:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Zipcode:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>City:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Second Address:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Client Name:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Driver Name:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Affiliate:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Email Address:</label>
+                                <select><option>All</option></select>
+                            </div>
+                            <div class="filter-row">
+                                <label>Payment Method:</label>
+                                <select><option>All</option></select>
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <label>Promo Code:</label>
+                            <select><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>All:</label>
+                            <select><option>All</option></select>
+                        </div>
+
+                        <div class="partial-name-field">
+                            <label>Partial Or Full List Name:</label>
+                            <input type="text" placeholder="Enter name...">
+                        </div>
+
+                        <!-- Checklist of Report Types -->
+                        <div class="report-types-checklist">
+                            <div class="checklist-item"><input type="checkbox" checked> <label>Normal</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Required</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Generated By When</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Required</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Customer 30 Full</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Dispatch/AFF</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Show</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Regional AKA/AFF</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Driver List</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Late Cancel</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Do Not Order</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Unfinished</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>High</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Charge</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Show Not Confirmed</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Late Charge Most</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Required/Passenger</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>No Money</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Passenger List</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Drivers List</label></div>
+                            <div class="checklist-item"><input type="checkbox"> <label>Unassigned</label></div>
+                        </div>
+
+                        <div class="filter-row">
+                            <label>All Res Sort By ColumnOnlyBy:</label>
+                            <select>
+                                <option>Sort by Date/Time</option>
+                                <option>Sort by Customer</option>
+                                <option>Sort by Driver</option>
+                            </select>
+                        </div>
+
+                        <button class="generate-btn">GENERATE REPORT</button>
+
+                        <p class="note">* Output sorted respectively "day" or "day-of-the-billing-charges *MM*"</p>
+                    </div>
+
+                    <!-- Customer Activity Report -->
+                    <div class="report-section">
+                        <h3>Customer Activity Report</h3>
+                        <div class="inline-select">
+                            <label>Report By:</label>
+                            <select>
+                                <option>Last 6 Months</option>
+                                <option>Last 12 Months</option>
+                                <option>Last 24 Months</option>
+                            </select>
+                        </div>
+                        <div class="inline-select">
+                            <label>Output Format:</label>
+                            <select>
+                                <option>Excel Sheet</option>
+                                <option>PDF Report</option>
+                            </select>
+                        </div>
+                        <div class="actions">
+                            <button class="action-link">📂 Filter</button>
+                            <button class="action-link">📊 Revisions</button>
+                        </div>
+                        <div class="inline-field">
+                            <label>Company:</label>
+                            <input type="text" placeholder="All">
+                            <select style="width: 100%; margin-top: 5px;"><option>All</option></select>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Lead Activity Report -->
+                    <div class="report-section">
+                        <h3>Lead Activity Report</h3>
+                        <div class="filter-row">
+                            <label>Report Type:</label>
+                            <select style="width: 100%;">
+                                <option>Billing Contacts</option>
+                                <option>All Contacts</option>
+                                <option>Primary Contacts</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Output Format:</label>
+                            <select style="width: 100%;">
+                                <option>Excel Sheet</option>
+                                <option>PDF Report</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Customer Open Balance Statement -->
+                    <div class="report-section">
+                        <h3>Customer Open Balance Statement</h3>
+                        <div class="filter-row">
+                            <label>Billing Contact (Note):</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date Range:</label>
+                            <input type="date" value="2025-01-01">
+                            <span>to</span>
+                            <input type="date" value="2025-12-31">
+                        </div>
+                        <div class="filter-row">
+                            <label>All Sorting:</label>
+                            <select style="width: 100%;">
+                                <option>Oldest to Newest</option>
+                                <option>Newest to Oldest</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="aging-report">
+                            <label for="aging-report">Use Aging Report</label>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Commission Payment History Report -->
+                    <div class="report-section">
+                        <h3>Commission Payment History Report</h3>
+                        <div class="filter-row">
+                            <label>Billing Contact (Note):</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date Range:</label>
+                            <input type="date" value="2025-01-01">
+                            <span>to</span>
+                            <input type="date" value="2025-12-31">
+                        </div>
+                        <div class="filter-row">
+                            <label>All Searching:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>User:</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="filter-row">
+                            <label>Driver:</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="filter-row">
+                            <label>Member No.:</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="filter-row">
+                            <label>System:</label>
+                            <input type="text" style="width: 100%;">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="rental-match">
+                            <label for="rental-match">* Rental match suggested</label>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="reports-column right-column">
+                    <!-- Daily Schedule Card -->
+                    <div class="report-section">
+                        <h3>Daily Schedule Card</h3>
+                        <div class="schedule-options">
+                            <div class="radio-group">
+                                <input type="radio" name="schedule-date" id="today" checked>
+                                <label for="today">☀️ Today</label>
+                                <input type="radio" name="schedule-date" id="case">
+                                <label for="case">📅 Case</label>
+                                <input type="radio" name="schedule-date" id="staff">
+                                <label for="staff">🗓️ Staff</label>
+                            </div>
+                        </div>
+                        <div class="date-input">
+                            <input type="date" value="2025-01-15">
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Reservation Manifest -->
+                    <div class="report-section">
+                        <h3>Reservation Manifest</h3>
+                        <div class="date-range-inline">
+                            <label>Date From:</label>
+                            <input type="date" value="2025-01-01">
+                        </div>
+                        <div class="filter-row">
+                            <label>Report Type View:</label>
+                            <select style="width: 100%;">
+                                <option>Detailed Trip View</option>
+                                <option>Summary View</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Sort Order:</label>
+                            <select style="width: 100%;">
+                                <option>Date & Time</option>
+                                <option>Customer Name</option>
+                            </select>
+                        </div>
+
+                        <div class="checkbox-group-columns">
+                            <div>
+                                <input type="checkbox" id="pickup-time" checked>
+                                <label for="pickup-time">Pickup On Time</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="billing-contact">
+                                <label for="billing-contact">Billing Contact Info</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="show-rft">
+                                <label for="show-rft">Show RFT</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="hide-rate" checked>
+                                <label for="hide-rate">Hide Rate</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="notable-notes">
+                                <label for="notable-notes">Notable Notes</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="credit-info">
+                                <label for="credit-info">Credit Info</label>
+                            </div>
+                        </div>
+
+                        <div class="date-range-inline" style="margin-top: 10px;">
+                            <label>Date To:</label>
+                            <input type="date" value="2025-12-31">
+                        </div>
+
+                        <div class="filter-row">
+                            <label>All:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Driver/Affiliate:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>All:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Show Payroll Reports -->
+                    <div class="report-section">
+                        <h3>Show Payroll Reports</h3>
+                        <div class="radio-group">
+                            <input type="radio" name="payroll-view" id="main-data" checked>
+                            <label for="main-data">☀️ Main Data</label>
+                            <input type="radio" name="payroll-view" id="hideout-data">
+                            <label for="hideout-data">🔒 Hideout Data Grants</label>
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date From:</label>
+                            <input type="date" value="2025-01-01">
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date To:</label>
+                            <input type="date" value="2025-12-31">
+                        </div>
+                        <div class="filter-row">
+                            <label>Exclude:</label>
+                            <select style="width: 100%;">
+                                <option>None</option>
+                                <option>Exclude Paid</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="calculate-hourly">
+                            <label for="calculate-hourly">Calculate Hourly Pay</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="last-cancel">
+                            <label for="last-cancel">Last Cancel</label>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Monthly Recap Reports -->
+                    <div class="report-section">
+                        <h3>Monthly Recap Reports</h3>
+                        <div class="filter-row">
+                            <label>Monthly:</label>
+                            <select style="width: 100%;">
+                                <option>January</option>
+                                <option>February</option>
+                                <option>March</option>
+                                <option>April</option>
+                                <option>May</option>
+                                <option>June</option>
+                                <option>July</option>
+                                <option>August</option>
+                                <option>September</option>
+                                <option>October</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Year:</label>
+                            <select style="width: 100%;">
+                                <option>2025</option>
+                                <option>2024</option>
+                                <option>2023</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- My Office Reports -->
+                    <div class="report-section">
+                        <h3>My Office Reports</h3>
+                        <div class="filter-row">
+                            <label>Months:</label>
+                            <select style="width: 100%;">
+                                <option>All Dates</option>
+                                <option>Last 3 Months</option>
+                                <option>Last 6 Months</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Show Status:</label>
+                            <select style="width: 100%;">
+                                <option>All Data</option>
+                                <option>Active Only</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Reservation Totals Report -->
+                    <div class="report-section">
+                        <h3>Reservation Totals Report</h3>
+                        <div class="date-range-inline">
+                            <label>Date From:</label>
+                            <input type="date" value="2025-01-01">
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date To:</label>
+                            <input type="date" value="2025-12-31">
+                        </div>
+                        <div class="filter-row">
+                            <label>Affiliate:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Show:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="filter-row">
+                            <label>All:</label>
+                            <select style="width: 100%;"><option>All</option></select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="scheduled-holders">
+                            <label for="scheduled-holders">Scheduled Holders Only</label>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Driver Payment Tab -->
+        <div id="driver-payment" class="tab-content">
+            <div class="single-column-layout">
+                <div class="report-section">
+                    <h3>Driver Payment Report</h3>
+                    <div class="filter-row">
+                        <label>Select Driver:</label>
+                        <select id="driver-select" style="width: 100%;">
+                            <option value="">-- Select Driver --</option>
+                            <option>Alexander Turner</option>
+                            <option>Benjamin Hayes</option>
+                            <option>Carlos Rodriguez</option>
+                            <option>Daniel Martinez</option>
+                            <option>Ethan Williams</option>
+                            <option>Frank Johnson</option>
+                            <option>Gregory Davis</option>
+                            <option>Henry Brown</option>
+                            <option>Isaac Thompson</option>
+                            <option>James Wilson</option>
+                        </select>
+                    </div>
+                    <div class="date-range-inline">
+                        <label>Payment Period:</label>
+                        <input type="date" id="driver-from" value="2025-01-01">
+                        <span>to</span>
+                        <input type="date" id="driver-to" value="2025-01-31">
+                    </div>
+                    <div class="filter-row">
+                        <label>Payment Method:</label>
+                        <select style="width: 100%;">
+                            <option>All Methods</option>
+                            <option>Direct Deposit</option>
+                            <option>Check</option>
+                            <option>Cash</option>
+                        </select>
+                    </div>
+                    <button class="generate-btn">VIEW PAYMENT REPORT</button>
+                </div>
+
+                <div class="report-results" id="driver-payment-results" style="display: none;">
+                    <h3>Payment Summary</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Trip #</th>
+                                <th>Route</th>
+                                <th>Hours</th>
+                                <th>Base Pay</th>
+                                <th>Tips</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>01/05/2025</td>
+                                <td>#10234</td>
+                                <td>LAX → Downtown LA</td>
+                                <td>2.5</td>
+                                <td>$125.00</td>
+                                <td>$25.00</td>
+                                <td>$150.00</td>
+                            </tr>
+                            <tr>
+                                <td>01/08/2025</td>
+                                <td>#10289</td>
+                                <td>Beverly Hills → LAX</td>
+                                <td>1.5</td>
+                                <td>$95.00</td>
+                                <td>$15.00</td>
+                                <td>$110.00</td>
+                            </tr>
+                            <tr>
+                                <td>01/12/2025</td>
+                                <td>#10341</td>
+                                <td>Santa Monica → Malibu</td>
+                                <td>3.0</td>
+                                <td>$180.00</td>
+                                <td>$40.00</td>
+                                <td>$220.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4"><strong>Total for Period:</strong></td>
+                                <td><strong>$400.00</strong></td>
+                                <td><strong>$80.00</strong></td>
+                                <td><strong>$480.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reporting & Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="analytics-layout">
+                <div class="analytics-cards">
+                    <!-- Revenue Analytics -->
+                    <div class="analytics-card">
+                        <h3>📊 Revenue Analytics</h3>
+                        <div class="filter-row">
+                            <label>Time Period:</label>
+                            <select style="width: 100%;">
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                                <option>Year to Date</option>
+                                <option>Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Group By:</label>
+                            <select style="width: 100%;">
+                                <option>Day</option>
+                                <option>Week</option>
+                                <option>Month</option>
+                                <option>Quarter</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE ANALYTICS</button>
+                    </div>
+
+                    <!-- Customer Insights -->
+                    <div class="analytics-card">
+                        <h3>👥 Customer Insights</h3>
+                        <div class="filter-row">
+                            <label>Analysis Type:</label>
+                            <select style="width: 100%;">
+                                <option>Top Customers by Revenue</option>
+                                <option>Customer Acquisition</option>
+                                <option>Customer Retention Rate</option>
+                                <option>Booking Frequency</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Limit:</label>
+                            <select style="width: 100%;">
+                                <option>Top 10</option>
+                                <option>Top 25</option>
+                                <option>Top 50</option>
+                                <option>All</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE INSIGHTS</button>
+                    </div>
+
+                    <!-- Driver Performance -->
+                    <div class="analytics-card">
+                        <h3>🚗 Driver Performance</h3>
+                        <div class="filter-row">
+                            <label>Metric:</label>
+                            <select style="width: 100%;">
+                                <option>Total Trips</option>
+                                <option>Revenue Generated</option>
+                                <option>Average Rating</option>
+                                <option>On-Time Performance</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Period:</label>
+                            <select style="width: 100%;">
+                                <option>This Month</option>
+                                <option>Last Month</option>
+                                <option>This Quarter</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">ANALYZE PERFORMANCE</button>
+                    </div>
+
+                    <!-- Fleet Utilization -->
+                    <div class="analytics-card">
+                        <h3>🚙 Fleet Utilization</h3>
+                        <div class="filter-row">
+                            <label>Vehicle Type:</label>
+                            <select style="width: 100%;">
+                                <option>All Vehicles</option>
+                                <option>Sedans</option>
+                                <option>SUVs</option>
+                                <option>Stretch Limos</option>
+                                <option>Party Buses</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Report Type:</label>
+                            <select style="width: 100%;">
+                                <option>Utilization Rate</option>
+                                <option>Maintenance Schedule</option>
+                                <option>Cost per Mile</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+
+                    <!-- Booking Trends -->
+                    <div class="analytics-card">
+                        <h3>📈 Booking Trends</h3>
+                        <div class="filter-row">
+                            <label>Trend Analysis:</label>
+                            <select style="width: 100%;">
+                                <option>Hourly Distribution</option>
+                                <option>Day of Week</option>
+                                <option>Seasonal Patterns</option>
+                                <option>Route Popularity</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <label>Compare To:</label>
+                            <select style="width: 100%;">
+                                <option>Previous Period</option>
+                                <option>Same Period Last Year</option>
+                                <option>Industry Average</option>
+                            </select>
+                        </div>
+                        <button class="generate-btn">ANALYZE TRENDS</button>
+                    </div>
+
+                    <!-- Financial Overview -->
+                    <div class="analytics-card">
+                        <h3>💰 Financial Overview</h3>
+                        <div class="filter-row">
+                            <label>Report Type:</label>
+                            <select style="width: 100%;">
+                                <option>Profit & Loss</option>
+                                <option>Cash Flow</option>
+                                <option>Accounts Receivable Aging</option>
+                                <option>Payment Method Distribution</option>
+                            </select>
+                        </div>
+                        <div class="date-range-inline">
+                            <label>Date Range:</label>
+                            <input type="date" value="2025-01-01">
+                            <span>to</span>
+                            <input type="date" value="2025-12-31">
+                        </div>
+                        <button class="generate-btn">GENERATE REPORT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="reports.js"></script>
+</body>
+</html>

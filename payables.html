@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payables - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="payables.css">
+</head>
+<body>
+    <div class="payables-container">
+        <!-- Tab Navigation -->
+        <div class="payables-tabs">
+            <button class="payables-tab active" data-tab="pay-drivers">Pay Drivers</button>
+            <button class="payables-tab" data-tab="driver-payroll-logs">Driver Payroll Logs</button>
+            <button class="payables-tab" data-tab="pay-affiliates">Pay Affiliates</button>
+            <button class="payables-tab" data-tab="pay-agents">Pay Agents</button>
+            <button class="payables-tab" data-tab="all-paid-bills">All Paid Bills</button>
+        </div>
+
+        <!-- Pay Drivers Tab -->
+        <div class="payables-content active" id="pay-drivers">
+            <!-- Search Panel -->
+            <div class="search-panel">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Search for:</label>
+                        <select id="search-for-driver">
+                            <option value="">Not selected</option>
+                            <option value="name">Driver Name</option>
+                            <option value="unpaid">Unpaid Only</option>
+                            <option value="paid">Paid Only</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Search in:</label>
+                        <input type="text" id="search-in-driver" placeholder="">
+                    </div>
+                    <div class="search-group">
+                        <label>Date:</label>
+                        <input type="text" id="date-from-driver" placeholder="From" class="date-input">
+                        <span class="to-label">To</span>
+                        <input type="text" id="date-to-driver" placeholder="" class="date-input">
+                        <button class="percent-btn">%</button>
+                    </div>
+                    <div class="search-group">
+                        <label>Paid Status:</label>
+                        <div class="button-group">
+                            <button class="filter-btn active" data-status="all">All</button>
+                            <button class="filter-btn" data-status="paid">Paid</button>
+                            <button class="filter-btn" data-status="unpaid">Unpaid</button>
+                        </div>
+                    </div>
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
+
+            <!-- Drivers Table -->
+            <div class="drivers-table">
+                <table>
+                    <tbody>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">--Ansar</td>
+                            <td class="trip-count">Trips: <strong>5</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Ansari Tony</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Brustad Eric</td>
+                            <td class="trip-count">Trips: <strong>5813</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Calafayud Ruben</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Doyle Mike</td>
+                            <td class="trip-count">Trips: <strong>4</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Hinea Greg</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Insasingnay Tune</td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Kools Cyril</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">LM7056 Rolando</td>
+                            <td class="trip-count">Trips: <strong>3</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Mitchell Evan</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Pulido Jonathan</td>
+                            <td class="trip-count">Trips: <strong>5</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Pulido Juan</td>
+                            <td class="trip-count">Trips: <strong>11</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">S Vladimir</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">Siniko Dustin</td>
+                            <td class="trip-count">Trips: <strong>5</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                        <tr class="driver-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="driver-name">xx Premie</td>
+                            <td class="trip-count">Trips: <strong>8</strong></td>
+                            <td class="action-cell"><button class="pay-driver-btn">Pay Driver</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Driver Payroll Logs Tab -->
+        <div class="payables-content" id="driver-payroll-logs">
+            <h2 class="section-title">Driver Pay Log Listing</h2>
+            
+            <div class="search-panel">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Pay Period From:</label>
+                        <input type="text" placeholder="" class="date-input-wide">
+                    </div>
+                    <div class="search-group">
+                        <label>Pay Period To:</label>
+                        <input type="text" placeholder="" class="date-input-wide">
+                    </div>
+                    <div class="search-group">
+                        <label>Driver Name (Partial OK):</label>
+                        <input type="text" placeholder="" class="name-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Generated Between These Dates:</label>
+                        <input type="text" placeholder="" class="date-input-wide">
+                        <input type="text" placeholder="" class="date-input-wide">
+                    </div>
+                    <button class="search-btn">SEARCH</button>
+                </div>
+            </div>
+
+            <!-- Payroll Logs Table -->
+            <div class="payroll-logs-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pay Period</th>
+                            <th>Driver Name</th>
+                            <th>Method</th>
+                            <th>Trips</th>
+                            <th>Total</th>
+                            <th>Generated On</th>
+                            <th>Generated By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12/19/2022 - 12/25/2022</td>
+                            <td>Brustad Eric</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>28</td>
+                            <td>$2,450.00</td>
+                            <td>01/02/2023 09:56 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>11/14/2022 - 12/27/2022</td>
+                            <td>Pulido Juan</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>37</td>
+                            <td>$3,180.00</td>
+                            <td>01/02/2023 09:53 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>11/14/2022 - 11/15/2022</td>
+                            <td>Mitchell Evan</td>
+                            <td>Cash</td>
+                            <td>2</td>
+                            <td>$165.00</td>
+                            <td>01/02/2023 09:32 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>11/14/2022 - 11/15/2022</td>
+                            <td>Pacheo Jeff</td>
+                            <td>Check</td>
+                            <td>1</td>
+                            <td>$95.00</td>
+                            <td>01/02/2023 09:33 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>10/17/2022 - 11/28/2022</td>
+                            <td>Doyle Mike</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>4</td>
+                            <td>$340.00</td>
+                            <td>01/02/2023 09:34 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>09/21/2022 - 10/24/2022</td>
+                            <td>Brunner Enrcirue</td>
+                            <td>Cash</td>
+                            <td>3</td>
+                            <td>$285.00</td>
+                            <td>01/02/2023 09:37 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>08/09/2022 - 09/30/2022</td>
+                            <td>Calafayud Ruben</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>1</td>
+                            <td>$120.00</td>
+                            <td>01/02/2023 09:39 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>07/18/2022 - 08/22/2022</td>
+                            <td>Hinea Greg</td>
+                            <td>Check</td>
+                            <td>1</td>
+                            <td>$95.00</td>
+                            <td>01/02/2023 09:40 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>05/31/2022 - 07/03/2022</td>
+                            <td>Lefkovech Dan</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>2</td>
+                            <td>$190.00</td>
+                            <td>01/02/2023 09:31 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>03/28/2022 - 05/25/2022</td>
+                            <td>Blackman Khaleel</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>5</td>
+                            <td>$425.00</td>
+                            <td>01/02/2023 09:35 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>03/01/2022 - 12/31/2022</td>
+                            <td>--Ansar</td>
+                            <td>Cash</td>
+                            <td>5</td>
+                            <td>$425.00</td>
+                            <td>01/02/2023 09:45 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>01/01/2022 - 02/14/2022</td>
+                            <td>xx Premie</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>8</td>
+                            <td>$680.00</td>
+                            <td>01/02/2023 09:57 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>12/15/2021 - 12/31/2021</td>
+                            <td>Siniko Dustin</td>
+                            <td>Check</td>
+                            <td>5</td>
+                            <td>$425.00</td>
+                            <td>01/02/2023 09:58 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>12/06/2021 - 08/11/2022</td>
+                            <td>Kools Cyril</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>1</td>
+                            <td>$85.00</td>
+                            <td>01/02/2023 09:51 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>10/11/2021 - 04/08/2022</td>
+                            <td>Vance Carl</td>
+                            <td>Cash</td>
+                            <td>3</td>
+                            <td>$255.00</td>
+                            <td>01/02/2023 09:30 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>09/27/2021 - 11/18/2021</td>
+                            <td>LM7056 Rolando</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>3</td>
+                            <td>$255.00</td>
+                            <td>01/02/2023 09:52 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>09/11/2021 - 08/22/2021</td>
+                            <td>Saldapona Matt</td>
+                            <td>Check</td>
+                            <td>2</td>
+                            <td>$170.00</td>
+                            <td>10/01/2021 11:27 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>08/13/2021 - 09/11/2021</td>
+                            <td>Ansari Tony</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>1</td>
+                            <td>$85.00</td>
+                            <td>09/20/2021 11:33 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>07/12/2021 - 07/12/2021</td>
+                            <td>Fredanov Nikolay</td>
+                            <td>Cash</td>
+                            <td>1</td>
+                            <td>$85.00</td>
+                            <td>01/02/2023 09:08 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>07/10/2021 - 07/14/2021</td>
+                            <td>Insasingnay Tune</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>2</td>
+                            <td>$170.00</td>
+                            <td>08/20/2021 11:20 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>07/10/2021 - 07/14/2021</td>
+                            <td>S Vladimir</td>
+                            <td>Check</td>
+                            <td>1</td>
+                            <td>$95.00</td>
+                            <td>08/20/2021 11:21 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                        <tr>
+                            <td>06/28/2021 - 07/12/2021</td>
+                            <td>Pulido Jonathan</td>
+                            <td>Direct Deposit/Fund</td>
+                            <td>5</td>
+                            <td>$425.00</td>
+                            <td>08/20/2021 11:22 AM</td>
+                            <td>admin</td>
+                            <td><a href="#" class="submit-link">Submit >></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <span>Page:</span>
+                <select class="page-selector">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+                <a href="#" class="page-nav">|< First Page</a>
+                <a href="#" class="page-nav">Next 50 ></a>
+                <a href="#" class="page-nav">Last 50 >|</a>
+            </div>
+        </div>
+
+        <!-- Pay Affiliates Tab -->
+        <div class="payables-content" id="pay-affiliates">
+            <div class="search-panel">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Search for:</label>
+                        <input type="text" placeholder="" class="search-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Search in:</label>
+                        <select id="search-in-affiliate">
+                            <option value="">Not selected</option>
+                            <option value="company">Company Name</option>
+                            <option value="location">Location</option>
+                            <option value="contact">Contact</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Date:</label>
+                        <input type="text" placeholder="From" class="date-input">
+                        <span class="to-label">To</span>
+                        <input type="text" placeholder="" class="date-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Paid Status:</label>
+                        <div class="button-group">
+                            <button class="filter-btn active" data-status="all">All</button>
+                            <button class="filter-btn" data-status="paid">Paid</button>
+                            <button class="filter-btn" data-status="unpaid">Unpaid</button>
+                        </div>
+                    </div>
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
+
+            <!-- Affiliates Table -->
+            <div class="affiliates-table">
+                <table>
+                    <tbody>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">AJ DELUXE PRIVATE TRANSPORTATION CORP</div>
+                                <div class="affiliate-location">Bethlehem, PA</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">1st Class Transportation, LLC</div>
+                                <div class="affiliate-location">Transportation, 1st Class</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>5</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">A Five Star Limo</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">A&D Limousine Services, Inc.</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Access Atlanta Transportation</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Admiral Limo / Sedan Car Service</div>
+                                <div class="affiliate-location">Arnold Schimroth, Orland, Ottawa (Ottawa)</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Always Ready Transportation LLC</div>
+                                <div class="affiliate-location">Lee, John</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">American Executive Transportation</div>
+                                <div class="affiliate-location">Akinyy, Sudy</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Austin Choice Limo</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Helios Chariot LLC</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Loon Limo</div>
+                                <div class="affiliate-location">Ottawa, Quebec</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>186</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Luxury Ride Nashville, Inc.</div>
+                                <div class="affiliate-location">Boyce, Marcella</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">McCarthy's Car Service</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>3</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Mickels Transportation</div>
+                                <div class="affiliate-location">Michelle, Caryn</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>13</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Nordic Transportation</div>
+                                <div class="affiliate-location">Calmignon, Brad</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Sir Preme Executive Transportation</div>
+                                <div class="affiliate-location">Frazier, Emma</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>64</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">Southwest Limo LLC</div>
+                                <div class="affiliate-location">Schweitzer, Bridgett</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">The Transportation Network</div>
+                                <div class="affiliate-location">Accokeek, Payable</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                        <tr class="affiliate-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="affiliate-info">
+                                <div class="affiliate-name">TORENKO - NY, LLC</div>
+                                <div class="affiliate-location">Myrod, Zuzgurneyan</div>
+                            </td>
+                            <td class="trip-count">Trips: <strong>2</strong></td>
+                            <td class="action-cell"><button class="pay-affiliate-btn">Pay Affiliate</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pay Agents Tab -->
+        <div class="payables-content" id="pay-agents">
+            <div class="search-panel">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Search for:</label>
+                        <input type="text" placeholder="" class="search-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Search in:</label>
+                        <select id="search-in-agent">
+                            <option value="">Not selected</option>
+                            <option value="name">Agent Name</option>
+                            <option value="unpaid">Unpaid Only</option>
+                            <option value="paid">Paid Only</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Date:</label>
+                        <input type="text" placeholder="From" class="date-input">
+                        <span class="to-label">To</span>
+                        <input type="text" placeholder="" class="date-input">
+                    </div>
+                    <div class="search-group">
+                        <label>Paid Status:</label>
+                        <div class="button-group">
+                            <button class="filter-btn active" data-status="all">All</button>
+                            <button class="filter-btn" data-status="paid">Paid</button>
+                            <button class="filter-btn" data-status="unpaid">Unpaid</button>
+                        </div>
+                    </div>
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
+
+            <!-- Agents Table -->
+            <div class="agents-table">
+                <table>
+                    <tbody>
+                        <tr class="agent-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="agent-name">Kristen Ciancio Booking Agent</td>
+                            <td class="trip-count">Trips: <strong>5</strong></td>
+                            <td class="action-cell"><button class="pay-agent-btn">Pay Agent</button></td>
+                        </tr>
+                        <tr class="agent-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="agent-name">Yvette Montgomery</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-agent-btn">Pay Agent</button></td>
+                        </tr>
+                        <tr class="agent-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="agent-name">Tracy Whitlief-Booking Agent</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-agent-btn">Pay Agent</button></td>
+                        </tr>
+                        <tr class="agent-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="agent-name">Mike McGee Booking Agent</td>
+                            <td class="trip-count">Trips: <strong>6</strong></td>
+                            <td class="action-cell"><button class="pay-agent-btn">Pay Agent</button></td>
+                        </tr>
+                        <tr class="agent-row">
+                            <td class="expand-cell"><span class="expand-icon">+</span></td>
+                            <td class="agent-name">Joy Basson booking agent</td>
+                            <td class="trip-count">Trips: <strong>1</strong></td>
+                            <td class="action-cell"><button class="pay-agent-btn">Pay Agent</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- All Paid Bills Tab -->
+        <div class="payables-content" id="all-paid-bills">
+            <h2 class="section-title">All Paid Bills</h2>
+            
+            <!-- Show Filters -->
+            <div class="show-filters">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-agents" checked> Show Agents
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-affiliates" checked> Show Affiliates
+                </label>
+            </div>
+
+            <!-- Search Panel -->
+            <div class="search-panel bills-search">
+                <div class="bills-filter-row">
+                    <div class="filter-item">
+                        <label>Bill#</label>
+                        <input type="text" class="small-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Date From</label>
+                        <input type="text" class="small-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Date To</label>
+                        <input type="text" class="small-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Bill To (Partial search OK)</label>
+                        <input type="text" class="medium-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Check#/Conf#</label>
+                        <input type="text" class="small-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Paid By</label>
+                        <input type="text" class="medium-input">
+                    </div>
+                    <div class="filter-item">
+                        <label>Payment Type</label>
+                        <select class="medium-input">
+                            <option value="">All</option>
+                            <option value="credit">CREDIT CARD</option>
+                            <option value="cash">CASH</option>
+                            <option value="check">CHECK</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Rate Date</label>
+                        <select class="small-input">
+                            <option value="">Equals to</option>
+                            <option value="before">Before</option>
+                            <option value="after">After</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Amount</label>
+                        <input type="text" class="small-input">
+                    </div>
+                    <button class="search-btn">SEARCH</button>
+                </div>
+            </div>
+
+            <!-- Paid Bills Table -->
+            <div class="paid-bills-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bill#</th>
+                            <th>Bill To</th>
+                            <th>Paid Type</th>
+                            <th>Date</th>
+                            <th>Ref#</th>
+                            <th>Paid By</th>
+                            <th>Payment Type</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Zaar Transportation / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>07/21/2018</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$490.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Zaar Transportation / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>10/21/2018</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$15.20</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Alliana Limo Service / Alfonso Sager</td>
+                            <td>AFF</td>
+                            <td>02/11/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$32.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Alliana Limo Service / Alfonso Sager</td>
+                            <td>AFF</td>
+                            <td>02/11/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$224.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Exceptional Transportation LLC / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>03/21/2019</td>
+                            <td>00AP742JN00537345</td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$55.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Exceptional Transportation LLC / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>03/21/2019</td>
+                            <td>00AP751IFN00111230</td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$65.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Helios Chariot / Civil Koch</td>
+                            <td>AFF</td>
+                            <td>03/27/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$117.50</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Exceptional Transportation LLC / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>03/27/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$80.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>1st Class Transportation, LLC / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>06/21/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$55.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>1st Class Transportation, LLC / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>06/21/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$107.20</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Executive Limo Service (833) / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$265.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>LA+ VIP LIMOUSINE / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$98.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td>HH Wedcar services / Pay Allen</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>dkogel</td>
+                            <td>CREDIT CARD</td>
+                            <td>$1043.90</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>Nordic Transportation / Walt babysjon</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$475.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td>Zaar Transportation / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$92.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td>Elite Sedan Transportation / Payable Accounts</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$152.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td>Coram Tranquil / Mike Cziller</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$30.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td>Empire Sedans Transportation / Andre Kagganovich</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$1246.30</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>19</td>
+                            <td>Helios Chariot / Civil Koch</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CREDIT CARD</td>
+                            <td>$1129.72</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>Joe Sheedd / Joe Procotel</td>
+                            <td>AFF</td>
+                            <td>07/30/2019</td>
+                            <td></td>
+                            <td>admin</td>
+                            <td>CASH</td>
+                            <td>$153.00</td>
+                            <td><a href="#" class="view-link">View >></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <span>Page:</span>
+                <select class="page-selector">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <a href="#" class="page-nav">|< First Page</a>
+                <a href="#" class="page-nav">Next 50 ></a>
+                <a href="#" class="page-nav">Last 50 >|</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="payables.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMS Provider - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="sms-provider.css" />
+  </head>
+  <body>
+    <div class="sms-provider-container">
+      <!-- Left Sidebar -->
+      <aside class="settings-sidebar">
+        <nav class="settings-nav">
+          <a href="#" class="settings-nav-item">Contact Information</a>
+          <a href="#" class="settings-nav-item">Company Preferences</a>
+          <a href="#" class="settings-nav-item">System Users</a>
+          <a href="#" class="settings-nav-item">Policies</a>
+          <a href="#" class="settings-nav-item">ReadBack Script Templates</a>
+          <a href="#" class="settings-nav-item">Messaging & Template Settings</a>
+          <a href="#" class="settings-nav-item">Calendar Settings</a>
+          <a href="#" class="settings-nav-item">Online Reservations</a>
+          <a href="#" class="settings-nav-item">Payment Gateway</a>
+          <a href="#" class="settings-nav-item">Third-party Plug-ins</a>
+          
+          <div class="settings-nav-section">
+            <div class="settings-nav-item active-section">System Settings</div>
+            <a href="service-types.html" class="settings-nav-subitem">Service Types</a>
+            <a href="#" class="settings-nav-subitem">Partner Settings</a>
+            <a href="system-mapping.html" class="settings-nav-subitem">System Mapping</a>
+            <a href="#" class="settings-nav-subitem">Data Reduction</a>
+            <a href="#" class="settings-nav-subitem">Electronic Fax</a>
+            <a href="sms-provider.html" class="settings-nav-subitem active">Sms Provider</a>
+            <a href="#" class="settings-nav-subitem">LimoAnywhere Pay</a>
+            <a href="#" class="settings-nav-subitem">Digital Marketing</a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="sms-provider-main">
+        <!-- Header -->
+        <div class="sms-provider-header">
+          <h1 class="sms-provider-title">Configured Sms Providers</h1>
+          <button class="btn-add-new" onclick="addNewProvider()">Add New</button>
+        </div>
+
+        <!-- SMS Providers Table -->
+        <div class="sms-providers-table-wrapper">
+          <table class="sms-providers-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">Default</th>
+                <th>Name</th>
+                <th style="width: 150px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="providersTableBody">
+              <tr>
+                <td class="radio-cell">
+                  <input type="radio" name="defaultProvider" value="limo-anywhere" checked />
+                </td>
+                <td class="provider-name">Limo Anywhere</td>
+                <td class="actions-cell">
+                  <a href="#" class="action-link" onclick="editProvider(event, 'limo-anywhere')">Edit</a>
+                  <a href="#" class="action-link delete-link" onclick="deleteProvider(event, 'limo-anywhere')">Delete</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State (hidden when there are providers) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-state-icon">📱</div>
+          <p class="empty-state-text">No SMS providers configured</p>
+          <p class="empty-state-subtext">Click "Add New" to configure your first SMS provider</p>
+        </div>
+      </main>
+    </div>
+
+    <script src="sms-provider.js"></script>
+  </body>
+</html>

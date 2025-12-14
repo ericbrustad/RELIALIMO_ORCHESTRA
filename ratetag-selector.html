@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Rate Tags</title>
+    <link rel="stylesheet" href="tag-selector.css">
+</head>
+<body>
+    <div class="tag-selector-modal" id="rateTagSelectorModal">
+        <div class="tag-selector-content">
+            <div class="tag-selector-header" style="background: linear-gradient(135deg, #0066cc 0%, #0088ff 100%);">
+                <h2 style="color: white;">💰 Rate Tags</h2>
+                <button class="close-btn" onclick="closeRateTagSelector()" style="color: white;">&times;</button>
+            </div>
+            
+            <div class="tag-selector-body">
+                <div class="tag-search">
+                    <input type="text" id="rateTagSearch" placeholder="Search rate tags..." oninput="filterRateTags()" />
+                </div>
+                
+                <div class="tag-categories">
+                    <button class="rate-category-btn category-btn active" onclick="filterByRateCategory('all')">All Rates</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('rates')">Rate Summary</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('base-rate')">Base Rates</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('miscellaneous')">Miscellaneous</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('gratuities')">Gratuities</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('taxes')">Taxes</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('surcharges')">Surcharges</button>
+                    <button class="rate-category-btn category-btn" onclick="filterByRateCategory('discounts')">Discounts</button>
+                </div>
+                
+                <div class="tag-list-container">
+                    <table class="rate-tag-table tag-table" id="rateTagTable">
+                        <thead>
+                            <tr>
+                                <th>Tag</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rateTagTableBody">
+                            <!-- Rate tags will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tag-selector-footer">
+                <button class="btn-cancel" onclick="closeRateTagSelector()">Cancel</button>
+                <button class="btn-insert" onclick="insertSelectedRateTag()" style="background: linear-gradient(135deg, #0066cc 0%, #0088ff 100%);">Insert Rate Tag</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="ratetag-selector.js"></script>
+</body>
+</html>

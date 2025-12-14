@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Types - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="service-types.css" />
+  </head>
+  <body>
+    <div class="service-types-container">
+      <!-- Left Sidebar -->
+      <aside class="settings-sidebar">
+        <nav class="settings-nav">
+          <a href="#" class="settings-nav-item">Contact Information</a>
+          <a href="#" class="settings-nav-item">Company Preferences</a>
+          <a href="#" class="settings-nav-item">System Users</a>
+          <a href="#" class="settings-nav-item">Policies</a>
+          <a href="#" class="settings-nav-item">ReadBack Script Templates</a>
+          <a href="#" class="settings-nav-item">Messaging & Template Settings</a>
+          <a href="#" class="settings-nav-item">Calendar Settings</a>
+          <a href="#" class="settings-nav-item">Online Reservations</a>
+          <a href="#" class="settings-nav-item">Payment Gateway</a>
+          <a href="#" class="settings-nav-item">Third-party Plug-ins</a>
+          
+          <div class="settings-nav-section">
+            <div class="settings-nav-item active-section">System Settings</div>
+            <a href="service-types.html" class="settings-nav-subitem active">Service Types</a>
+            <a href="#" class="settings-nav-subitem">Partner Settings</a>
+            <a href="system-mapping.html" class="settings-nav-subitem">System Mapping</a>
+            <a href="#" class="settings-nav-subitem">Data Reduction</a>
+            <a href="#" class="settings-nav-subitem">Electronic Fax</a>
+            <a href="sms-provider.html" class="settings-nav-subitem">Sms Provider</a>
+            <a href="#" class="settings-nav-subitem">LimoAnywhere Pay</a>
+            <a href="#" class="settings-nav-subitem">Digital Marketing</a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="service-types-main">
+        <!-- Header -->
+        <div class="service-types-header">
+          <h1 class="service-types-title">Service Types</h1>
+          <div class="service-types-actions">
+            <div class="company-selector">
+              <label>CompanyAdmin</label>
+              <select class="form-select-small">
+                <option value="admin" selected>admin</option>
+                <option value="user">user</option>
+              </select>
+            </div>
+            <button class="btn-add-new">Add New</button>
+          </div>
+        </div>
+
+        <!-- Service Types Table -->
+        <div class="service-types-table-wrapper">
+          <table class="service-types-table">
+            <thead>
+              <tr>
+                <th style="width: 30px;"></th>
+                <th style="width: 180px;">Name</th>
+                <th style="width: 100px;">Code</th>
+                <th style="width: 150px;">Pricing Type</th>
+                <th style="width: 150px;">Custom Label</th>
+                <th style="width: 200px;">Agreement</th>
+                <th style="width: 180px;">Default</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td><a href="#" class="service-link">From Airport</a></td>
+                <td>ARPT</td>
+                <td>Distance</td>
+                <td>From Airport</td>
+                <td></td>
+                <td>Airport Arrival</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td><a href="#" class="service-link">To Airport</a></td>
+                <td>AIRD</td>
+                <td>Distance</td>
+                <td>To Airport</td>
+                <td></td>
+                <td>Airport Departure</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td><a href="#" class="service-link">Hourly/As Directed</a></td>
+                <td>HRL</td>
+                <td>Hourly</td>
+                <td>Hourly/As Directed</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td><a href="#" class="service-link">Point-to-Point</a></td>
+                <td>PTP</td>
+                <td>Distance</td>
+                <td>Point-to-Point</td>
+                <td></td>
+                <td>Hourly, Point-To-Point</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Altet</a></td>
+                <td>3AS</td>
+                <td>Distance</td>
+                <td>Altet</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Point to Point (form trip</a></td>
+                <td>PNPINT</td>
+                <td>Distance</td>
+                <td>Point to Point about trip</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Quote</a></td>
+                <td>Quote</td>
+                <td>Hourly, Distance</td>
+                <td>Quote</td>
+                <td>Erix Coach and Car Agreement</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">RECUR</a></td>
+                <td>RECUR</td>
+                <td>Fixed</td>
+                <td>Recurring</td>
+                <td>affiliate farmout Agreement</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td><a href="#" class="service-link">Side-way Light Tour</a></td>
+                <td>Hourly6</td>
+                <td>Hourly</td>
+                <td>Holiday light tour</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">UNITS DISP to unitsDISP</a></td>
+                <td>UNITSDII</td>
+                <td>Fixed</td>
+                <td>UNITS 2 AIRPORT</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">training Retur -Simple</a></td>
+                <td>RAS</td>
+                <td>Fixed-D Distance</td>
+                <td>Roundtrip</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Birthday Party</a></td>
+                <td>BRTH</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Charter</a></td>
+                <td>CH</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">SharedTrip</a></td>
+                <td>PROSTEP</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Prom</a></td>
+                <td>PROM</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Road Show</a></td>
+                <td>ROAD</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">From Seaport</a></td>
+                <td>SEAA</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">To Seaport</a></td>
+                <td>SEAD</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Tour</a></td>
+                <td>TOUR</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Transfer</a></td>
+                <td>TRF</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Other</a></td>
+                <td>OTH</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="#" class="service-link">Custom (Invoice)</a></td>
+                <td>CUSTOM</td>
+                <td>Fixed</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script src="service-types.js"></script>
+  </body>
+</html>

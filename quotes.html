@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotes - RELIA🐂LIMO™</title>
+    <link rel="stylesheet" href="quotes.css" />
+    <script>
+      // Hide main navigation if in iframe
+      if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', function() {
+          const headerContent = document.querySelector('.header-content');
+          if (headerContent) {
+            headerContent.style.display = 'none';
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Quotes Tabs -->
+      <div class="window-tabs-bar">
+        <div class="window-tabs">
+          <button class="window-tab active" data-tab="manage-quotes">Manage Quotes</button>
+          <button class="window-tab" data-tab="response-templates">Response Templates</button>
+          <button class="window-tab" data-tab="initial-response">Initial Response</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Manage Quotes Tab Content -->
+        <section id="manage-quotes-tab" class="quotes-section active">
+          <div class="quotes-container">
+            <h2 class="quotes-title">Quote Requests</h2>
+            
+            <!-- Search Quote Requests Section -->
+            <div class="search-section">
+              <h3 class="search-title">Search Quote Requests</h3>
+              
+              <div class="search-controls">
+                <div class="search-row">
+                  <div class="search-group">
+                    <label for="searchFor">Search For</label>
+                    <input type="text" id="searchFor" class="search-input" />
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="searchIn">Search In</label>
+                    <select id="searchIn" class="search-select">
+                      <option value="">All Fields</option>
+                      <option value="passenger">Passenger Name</option>
+                      <option value="phone">Phone Number</option>
+                      <option value="email">Email</option>
+                      <option value="ref">Reference #</option>
+                    </select>
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="dateFrom">Date From</label>
+                    <input type="date" id="dateFrom" class="search-input" />
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="dateTo">Date To</label>
+                    <input type="date" id="dateTo" class="search-input" />
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="sortBy">Sort By</label>
+                    <select id="sortBy" class="search-select">
+                      <option value="when-requested" selected>When Requested</option>
+                      <option value="pu-date">Pickup Date</option>
+                      <option value="passenger">Passenger Name</option>
+                      <option value="quote-amount">Quote Amount</option>
+                      <option value="ref">Reference #</option>
+                    </select>
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="orderBy">Order By</label>
+                    <select id="orderBy" class="search-select">
+                      <option value="desc" selected>Descending</option>
+                      <option value="asc">Ascending</option>
+                    </select>
+                  </div>
+                  
+                  <div class="search-group">
+                    <label for="pageSize">Page Size</label>
+                    <select id="pageSize" class="search-select">
+                      <option value="25" selected>25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="250">250</option>
+                    </select>
+                  </div>
+                  
+                  <div class="search-group">
+                    <button class="btn-go" id="searchQuotes">GO</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quote Requests Table -->
+            <div class="quotes-table-wrapper">
+              <table class="quotes-table">
+                <thead>
+                  <tr>
+                    <th>Ref #</th>
+                    <th>PU Date</th>
+                    <th>Time</th>
+                    <th>Passenger</th>
+                    <th>Vehicle-Type</th>
+                    <th>Quote</th>
+                    <th>Phone #</th>
+                    <th>When Requested</th>
+                    <th style="width: 40px;"></th>
+                  </tr>
+                </thead>
+                <tbody id="quotesTableBody">
+                  <tr class="no-results-row">
+                    <td colspan="9" class="no-results">No results found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Response Templates Tab Content -->
+        <section id="response-templates-tab" class="quotes-section" style="display: none;">
+          <div class="response-templates-container">
+            <!-- Left: Template List -->
+            <div class="response-template-list-panel">
+              <div class="response-template-list-header">
+                <h3>Response Templates</h3>
+              </div>
+              <div class="response-template-list">
+                <button class="response-template-item active" data-template="manage-quotes">
+                  Manage Quotes
+                </button>
+                <button class="response-template-item" data-template="response-template">
+                  Response Template
+                </button>
+                <button class="response-template-item" data-template="initial-response">
+                  Initial Response
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Template Editor -->
+            <div class="response-template-editor-panel">
+              <div class="response-template-header">
+                <h2>Edit Auto Response Template</h2>
+              </div>
+
+              <!-- Template Name -->
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Template Name:</label>
+                <input type="text" class="form-control" id="responseTemplateName" value="Manage Quotes" style="max-width: 500px;" />
+              </div>
+
+              <!-- Show All -->
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="showAllResponseTemplates" />
+                  <span style="margin-left: 8px;">Show All</span>
+                </label>
+              </div>
+
+              <!-- Rich Text Editor -->
+              <div class="response-editor-wrapper">
+                <div class="response-editor-toolbar">
+                  <select class="toolbar-select" style="width: 100px;">
+                    <option value="div">Cell Class</option>
+                    <option value="paragraph">Paragraph</option>
+                    <option value="heading">Heading</option>
+                  </select>
+                  <select class="toolbar-select" style="width: 90px;">
+                    <option value="paragraph">Paragraph</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                  </select>
+                  <select class="toolbar-select" style="width: 70px;">
+                    <option value="font">Default Font</option>
+                    <option value="times">Times</option>
+                    <option value="arial">Arial</option>
+                    <option value="courier">Courier</option>
+                  </select>
+                  
+                  <button class="toolbar-btn" title="Bold">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                      <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Italic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="19" y1="4" x2="10" y2="4"/>
+                      <line x1="14" y1="20" x2="5" y2="20"/>
+                      <line x1="15" y1="4" x2="9" y2="20"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Underline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/>
+                      <line x1="4" y1="21" x2="20" y2="21"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Align Left">≡</button>
+                  <button class="toolbar-btn" title="Align Center">≣</button>
+                  <button class="toolbar-btn" title="Align Right">≡</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Text Color">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 20h16"/>
+                      <path d="M7 4L12 20L17 4"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Background Color">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                  </button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Bullet List">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="8" y1="6" x2="21" y2="6"/>
+                      <line x1="8" y1="12" x2="21" y2="12"/>
+                      <line x1="8" y1="18" x2="21" y2="18"/>
+                      <circle cx="4" cy="6" r="1" fill="currentColor"/>
+                      <circle cx="4" cy="12" r="1" fill="currentColor"/>
+                      <circle cx="4" cy="18" r="1" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Numbered List">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="10" y1="6" x2="21" y2="6"/>
+                      <line x1="10" y1="12" x2="21" y2="12"/>
+                      <line x1="10" y1="18" x2="21" y2="18"/>
+                      <text x="3" y="8" font-size="8" fill="currentColor">1</text>
+                      <text x="3" y="14" font-size="8" fill="currentColor">2</text>
+                      <text x="3" y="20" font-size="8" fill="currentColor">3</text>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Decrease Indent">←</button>
+                  <button class="toolbar-btn" title="Increase Indent">→</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Insert Link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Insert Image">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Insert Table">⊞</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Undo">↶</button>
+                  <button class="toolbar-btn" title="Redo">↷</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Source Code">{ }</button>
+                  <button class="toolbar-btn" title="Clear Formatting">⊗</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" id="responseTemplateInsertTripTagsBtn" title="Insert Trip Tags" style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #000; font-weight: 600; border: none; padding: 5px 12px;">
+                    📋 Trip Tags
+                  </button>
+                  <button class="toolbar-btn" id="responseTemplateInsertRateTagsBtn" title="Insert Rate Tags" style="background: linear-gradient(135deg, #0066cc 0%, #0088ff 100%); color: #fff; font-weight: 600; border: none; padding: 5px 12px; margin-left: 5px;">
+                    💰 Rate Tags
+                  </button>
+                </div>
+
+                <textarea class="response-editor-source" id="responseTemplateEditorSource" style="display: none;"></textarea>
+                <div class="response-editor-content" contenteditable="true" id="responseTemplateEditor">
+                  <p><strong>Quote/Response templates</strong></p>
+                  <p>&nbsp;</p>
+                  <p><strong>Questions</strong></p>
+                  <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                  <p>&nbsp;</p>
+                  <p><strong>Reservation Status</strong></p>
+                  <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                  <p>&nbsp;</p>
+                  <p><strong>Reminder</strong></p>
+                  <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                </div>
+                <div class="response-editor-preview" id="responseTemplateEditorPreview" style="display: none;"></div>
+                
+                <div class="response-editor-footer">
+                  <div class="editor-footer-tabs">
+                    <button class="editor-footer-tab" data-mode="source">xhtml</button>
+                    <button class="editor-footer-tab active" data-mode="editor">HTML</button>
+                    <button class="editor-footer-tab" data-mode="preview">Preview</button>
+                  </div>
+                  <div class="editor-footer-info">Words:0 Characters:0</div>
+                </div>
+              </div>
+
+              <!-- Save Buttons -->
+              <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Initial Response Tab Content -->
+        <section id="initial-response-tab" class="quotes-section" style="display: none;">
+          <div class="initial-response-container">
+            <!-- Left: Recipients List -->
+            <div class="initial-response-list-panel">
+              <div class="initial-response-list-header">
+                <h3>Recipients</h3>
+              </div>
+              <div class="initial-response-list">
+                <button class="initial-response-item active" data-recipient="online-quote">
+                  online Quote
+                </button>
+                <button class="initial-response-item" data-recipient="online-express">
+                  online Express
+                </button>
+                <button class="initial-response-item" data-recipient="online-contract">
+                  online Contract
+                </button>
+                <button class="initial-response-item" data-recipient="online-account">
+                  online Account
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Response Editor -->
+            <div class="initial-response-editor-panel">
+              <div class="initial-response-header">
+                <h2>Initial Quote Response Template</h2>
+              </div>
+
+              <!-- Configuration Options -->
+              <div class="form-row" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-right: 20px;">
+                  <label style="font-weight: 600; margin-bottom: 8px; display: block;">Recipient:</label>
+                  <select class="form-control" id="initialResponseRecipient" style="width: 200px;">
+                    <option value="online-quote" selected>online Quote</option>
+                    <option value="online-express">online Express</option>
+                    <option value="online-contract">online Contract</option>
+                    <option value="online-account">online Account</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Instructions -->
+              <div class="info-box" style="margin-bottom: 20px; padding: 12px; background: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
+                <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.6;">
+                  This is the initial/instantaneous email sent when your customers submit quote requests, BEFORE any staff processes or BEFORE any price calculation. The purpose: "we got your request, call us with questions, wait patiently!". Usually you will NOT add Trip Tags here.
+                </p>
+              </div>
+
+              <!-- Section Headers -->
+              <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Email Subject:</label>
+                <input type="text" class="form-control" id="initialResponseSubject" value="Thank you for your quote request" style="max-width: 500px;" />
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Email Body:</label>
+              </div>
+
+              <!-- Rich Text Editor -->
+              <div class="initial-editor-wrapper">
+                <div class="initial-editor-toolbar">
+                  <select class="toolbar-select" style="width: 100px;">
+                    <option value="div">Cell Class</option>
+                    <option value="paragraph">Paragraph</option>
+                    <option value="heading">Heading</option>
+                  </select>
+                  <select class="toolbar-select" style="width: 90px;">
+                    <option value="paragraph">Paragraph</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                  </select>
+                  <select class="toolbar-select" style="width: 70px;">
+                    <option value="font">Default Font</option>
+                    <option value="times">Times</option>
+                    <option value="arial">Arial</option>
+                    <option value="courier">Courier</option>
+                  </select>
+                  
+                  <button class="toolbar-btn" title="Bold">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                      <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Italic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="19" y1="4" x2="10" y2="4"/>
+                      <line x1="14" y1="20" x2="5" y2="20"/>
+                      <line x1="15" y1="4" x2="9" y2="20"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Underline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/>
+                      <line x1="4" y1="21" x2="20" y2="21"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Align Left">≡</button>
+                  <button class="toolbar-btn" title="Align Center">≣</button>
+                  <button class="toolbar-btn" title="Align Right">≡</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Text Color">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 20h16"/>
+                      <path d="M7 4L12 20L17 4"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Background Color">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                  </button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Bullet List">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="8" y1="6" x2="21" y2="6"/>
+                      <line x1="8" y1="12" x2="21" y2="12"/>
+                      <line x1="8" y1="18" x2="21" y2="18"/>
+                      <circle cx="4" cy="6" r="1" fill="currentColor"/>
+                      <circle cx="4" cy="12" r="1" fill="currentColor"/>
+                      <circle cx="4" cy="18" r="1" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Numbered List">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="10" y1="6" x2="21" y2="6"/>
+                      <line x1="10" y1="12" x2="21" y2="12"/>
+                      <line x1="10" y1="18" x2="21" y2="18"/>
+                      <text x="3" y="8" font-size="8" fill="currentColor">1</text>
+                      <text x="3" y="14" font-size="8" fill="currentColor">2</text>
+                      <text x="3" y="20" font-size="8" fill="currentColor">3</text>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Decrease Indent">←</button>
+                  <button class="toolbar-btn" title="Increase Indent">→</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Insert Link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Insert Image">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </button>
+                  <button class="toolbar-btn" title="Insert Table">⊞</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Undo">↶</button>
+                  <button class="toolbar-btn" title="Redo">↷</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" title="Source Code">{ }</button>
+                  <button class="toolbar-btn" title="Clear Formatting">⊗</button>
+                  
+                  <div class="toolbar-divider"></div>
+                  
+                  <button class="toolbar-btn" id="initialResponseInsertTripTagsBtn" title="Insert Trip Tags" style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #000; font-weight: 600; border: none; padding: 5px 12px;">
+                    📋 Trip Tags
+                  </button>
+                  <button class="toolbar-btn" id="initialResponseInsertRateTagsBtn" title="Insert Rate Tags" style="background: linear-gradient(135deg, #0066cc 0%, #0088ff 100%); color: #fff; font-weight: 600; border: none; padding: 5px 12px; margin-left: 5px;">
+                    💰 Rate Tags
+                  </button>
+                </div>
+
+                <textarea class="initial-editor-source" id="initialResponseEditorSource" style="display: none;"></textarea>
+                <div class="initial-editor-content" contenteditable="true" id="initialResponseEditor">
+                  <p>Thank you for contacting us for your upcoming transportation needs. Please save the phone number (555) 123-4567.</p>
+                  <p>&nbsp;</p>
+                  <p>A Customer Service Representative will follow up shortly! If you have any questions, please call us.</p>
+                  <p>&nbsp;</p>
+                  <p>Regards,</p>
+                  <p>Customer Service</p>
+                  <p>&nbsp;</p>
+                  <p><em>Please save our phone number for future reference.</em></p>
+                </div>
+                <div class="initial-editor-preview" id="initialResponseEditorPreview" style="display: none;"></div>
+                
+                <div class="initial-editor-footer">
+                  <div class="editor-footer-tabs">
+                    <button class="editor-footer-tab" data-mode="source">xhtml</button>
+                    <button class="editor-footer-tab active" data-mode="editor">HTML</button>
+                    <button class="editor-footer-tab" data-mode="preview">Preview</button>
+                  </div>
+                  <div class="editor-footer-info">Words:0 Characters:0</div>
+                </div>
+              </div>
+
+              <!-- Save Buttons -->
+              <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Trip Tag Selector Modal -->
+    <div class="tag-selector-modal" id="tripTagSelectorModal">
+      <div class="tag-selector-content">
+        <div class="tag-selector-header" style="background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);">
+          <h2 style="color: #000;">📋 Trip Tags</h2>
+          <button class="close-btn" onclick="closeTripTagSelector()" style="color: #000;">&times;</button>
+        </div>
+        
+        <div class="tag-selector-body">
+          <div class="tag-search">
+            <input type="text" id="tripTagSearch" placeholder="Search trip tags..." oninput="filterTripTags()" />
+          </div>
+          
+          <div class="tag-categories">
+            <button class="trip-category-btn category-btn active" onclick="filterByTripCategory('all')">All Tags</button>
+            <button class="trip-category-btn category-btn" onclick="filterByTripCategory('company')">Company</button>
+            <button class="trip-category-btn category-btn" onclick="filterByTripCategory('trip-info')">Trip Info</button>
+            <button class="trip-category-btn category-btn" onclick="filterByTripCategory('billing-contact')">Billing Contact</button>
+            <button class="trip-category-btn category-btn" onclick="filterByTripCategory('passenger')">Passenger</button>
+          </div>
+          
+          <div id="tripTagsList" class="tag-list">
+            <!-- Tags populated by triptag-selector.js -->
+          </div>
+        </div>
+        
+        <div class="tag-selector-footer">
+          <button class="btn-cancel" onclick="closeTripTagSelector()">Cancel</button>
+          <button class="btn-insert" onclick="insertSelectedTripTag()">Insert Tag</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rate Tag Selector Modal -->
+    <div class="tag-selector-modal" id="rateTagSelectorModal">
+      <div class="tag-selector-content">
+        <div class="tag-selector-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+          <h2 style="color: #fff;">💰 Rate Tags</h2>
+          <button class="close-btn" onclick="closeRateTagSelector()" style="color: #fff;">&times;</button>
+        </div>
+        
+        <div class="tag-selector-body">
+          <div class="tag-search">
+            <input type="text" id="rateTagSearch" placeholder="Search rate tags..." oninput="filterRateTags()" />
+          </div>
+          
+          <div class="tag-categories">
+            <button class="rate-category-btn category-btn active" onclick="filterByRateCategory('all')">All Tags</button>
+            <button class="rate-category-btn category-btn" onclick="filterByRateCategory('totals')">Totals</button>
+            <button class="rate-category-btn category-btn" onclick="filterByRateCategory('base-rates')">Base Rates</button>
+            <button class="rate-category-btn category-btn" onclick="filterByRateCategory('fees')">Fees</button>
+            <button class="rate-category-btn category-btn" onclick="filterByRateCategory('taxes')">Taxes</button>
+          </div>
+          
+          <div id="rateTagsList" class="tag-list">
+            <!-- Tags populated by ratetag-selector.js -->
+          </div>
+        </div>
+        
+        <div class="tag-selector-footer">
+          <button class="btn-cancel" onclick="closeRateTagSelector()">Cancel</button>
+          <button class="btn-insert" onclick="insertSelectedRateTag()">Insert Tag</button>
+        </div>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="tag-selector.css" />
+    <script src="triptag-selector.js"></script>
+    <script src="ratetag-selector.js"></script>
+    <script src="html-editor-view-switcher.js"></script>
+    <script src="drag-drop-handler.js"></script>
+    <script type="module" src="quotes.js"></script>
+  </body>
+</html>
