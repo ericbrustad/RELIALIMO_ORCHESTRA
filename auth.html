@@ -1,39 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Access - RELIARELIA bullLIMO™</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🐂</text></svg>" />
-  <link rel="stylesheet" href="auth.css" />
-  <script src="env.js"></script>
-</head>
-<body class="auth-body">
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h1 class="auth-logo">
-          RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="RELIA bull" class="auth-logo-bull">LIMO™
-        </h1>
-        <p class="auth-subtitle">Management System</p>
-      </div>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sign in</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="auth.css" />
+    <script src="env.js"></script>
+  </head>
+  <body>
+    <main class="auth-shell">
+      <header>
+        <h1>Sign in</h1>
+        <p class="auth-lede">Enter your Supabase email and password or request a magic link.</p>
+      </header>
 
-      <div class="auth-message">
-        <h2 class="auth-message__title">Sign-in no longer required</h2>
-        <p class="auth-message__body">
-          Access to RELIA🐂LIMO™ is now direct. Continue below to launch the dashboard without
-          entering credentials.
-        </p>
-        <button type="button" id="enterApp" class="btn-enter">Enter Dashboard</button>
-      </div>
+      <form id="login-form" class="auth-form">
+        <label class="auth-label" for="login-email">Email</label>
+        <input id="login-email" name="email" type="email" placeholder="Email" required />
+        <label class="auth-label" for="login-password">Password</label>
+        <input id="login-password" name="password" type="password" placeholder="Password" required />
+        <button type="submit">Sign in</button>
+      </form>
 
-      <div class="auth-footer">
-        <p>🔓 Authentication disabled for this environment</p>
-        <p class="version">RELIA🐂LIMO™ v1.0</p>
-      </div>
-    </div>
-  </div>
+      <form id="magic-form" class="auth-form auth-form--secondary">
+        <label class="auth-label" for="magic-email">Email for magic link</label>
+        <input id="magic-email" name="email" type="email" placeholder="Email for magic link" required />
+        <button type="submit">Send magic link</button>
+        <small>We’ll email you a one-time link to sign in.</small>
+      </form>
 
-  <script type="module" src="auth.js"></script>
-</body>
+      <p id="msg" role="status" aria-live="polite" class="auth-message"></p>
+    </main>
+
+    <script type="module" src="auth.js"></script>
+  </body>
 </html>

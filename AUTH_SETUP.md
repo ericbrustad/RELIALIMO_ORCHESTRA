@@ -1,26 +1,38 @@
 # RELIA🐂LIMO™ - Authentication Setup Guide (Login Removed)
 
 ## Overview
-Authentication prompts have been disabled in this environment. The legacy email/password form and demo buttons have been replaced with a simple entry notice so users can reach the dashboard without credentials.
+This environment now uses Supabase email/password authentication with optional magic links. The login page (`/auth.html`) talks directly to Supabase using your public project URL and anon key.
 
-## Files
-- **`/auth.html`** – Entry notice with an **Enter Dashboard** button.
-- **`/auth.css`** – Styling for the simplified access card.
-- **`/auth.js`** – Clears stored auth state and redirects to `index.html`.
-- **`/auth-guard.js`** – Stubbed guard that always allows access.
-- **`/user-menu.js`** – UI-only user menu (no auth required).
+## Supabase Configuration
+1. **Email provider** (Supabase Dashboard → Authentication → Providers → Email)
+   - Enable email provider.
+   - Disable email signups.
+   - Disable confirm email.
+2. **Environment variables**
+   - Set the following in each Vercel project:
+     - `NEXT_PUBLIC_SUPABASE_URL = https://YOUR-PROJECT-REF.supabase.co`
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY = YOUR-ANON-KEY`
+3. **Local/buildless previews**
+   - Update `env.js` with the same values so static previews work without a build step.
 
-## Setup
-1. Ensure your pages still include `auth-guard.js` and `user-menu.js` so the UI loads consistently.
-2. Deploy the updated `auth.html` if you want to provide a direct link for users; it no longer accepts credentials.
-3. Supabase configuration in `env.js` remains available for data access, but no sign-in calls are made during navigation.
+## Files to Deploy
+- `auth.html` – email/password login and magic-link form
+- `auth/callback.html` – completes magic-link sign-in and returns to the app
+- `auth.js` – Supabase client setup and form handlers
+- `auth.css` – styles for both forms
+- `auth-guard.js` – optional guard for protected pages
 
-## Current Flow
+## Protected Pages
+Add the guard script to any page that should require authentication:
+```html
+<script type="module" src="/auth-guard.js"></script>
 ```
-Page load → auth-guard.js allows access → (optional) auth.html shows notice → index.html
-```
+The guard checks `supabase.auth.getSession()` and redirects to `/auth.html` when no session is present.
 
-## Notes
-- No credentials are requested anywhere in the app.
-- Stored auth tokens from older builds are cleared when `auth.js` loads to prevent stale state.
-- If you re-enable authentication later, restore sign-in logic before turning the guard back on.
+## Redirect Targets
+Successful sign-ins navigate to `index.html`. Update the redirect targets in `auth.js` and `auth/callback.html` if your app uses a different landing page.
+
+## Testing
+- Submit the password form with a valid Supabase user to ensure session creation and redirect.
+- Use the magic link form and confirm the email delivers a working link back to `/auth/callback.html`.
+- Visit a protected page with and without an active session to confirm the guard behavior.

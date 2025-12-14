@@ -1,35 +1,39 @@
 # 🔓 Authentication Quick Reference Card
 
 ## Access
-- **Auth page:** `https://relialimo.netlify.app/auth.html` now shows a short notice and an **Enter Dashboard** button.
-- **Main app:** `https://relialimo.netlify.app` loads directly; no credentials are required.
+- **Auth page:** `/auth.html` shows email/password and magic-link forms backed by Supabase.
+- **Magic link callback:** `/auth/callback.html` completes sign-in and routes users to `index.html`.
+- **Guard:** Include `/auth-guard.js` on protected pages to enforce sessions.
 
 ## Key Files
 | File | Purpose | Location |
 |------|---------|----------|
-| `auth.html` | Entry notice and launch button | Root |
-| `auth.js` | Clears legacy auth data, redirects to app | Root |
-| `auth.css` | Styling for simplified access card | Root |
-| `auth-guard.js` | Stubbed guard that always allows access | Root |
-| `env.js` | Config | Root |
+| `auth.html` | Login UI | Root |
+| `auth.js` | Supabase client + form handlers | Root |
+| `auth.css` | Auth form styles | Root |
+| `auth/callback.html` | Magic-link completion | `/auth` |
+| `auth-guard.js` | Session check + redirect | Root |
+| `env.js` | Browser env defaults | Root |
 
 ## Behavior
-- Authentication checks are disabled; Supabase is not consulted for login.
-- Visiting `auth.html` will clear any stored auth tokens and continue to `index.html`.
-- Route protection is effectively bypassed while this mode is active.
+- Password sign-in redirects to `index.html` on success.
+- Magic link emails redirect to `/auth/callback.html`, which forwards to `index.html` after verifying the session.
+- `auth-guard.js` redirects unauthenticated visitors to `/auth.html`.
 
-## Supabase Usage
-Data access through `supabase-client.js` remains available for other modules, but sign-in is not performed.
+## Supabase Settings
+- **Providers > Email**: Email provider ON, email signups OFF, confirm email OFF.
+- **Vercel env vars**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- **Local**: Mirror the same values in `env.js`.
 
 ## Troubleshooting
-| Situation | What happens |
-|-----------|--------------|
-| Attempt to sign in | Not applicable — form removed |
-| Auth guard redirect loop | Resolved by disabling guard; direct access allowed |
-| Stale login state | `auth.js` clears stored tokens on load |
+| Situation | What to check |
+|-----------|---------------|
+| Error on sign-in | Confirm URL/key values and that the user exists in Supabase. |
+| Magic link not delivered | Verify email provider is enabled and signups are disabled. |
+| Unexpected redirects | Ensure `auth-guard.js` is only loaded on pages that require auth. |
 
 ## File Checklist
-- [x] `/auth.html` - Simplified access page
-- [x] `/auth.css` - Updated styling
-- [x] `/auth.js` - Redirect logic
-- [x] `/auth-guard.js` - Guard disabled
+- [x] `/auth.html` - Login and magic link forms
+- [x] `/auth.js` - Supabase handlers
+- [x] `/auth-guard.js` - Guard enabled
+- [x] `/auth/callback.html` - Magic link callback

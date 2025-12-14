@@ -1,34 +1,40 @@
-# 🔓 Authentication Access Summary
+# 🔐 Authentication Access Summary
 
 ## Current State
-- **Sign-in removed:** The previous email/password form and demo-account buttons have been retired.
-- **Direct entry:** `auth.html` now shows an informational notice with a single **Enter Dashboard** button.
-- **No Supabase session requirement:** `auth.js` only clears legacy auth storage and forwards visitors to `index.html`.
-- **Auth guard disabled:** `auth-guard.js` no longer blocks access based on Supabase sessions.
+- **Email + password sign-in available:** `auth.html` now offers Supabase email/password login and magic link sign-in.
+- **Magic link callback:** `auth/callback.html` completes the magic-link flow and returns the user to the app.
+- **Auth guard enforced:** `auth-guard.js` redirects unauthenticated visitors back to `auth.html`.
+- **Supabase-backed:** All auth calls use your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` values (or `env.js` defaults during local builds).
 
 ## Key Files
 ```
-/auth.html              - Entry notice with "Enter Dashboard" button
-/auth.css               - Styling for the simplified access card
-/auth.js                - Clears old auth data and redirects to the app
-/auth-guard.js          - Stubbed guard that always allows access
-/user-menu.js           - UI-only user menu (no login needed)
-/user-menu.css          - Styling for the user menu
-/supabase-client.js     - Supabase connection (unused for login)
+/auth.html              - Login UI with password and magic-link forms
+/auth.js                - Supabase client setup and form handlers
+/auth.css               - Styles for the auth forms
+/auth/callback.html     - Completes magic-link sign-in and redirects to the app
+/auth-guard.js          - Optional guard that redirects to /auth.html when no session exists
+/env.js                 - Browser-friendly Supabase environment defaults
+/lib/supabase-browser.ts - Browser SDK helper (NEXT_PUBLIC_* aware)
+/lib/supabase-server.ts  - Server SDK helper (SERVICE_ROLE + NEXT_PUBLIC_* aware)
 ```
 
 ## Access Flow
 ```
-Visitor opens any page
+Visitor opens any protected page
     ↓
-(auth-guard.js allows access immediately)
+Auth guard checks Supabase session
     ↓
-If visiting auth.html → click Enter Dashboard (or wait for auto-redirect)
+If no session → redirect to /auth.html
     ↓
-index.html loads with no authentication prompts
+Email/password or magic link sign-in
+    ↓
+Redirect to index.html once a Supabase session is established
 ```
 
+## Supabase Settings
+- **Providers > Email**: Enable email provider, disable email signups, disable email confirmation.
+- **Vercel env vars**: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` must be set per project.
+
 ## Notes
-- Credentials are no longer requested in this environment.
-- Legacy auth tokens are cleared on page load to avoid stale state.
-- Supabase credentials remain available for data access, but authentication is bypassed.
+- Update `env.js` with the same values if you need buildless/local previews.
+- Default credentials remain in `env.js` but should be overridden in production via environment variables.
