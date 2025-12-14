@@ -16,3 +16,24 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 
 export const supabaseServer = () =>
   createClient(supabaseUrl, supabaseServiceRoleKey, { auth: { persistSession: false } });
+
+/**
+ * Fetch auth configuration via Edge Function using a service role Authorization header.
+ * The Edge Function requires elevated privileges because it reads Supabase auth config.
+ */
+export async function fetchAuthConfig() {
+  const response = await fetch(`${supabaseUrl}/functions/v1/auth-config`, {
+    method: 'GET',
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      Authorization: `Bearer ${supabaseServiceRoleKey}`
+    }
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Failed to load auth config (${response.status}): ${body}`);
+  }
+
+  return response.json();
+}

@@ -34,6 +34,7 @@ Redirect to index.html once a Supabase session is established
 ## Supabase Settings
 - **Providers > Email**: Enable email provider, disable email signups, disable email confirmation.
 - **Vercel env vars**: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` must be set per project.
+- **Server secret**: `SUPABASE_SERVICE_ROLE_KEY` is required so the auth-config Edge Function can include an `Authorization: Bearer <service_role_key>` header when reading auth configuration.
 
 ## Notes
 - Update `env.js` with the same values if you need buildless/local previews.

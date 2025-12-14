@@ -12,6 +12,8 @@ This environment now uses Supabase email/password authentication with optional m
    - Set the following in each Vercel project:
      - `NEXT_PUBLIC_SUPABASE_URL = https://YOUR-PROJECT-REF.supabase.co`
      - `NEXT_PUBLIC_SUPABASE_ANON_KEY = YOUR-ANON-KEY`
+   - Add the server-only secret needed for auth config lookups:
+     - `SUPABASE_SERVICE_ROLE_KEY` (store as a Vercel secret; required so the auth-config Edge Function can send the Authorization header it needs)
 3. **Local/buildless previews**
    - Update `env.js` with the same values so static previews work without a build step.
 
@@ -36,3 +38,4 @@ Successful sign-ins navigate to `index.html`. Update the redirect targets in `au
 - Submit the password form with a valid Supabase user to ensure session creation and redirect.
 - Use the magic link form and confirm the email delivers a working link back to `/auth/callback.html`.
 - Visit a protected page with and without an active session to confirm the guard behavior.
+- Call the auth-config Edge Function from a server environment to verify it receives the `Authorization: Bearer <service_role_key>` header and returns your configured settings.

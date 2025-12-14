@@ -23,6 +23,7 @@
 ## Supabase Settings
 - **Providers > Email**: Email provider ON, email signups OFF, confirm email OFF.
 - **Vercel env vars**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- **Server secret**: `SUPABASE_SERVICE_ROLE_KEY` (kept in Vercel secrets) for calling the auth-config Edge Function with the required Authorization header.
 - **Local**: Mirror the same values in `env.js`.
 
 ## Troubleshooting
