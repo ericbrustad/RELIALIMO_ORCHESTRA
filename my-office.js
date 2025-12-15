@@ -6,6 +6,7 @@ class MyOffice {
     this.currentSection = 'contact-info';
     this.currentPrefTab = 'general';
     this.currentDriver = null;
+    this.currentSystemSettingsPage = 'service-types';
     this.drivers = [];
     this.users = [
       {
@@ -137,6 +138,17 @@ class MyOffice {
         this.navigateToSection(section);
       });
     });
+
+    // System Settings sub-navigation
+    const systemSettingsSubnav = document.getElementById('systemSettingsSubnav');
+    if (systemSettingsSubnav) {
+      systemSettingsSubnav.addEventListener('click', (e) => {
+        const btn = e.target.closest('.sidebar-subbtn');
+        if (!btn || !btn.dataset.systemSetting) return;
+        this.navigateToSection('system-settings');
+        this.navigateToSystemSettingsPage(btn.dataset.systemSetting);
+      });
+    }
 
     // Top tabs navigation
     document.querySelectorAll('.window-tab').forEach(tab => {
@@ -609,6 +621,12 @@ class MyOffice {
       }
     });
 
+    // Toggle System Settings sub-navigation visibility
+    const systemSettingsSubnav = document.getElementById('systemSettingsSubnav');
+    if (systemSettingsSubnav) {
+      systemSettingsSubnav.style.display = section === 'system-settings' ? 'block' : 'none';
+    }
+
     // Update content sections - hide all first
     document.querySelectorAll('.office-section').forEach(sec => {
       sec.classList.remove('active');
@@ -627,15 +645,61 @@ class MyOffice {
       if (window.reinitializeDragDrop) {
         window.reinitializeDragDrop();
       }
-      
+
       // Reinitialize editor view switchers
       if (window.reinitializeEditorViewSwitchers) {
         window.reinitializeEditorViewSwitchers();
+      }
+
+      if (section === 'system-settings') {
+        this.navigateToSystemSettingsPage(this.currentSystemSettingsPage || 'service-types');
       }
     } else {
       // If section doesn't exist yet, show placeholder
       console.error('Section not found:', `${section}-section`);
       alert(`${section} section is under construction`);
+    }
+  }
+
+  navigateToSystemSettingsPage(page) {
+    const pageMap = {
+      'service-types': 'service-types.html',
+      'partner-settings': null,
+      'system-mapping': 'system-mapping.html',
+      'data-reduction': null,
+      'electronic-fax': null,
+      'sms-provider': 'sms-provider.html',
+      'limoanywhere-pay': null,
+      'digital-marketing': null,
+      'appearance': 'appearance.html',
+    };
+
+    const subnav = document.getElementById('systemSettingsSubnav');
+    if (subnav) {
+      subnav.querySelectorAll('.sidebar-subbtn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.systemSetting === page);
+      });
+    }
+
+    let target = pageMap[page];
+    if (!target) {
+      const friendlyName = (page || 'System Setting').replace(/-/g, ' ');
+      alert(`${friendlyName} page is under construction`);
+      page = 'service-types';
+      target = pageMap[page];
+
+      if (subnav) {
+        subnav.querySelectorAll('.sidebar-subbtn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.systemSetting === page);
+        });
+      }
+    }
+
+    this.currentSystemSettingsPage = page;
+
+    const iframe = document.querySelector('#system-settings-section iframe');
+    if (iframe && target) {
+      iframe.src = target;
     }
   }
 
@@ -1126,15 +1190,10 @@ class MyOffice {
         this.switchTab('company-settings');
         // Then navigate to system-settings section
         this.navigateToSection('system-settings');
-        
+
         // Update the iframe src if specific page is requested
         if (event.data.page) {
-          const iframe = document.querySelector('#system-settings-section iframe');
-          if (iframe && event.data.page === 'system-mapping') {
-            iframe.src = 'system-mapping.html';
-          } else if (iframe && event.data.page === 'service-types') {
-            iframe.src = 'service-types.html';
-          }
+          this.navigateToSystemSettingsPage(event.data.page);
         }
       }
     });

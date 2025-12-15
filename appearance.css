@@ -25,7 +25,7 @@ body {
 }
 
 .embedded .settings-sidebar {
-  display: block;
+  display: none;
 }
 
 .settings-nav {
