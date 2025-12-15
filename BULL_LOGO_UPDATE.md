@@ -1,10 +1,7 @@
-# RELIA<img width="424" height="484" alt="bull-icon" src="https://github.com/user-attachments/assets/af40d54d-fd45-420e-8236-e945a7c667b7" />
-<img width="27" height="30" alt="image" src="https://github.com/user-attachments/assets/46a7cf7f-c94e-4932-82de-e0dacbbf1ef0" />
-
-LIMO™ Red Bull Logo Update
+# RELIA<img width="27" height="30" alt="image" src="https://github.com/user-attachments/assets/46a7cf7f-c94e-4932-82de-e0dacbbf1ef0" />LIMO™ Red Bull Logo Update
 
 ## Update Complete ✅
-
+<img width="424" height="484" alt="bull-icon" src="https://github.com/user-attachments/assets/af40d54d-fd45-420e-8236-e945a7c667b7" />
 All bull emoji references have been replaced with a professional red bull logo image.
 
 ### Logo Asset
@@ -13,7 +10,7 @@ All bull emoji references have been replaced with a professional red bull logo i
 - **URL:** `<img width="622" height="525" alt="image" src="https://github.com/user-attachments/assets/d7d111cc-186d-4a88-bac3-7b39c313b25c" />
 `
 - **Format:** png with transparency (png-compatible)
-- **Size:** 127×115 pixels
+- **Size:** 127×127 pixels
 - **Style:** Professional red bull head icon with prominent horns and white eye highlights
 
 ### Where the Logo Appears
@@ -113,4 +110,4 @@ Logo image styling (applied across all pages):
 
 **Status:** ✅ Deployed and Active  
 **Last Updated:** 2025  
-**System:** RELIA🐂LIMO™ Management System
+**System:** RELIA<img width="27" height="30" alt="image" src="https://github.com/user-attachments/assets/f7ede478-630a-43ae-9a30-7385f342be08" />LIMO™ Management System
