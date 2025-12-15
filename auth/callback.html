@@ -11,8 +11,16 @@
       import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       import { getSupabaseCredentials } from '../supabase-config.js';
 
-      const { url: SUPABASE_URL, anonKey: SUPABASE_ANON_KEY } = getSupabaseCredentials();
-      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      let supabase;
+
+      try {
+        const { url: SUPABASE_URL, anonKey: SUPABASE_ANON_KEY } = getSupabaseCredentials();
+        supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (error) {
+        console.error('Supabase configuration error', error);
+        document.body.innerHTML = '<p>Supabase configuration missing. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.</p>';
+        throw error;
+      }
 
       setTimeout(async () => {
         const {
