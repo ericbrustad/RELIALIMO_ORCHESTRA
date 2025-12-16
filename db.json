@@ -1,0 +1,138 @@
+{
+  "reservations": [
+    {
+      "id": 1,
+      "customerName": "John Smith",
+      "email": "john.smith@example.com",
+      "phone": "555-0101",
+      "pickupDate": "2025-12-20",
+      "pickupTime": "10:00",
+      "pickupLocation": "JFK Airport",
+      "dropoffLocation": "Manhattan Hotel",
+      "vehicleType": "Sedan",
+      "passengers": 2,
+      "status": "confirmed",
+      "price": 150.00
+    },
+    {
+      "id": 2,
+      "customerName": "Sarah Johnson",
+      "email": "sarah.j@example.com",
+      "phone": "555-0102",
+      "pickupDate": "2025-12-22",
+      "pickupTime": "14:30",
+      "pickupLocation": "LaGuardia Airport",
+      "dropoffLocation": "Brooklyn Office",
+      "vehicleType": "SUV",
+      "passengers": 4,
+      "status": "pending",
+      "price": 200.00
+    }
+  ],
+  "quotes": [
+    {
+      "id": 1,
+      "customerName": "Mike Williams",
+      "email": "mike.w@example.com",
+      "phone": "555-0103",
+      "serviceType": "Airport Transfer",
+      "fromLocation": "Newark Airport",
+      "toLocation": "Times Square",
+      "requestedDate": "2025-12-25",
+      "passengers": 3,
+      "status": "pending",
+      "estimatedPrice": 175.00
+    }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Corporate Account - Tech Corp",
+      "email": "billing@techcorp.com",
+      "phone": "555-0200",
+      "accountType": "corporate",
+      "balance": 5000.00,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "VIP Account - Jane Doe",
+      "email": "jane.doe@vip.com",
+      "phone": "555-0201",
+      "accountType": "individual",
+      "balance": 1200.00,
+      "status": "active"
+    }
+  ],
+  "drivers": [
+    {
+      "id": 1,
+      "name": "David Martinez",
+      "phone": "555-0301",
+      "email": "d.martinez@relialimo.com",
+      "licenseNumber": "D1234567",
+      "vehicleType": "Sedan",
+      "status": "available"
+    },
+    {
+      "id": 2,
+      "name": "Emily Chen",
+      "phone": "555-0302",
+      "email": "e.chen@relialimo.com",
+      "licenseNumber": "D7654321",
+      "vehicleType": "SUV",
+      "status": "on-trip"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": 1,
+      "make": "Mercedes-Benz",
+      "model": "S-Class",
+      "year": 2024,
+      "type": "Sedan",
+      "licensePlate": "ABC123",
+      "capacity": 4,
+      "status": "available"
+    },
+    {
+      "id": 2,
+      "make": "Cadillac",
+      "model": "Escalade",
+      "year": 2024,
+      "type": "SUV",
+      "licensePlate": "XYZ789",
+      "capacity": 6,
+      "status": "maintenance"
+    }
+  ],
+  "receivables": [
+    {
+      "id": 1,
+      "invoiceNumber": "INV-2025-001",
+      "accountId": 1,
+      "amount": 500.00,
+      "dueDate": "2025-12-31",
+      "status": "outstanding"
+    }
+  ],
+  "payables": [
+    {
+      "id": 1,
+      "vendor": "Fuel Company",
+      "amount": 350.00,
+      "dueDate": "2025-12-25",
+      "status": "pending"
+    }
+  ],
+  "memos": [
+    {
+      "id": 1,
+      "title": "Holiday Schedule Update",
+      "content": "Please note updated holiday operating hours for December.",
+      "author": "Admin",
+      "date": "2025-12-15",
+      "priority": "high"
+    }
+  ]
+}

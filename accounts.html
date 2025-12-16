@@ -200,6 +200,9 @@
               <div class="account-tabs">
                 <button class="account-tab active" data-account-tab="info">Account Info</button>
                 <button class="account-tab" data-account-tab="financial">Financial Data</button>
+                <button class="account-tab" data-account-tab="addresses">Addrs / Bill / Pax</button>
+                <button class="account-tab" data-account-tab="booking">Booking Conts</button>
+                <button class="account-tab" data-account-tab="misc">Misc</button>
               </div>
 
               <!-- Account Info Tab -->
@@ -557,8 +560,373 @@
 
               <!-- Financial Data Tab -->
               <div id="financialDataTab" class="account-tab-content" style="display: none;">
-                <div style="padding: 40px; text-align: center; color: #666;">
-                  <p>Financial data content will be available here.</p>
+                <div class="account-form">
+                  <div class="form-section">
+                    <h4 class="form-section-header">Financial Settings</h4>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Post Method</label>
+                        <select id="postMethod" class="form-control">
+                          <option value="">-- NOT SELECTED --</option>
+                          <option value="invoice">Invoice</option>
+                          <option value="statement">Statement</option>
+                          <option value="cc">Credit Card</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Post Terms</label>
+                        <input type="text" id="postTerms" class="form-control" placeholder="e.g., Net 30" />
+                      </div>
+                    </div>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Primary Agent Assigned</label>
+                        <select id="primaryAgent" class="form-control">
+                          <option value="">-- NOT SELECTED --</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Secondary Agent Assigned</label>
+                        <select id="secondaryAgent" class="form-control">
+                          <option value="">-- NOT SELECTED --</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-section">
+                    <h4 class="form-section-header">Payment Information</h4>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Credit Card #</label>
+                        <input type="text" id="creditCardNumber" class="form-control" placeholder="Card number" />
+                      </div>
+                      <div class="form-group">
+                        <label>Exp (M)</label>
+                        <input type="text" id="expMonth" class="form-control" placeholder="MM" maxlength="2" style="width: 60px; display: inline-block;" />
+                        <label style="margin-left: 10px;">Exp (Y)</label>
+                        <input type="text" id="expYear" class="form-control" placeholder="YYYY" maxlength="4" style="width: 80px; display: inline-block; margin-left: 5px;" />
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Name On Card</label>
+                      <input type="text" id="nameOnCard" class="form-control" />
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Billing Address (For CC)</label>
+                      <input type="text" id="billingAddressCC" class="form-control" placeholder="Street address" />
+                    </div>
+                    
+                    <div class="form-row-3">
+                      <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="billingCityCC" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>State/Prov</label>
+                        <select id="billingStateCC" class="form-control">
+                          <option value="">Select</option>
+                          <option value="MN">MN</option>
+                          <!-- Add more states -->
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Zip/Post</label>
+                        <input type="text" id="billingZipCC" class="form-control" />
+                      </div>
+                    </div>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Address Line2</label>
+                        <input type="text" id="billingAddressLine2CC" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>Country</label>
+                        <select id="billingCountryCC" class="form-control">
+                          <option value="United States">United States</option>
+                          <option value="Canada">Canada</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>CVV (C)</label>
+                        <input type="text" id="cvv" class="form-control" maxlength="4" style="width: 100px;" />
+                      </div>
+                      <div class="form-group">
+                        <label>CC Type</label>
+                        <select id="ccType" class="form-control">
+                          <option value="">-- NOT SELECTED --</option>
+                          <option value="visa">Visa</option>
+                          <option value="mastercard">MasterCard</option>
+                          <option value="amex">American Express</option>
+                          <option value="discover">Discover</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Credit Card Notes</label>
+                      <textarea id="creditCardNotes" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary">SAVE</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Addrs / Bill / Pax Tab -->
+              <div id="addressesTab" class="account-tab-content" style="display: none;">
+                <div class="account-form">
+                  <div class="form-section">
+                    <h4 class="form-section-header">Add New Address</h4>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Address Type</label>
+                        <select id="addressType" class="form-control">
+                          <option value="primary">Primary Address</option>
+                          <option value="billing">Billing</option>
+                          <option value="home">Home</option>
+                          <option value="pickup">Pickup</option>
+                          <option value="dropoff">Dropoff</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Address Name</label>
+                        <input type="text" id="addressName" class="form-control" placeholder="e.g., Home, Office" />
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Primary Address</label>
+                      <input type="text" id="primaryAddress" class="form-control" />
+                    </div>
+                    
+                    <div class="form-row-3">
+                      <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addressCity" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>State/Prov</label>
+                        <select id="addressState" class="form-control">
+                          <option value="">Select</option>
+                          <option value="MN">MN</option>
+                          <!-- Add more states -->
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Zip/Post</label>
+                        <input type="text" id="addressZip" class="form-control" />
+                      </div>
+                    </div>
+                    
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Apt/Ste</label>
+                        <input type="text" id="addressApt" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>Country</label>
+                        <select id="addressCountry" class="form-control">
+                          <option value="United States">United States</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                      <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="copyFromPrimary" />
+                        <span>Copy from Primary</span>
+                      </label>
+                      <button type="button" class="btn btn-secondary" id="deleteAddressBtn">DELETE</button>
+                      <button type="button" class="btn btn-secondary" id="editAddressBtn">EDIT</button>
+                      <button type="button" class="btn btn-primary" id="addAddressBtn">ADD</button>
+                    </div>
+                  </div>
+                  
+                  <div class="form-section">
+                    <h4 class="form-section-header">Stored Addresses</h4>
+                    <div id="storedAddressesList" style="border: 1px solid #ccc; min-height: 200px; padding: 10px; background: white;">
+                      <p style="color: #999; text-align: center;">No stored addresses yet</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary" style="margin-top: 10px;">VIEW</button>
+                  </div>
+                  
+                  <div class="form-section">
+                    <h4 class="form-section-header">My Billing Contact</h4>
+                    <div class="form-row-2">
+                      <div class="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" id="employeeId" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>VIP Number</label>
+                        <input type="text" id="vipNumber" class="form-control" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>My Billing Contact</label>
+                      <select id="myBillingContact" class="form-control">
+                        <option value="">-- NOT SELECTED --</option>
+                      </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="updateContactBtn">UPDATE CONTACT</button>
+                  </div>
+                  
+                  <div class="form-section">
+                    <h4 class="form-section-header">Accounts Managed</h4>
+                    <div style="border: 1px solid #ccc; min-height: 150px; padding: 10px; background: white;">
+                      <p style="color: #999; text-align: center;">No managed accounts</p>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                      <button type="button" class="btn btn-secondary">DELETE</button>
+                      <button type="button" class="btn btn-secondary">VIEW</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Booking Conts Tab -->
+              <div id="bookingTab" class="account-tab-content" style="display: none;">
+                <div class="account-form">
+                  <div class="form-section">
+                    <h4 class="form-section-header">My Booking Accounts</h4>
+                    <div id="bookingContactsList" style="border: 1px solid #ccc; min-height: 300px; padding: 10px; background: white;">
+                      <p style="color: #999; text-align: center;">No booking contacts yet</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary" style="margin-top: 10px;">VIEW</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Misc Tab -->
+              <div id="miscTab" class="account-tab-content" style="display: none;">
+                <div class="account-form">
+                  <div class="account-form-left">
+                    <div class="form-section">
+                      <h4 class="form-section-header">Account Information</h4>
+                      
+                      <div class="form-row-2">
+                        <div class="form-group">
+                          <label>Prefix</label>
+                          <select id="miscPrefix" class="form-control">
+                            <option value="">-- NOT SELECTED --</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Dr">Dr</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label>First Name</label>
+                          <input type="text" id="miscFirstName" class="form-control" readonly />
+                        </div>
+                      </div>
+                      
+                      <div class="form-row-2">
+                        <div class="form-group">
+                          <label>Last Name</label>
+                          <input type="text" id="miscLastName" class="form-control" readonly />
+                        </div>
+                        <div class="form-group">
+                          <label>Account Number</label>
+                          <input type="text" id="miscAccountNumber" class="form-control" readonly style="background: #f5f5f5; color: #d32f2f; font-weight: bold;" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Trip History</h4>
+                      <div style="border: 1px solid #ccc; min-height: 150px; padding: 10px; background: white;">
+                        <p style="color: #999; text-align: center;">No trip history</p>
+                      </div>
+                      <button type="button" class="btn btn-secondary" style="margin-top: 10px;">VIEW</button>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Account History</h4>
+                      <div style="border: 1px solid #ccc; min-height: 150px; padding: 10px; background: white;">
+                        <p style="color: #999; text-align: center;">No account history</p>
+                      </div>
+                      <button type="button" class="btn btn-secondary" style="margin-top: 10px;">VIEW</button>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Customer Logo Upload/Preview</h4>
+                      <div style="border: 1px solid #ccc; min-height: 200px; padding: 20px; background: white; text-align: center;">
+                        <p style="color: #999;">-- NO LOGO UPLOADED --</p>
+                      </div>
+                      <div style="margin-top: 10px;">
+                        <input type="file" id="logoUpload" accept="image/*" style="display: none;" />
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('logoUpload').click()">Choose File</button>
+                        <span style="margin-left: 10px; color: #666;">No file chosen</span>
+                        <button type="button" class="btn btn-primary" style="margin-left: 10px;">Upload >></button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="account-form-right">
+                    <div class="form-section">
+                      <h4 class="form-section-header">Transaction Log</h4>
+                      <div style="border: 1px solid #ccc; min-height: 150px; padding: 10px; background: white;">
+                        <p style="color: #999; text-align: center;">No transactions</p>
+                      </div>
+                      <button type="button" class="btn btn-secondary" style="margin-top: 10px;">VIEW</button>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Customer Profile Info</h4>
+                      <div style="padding: 10px; background: #f9f9f9; border: 1px solid #e0e0e0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                          <span style="font-weight: 600;">Created By:</span>
+                          <span id="createdBy">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                          <span style="font-weight: 600;">Date Created:</span>
+                          <span id="dateCreated">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                          <span style="font-weight: 600;">Updated By:</span>
+                          <span id="updatedBy">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                          <span style="font-weight: 600;">Last Updated:</span>
+                          <span id="lastUpdated">--</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Scheduled Email Rules For Account</h4>
+                      <select id="scheduledEmailRules" class="form-control">
+                        <option value="">- - - NOT SELECTED - - -</option>
+                      </select>
+                      <button type="button" class="btn btn-primary" style="margin-top: 10px;">SAVE</button>
+                    </div>
+                    
+                    <div class="form-section">
+                      <h4 class="form-section-header">Partner Preferences</h4>
+                      <div class="form-group">
+                        <label>GroundXchange ID</label>
+                        <input type="text" id="groundXchangeId" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label>GNet ID</label>
+                        <input type="text" id="gnetId" class="form-control" />
+                      </div>
+                      <button type="button" class="btn btn-primary">SAVE</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

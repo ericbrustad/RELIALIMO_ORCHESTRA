@@ -52,6 +52,13 @@
               <div class="billing-tabs">
                 <button class="billing-tab active" data-billing-tab="account">Bill To & Pax</button>
                 <button class="billing-tab" data-billing-tab="payment">Payment Info</button>
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                  <label style="display: flex; align-items: center; gap: 5px; font-size: 14px; cursor: pointer;">
+                    <input type="checkbox" id="copyPassengerInfoCheckbox" style="cursor: pointer;" />
+                    <span>Copy Passenger Info</span>
+                  </label>
+                  <button type="button" id="createAccountBtn" class="btn-icon" title="Create new account from billing info" style="padding: 6px 12px;">📋 Create Account</button>
+                </div>
               </div>
               
               <div class="billing-tab-content active" id="accountTab">
@@ -230,7 +237,6 @@
             <section class="panel">
               <div class="panel-header">
                 <h2 class="panel-title">Passenger</h2>
-                <button type="button" id="copyPassengerToAccountBtn" class="btn-icon" title="Copy passenger data to billing & create account" style="margin-left: auto;" onclick="window.copyPassengerToBillingAndOpenAccounts()">📋 Copy to Account</button>
               </div>
               
               <div class="form-section">

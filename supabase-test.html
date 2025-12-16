@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Connection Test</title>
+  <link rel="icon" href="favicon.png" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .status {
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .loading { background: #fff3cd; color: #856404; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .info { background: #d1ecf1; color: #0c5460; }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px;
+    }
+    button:hover { background: #0056b3; }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-card">
+    <h1>🔌 Supabase Connection Test</h1>
+    
+    <div id="status" class="status loading">Initializing...</div>
+    
+    <div id="details"></div>
+    
+    <div style="margin-top: 20px;">
+      <button id="testConnection">Test Connection</button>
+      <button id="testAuth">Test Auth</button>
+      <button id="testQuery">Test Database Query</button>
+      <button id="logout">Log Out</button>
+      <button id="clearResults">Clear Results</button>
+    </div>
+    
+    <div id="results"></div>
+  </div>
+
+  <script src="env.js"></script>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { getSupabaseCredentials } from './supabase-config.js';
+
+    let supabase;
+    const statusEl = document.getElementById('status');
+    const detailsEl = document.getElementById('details');
+    const resultsEl = document.getElementById('results');
+
+    function showStatus(message, type = 'info') {
+      statusEl.className = `status ${type}`;
+      statusEl.textContent = message;
+    }
+
+    function addResult(title, data) {
+      const resultDiv = document.createElement('div');
+      resultDiv.innerHTML = `
+        <h3>${title}</h3>
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+      `;
+      resultsEl.appendChild(resultDiv);
+    }
+
+    // Initialize Supabase
+    try {
+      const { url, anonKey } = getSupabaseCredentials();
+      supabase = createClient(url, anonKey);
+      
+      showStatus('✅ Supabase client initialized successfully', 'success');
+      detailsEl.innerHTML = `
+        <div class="status info">
+          <strong>Supabase URL:</strong> ${url}<br>
+          <strong>Anon Key:</strong> ${anonKey.substring(0, 20)}...
+        </div>
+      `;
+    } catch (error) {
+      showStatus(`❌ Failed to initialize: ${error.message}`, 'error');
+      console.error(error);
+    }
+
+    // Test Connection
+    document.getElementById('testConnection').addEventListener('click', async () => {
+      showStatus('Testing connection...', 'loading');
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        showStatus('✅ Connection successful!', 'success');
+        addResult('Connection Test', { 
+          status: 'Connected',
+          hasSession: !!data.session,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        showStatus(`❌ Connection failed: ${error.message}`, 'error');
+        addResult('Connection Error', error);
+      }
+    });
+
+    // Test Auth
+    document.getElementById('testAuth').addEventListener('click', async () => {
+      showStatus('Checking authentication...', 'loading');
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error) throw error;
+        
+        if (user) {
+          showStatus('✅ User is authenticated', 'success');
+          addResult('Current User', user);
+        } else {
+          showStatus('ℹ️ No user logged in', 'info');
+          addResult('Auth Status', { authenticated: false });
+        }
+      } catch (error) {
+        showStatus(`❌ Auth check failed: ${error.message}`, 'error');
+        addResult('Auth Error', error);
+      }
+    });
+
+    // Test Database Query
+    document.getElementById('testQuery').addEventListener('click', async () => {
+      showStatus('Testing database query...', 'loading');
+      try {
+        // Try different tables in order of likelihood
+        const tablesToTry = ['accounts', 'organizations', 'drivers', 'vehicles', 'profiles'];
+        let foundTable = null;
+        let tableData = null;
+        
+        for (const table of tablesToTry) {
+          const { data, error } = await supabase
+            .from(table)
+            .select('*')
+            .limit(3);
+          
+          if (!error && data) {
+            foundTable = table;
+            tableData = data;
+            break;
+          }
+        }
+        
+        if (foundTable) {
+          showStatus(`✅ Successfully queried '${foundTable}' table!`, 'success');
+          addResult(`Query Results (${foundTable})`, tableData);
+        } else {
+          showStatus('⚠️ No tables found. Run supabase-schema.sql first.', 'error');
+          addResult('Database Status', {
+            message: 'No tables exist yet',
+            action: 'Run supabase-schema.sql in Supabase SQL Editor'
+          });
+        }
+      } catch (error) {
+        showStatus(`❌ Query failed: ${error.message}`, 'error');
+        addResult('Query Error', {
+          message: error.message,
+          hint: 'Run supabase-schema.sql in your Supabase project first.'
+        });
+      }
+    });
+
+    // Log Out
+    document.getElementById('logout').addEventListener('click', async () => {
+      showStatus('Logging out...', 'loading');
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        showStatus('✅ Logged out successfully', 'success');
+        addResult('Logout', { status: 'Logged out', timestamp: new Date().toISOString() });
+      } catch (error) {
+        showStatus(`❌ Logout failed: ${error.message}`, 'error');
+        addResult('Logout Error', error);
+      }
+    });
+
+    // Clear Results
+    document.getElementById('clearResults').addEventListener('click', () => {
+      resultsEl.innerHTML = '';
+      showStatus('Results cleared', 'info');
+    });
+  </script>
+</body>
+</html>

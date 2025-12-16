@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RELIA LIMO™</title>
-    <link rel="icon" href="https://github.com/user-attachments/assets/d7d111cc-186d-4a88-bac3-7b39c313b25c" />
+    <link rel="icon" href="favicon.png" />
     <!-- Load environment variables first -->
     <script src="env.js"></script>
     <link rel="stylesheet" href="my-office.css" />
@@ -37,22 +37,22 @@
             <h1 class="logo">RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="RELIA bull" class="logo-bull">LIMO™</h1>
           </div>
           <div class="main-nav">
-            <button class="nav-btn" data-section="new-reservation" onclick="openNewReservation()"><span>New Reservation</span><span style="font-size: 24px;">➕</span></button>
-            <button class="nav-btn" data-section="dashboard" onclick="switchMainSection('dashboard')"><span>Farmout Dashboard</span><span style="font-size: 24px;">🏠</span></button>
-            <button class="nav-btn active" data-section="office" onclick="switchMainSection('office')"><span>Office</span><span style="font-size: 24px;">🏢</span></button>
-            <button class="nav-btn" data-section="accounts" onclick="switchMainSection('accounts')"><span>Accounts</span><span style="font-size: 24px;">👤</span></button>
-            <button class="nav-btn" data-section="calendar" onclick="switchMainSection('calendar')"><span>Calendar</span><span style="font-size: 24px;">📅</span></button>
-            <button class="nav-btn" data-section="quotes" onclick="switchMainSection('quotes')"><span>Quotes</span><span style="font-size: 24px;">📋</span></button>
-            <button class="nav-btn" data-section="reservations" onclick="switchMainSection('reservations')"><span>Reservations</span><span style="font-size: 24px;">🚗</span></button>
-            <button class="nav-btn" data-section="dispatch" onclick="switchMainSection('dispatch')"><span>Dispatch</span><span style="font-size: 24px;">🚙</span></button>
-            <button class="nav-btn" data-section="network" onclick="switchMainSection('network')"><span>Network</span><span style="font-size: 24px;">🌐</span></button>
-            <button class="nav-btn" data-section="settle" onclick="switchMainSection('settle')"><span>Settle</span><span style="font-size: 24px;">💰</span></button>
-            <button class="nav-btn" data-section="receivables" onclick="switchMainSection('receivables')"><span>Receivables</span><span style="font-size: 24px;">📊</span></button>
-            <button class="nav-btn" data-section="payables" onclick="switchMainSection('payables')"><span>Payables</span><span style="font-size: 24px;">💳</span></button>
-            <button class="nav-btn" data-section="memos" onclick="switchMainSection('memos')"><span>Memos</span><span style="font-size: 24px;">📝</span></button>
-            <button class="nav-btn" data-section="files" onclick="switchMainSection('files')"><span>Files</span><span style="font-size: 24px;">📁</span></button>
-            <button class="nav-btn" data-section="tools" onclick="switchMainSection('tools')"><span>Tools</span><span style="font-size: 24px;">🔧</span></button>
-            <button class="nav-btn" data-section="reports" onclick="switchMainSection('reports')"><span>Reports</span><span style="font-size: 24px;">📈</span></button>
+            <button class="nav-btn" data-section="new-reservation"><span>New Reservation</span><span style="font-size: 24px;">➕</span></button>
+            <button class="nav-btn" data-section="dashboard"><span>Farmout Dashboard</span><span style="font-size: 24px;">🏠</span></button>
+            <button class="nav-btn active" data-section="office"><span>Office</span><span style="font-size: 24px;">🏢</span></button>
+            <button class="nav-btn" data-section="accounts"><span>Accounts</span><span style="font-size: 24px;">👤</span></button>
+            <button class="nav-btn" data-section="calendar"><span>Calendar</span><span style="font-size: 24px;">📅</span></button>
+            <button class="nav-btn" data-section="quotes"><span>Quotes</span><span style="font-size: 24px;">📋</span></button>
+            <button class="nav-btn" data-section="reservations"><span>Reservations</span><span style="font-size: 24px;">🚗</span></button>
+            <button class="nav-btn" data-section="dispatch"><span>Dispatch</span><span style="font-size: 24px;">🚙</span></button>
+            <button class="nav-btn" data-section="network"><span>Network</span><span style="font-size: 24px;">🌐</span></button>
+            <button class="nav-btn" data-section="settle"><span>Settle</span><span style="font-size: 24px;">💰</span></button>
+            <button class="nav-btn" data-section="receivables"><span>Receivables</span><span style="font-size: 24px;">📊</span></button>
+            <button class="nav-btn" data-section="payables"><span>Payables</span><span style="font-size: 24px;">💳</span></button>
+            <button class="nav-btn" data-section="memos"><span>Memos</span><span style="font-size: 24px;">📝</span></button>
+            <button class="nav-btn" data-section="files"><span>Files</span><span style="font-size: 24px;">📁</span></button>
+            <button class="nav-btn" data-section="tools"><span>Tools</span><span style="font-size: 24px;">🔧</span></button>
+            <button class="nav-btn" data-section="reports"><span>Reports</span><span style="font-size: 24px;">📈</span></button>
           </div>
         </div>
       </header>
@@ -139,9 +139,18 @@
     </div>
 
     <script>
-      function openNewReservation() {
-        switchMainSection('new-reservation');
-      }
+      // Wire all navigation buttons with event delegation
+      document.addEventListener('DOMContentLoaded', () => {
+        const mainNav = document.querySelector('.main-nav');
+        if (mainNav) {
+          mainNav.addEventListener('click', (e) => {
+            const btn = e.target.closest('.nav-btn');
+            if (btn?.dataset.section) {
+              switchMainSection(btn.dataset.section);
+            }
+          });
+        }
+      });
 
       function switchMainSection(section) {
         console.log('Switching to section:', section);

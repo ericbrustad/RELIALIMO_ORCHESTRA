@@ -53,21 +53,47 @@ alter table public.organization_members enable row level security;
 
 create table if not exists public.accounts (
   id uuid primary key default uuid_generate_v4(),
+  account_number text unique,
   organization_id uuid not null references public.organizations(id) on delete cascade,
-  email text not null,
+  
+  -- Account Info
+  prefix text,
   first_name text,
   last_name text,
+  company_name text,
+  email text not null,
   phone text,
   cell_phone text,
   fax text,
-  company_name text,
-  address text,
-  city text,
-  state text,
-  postal_code text,
-  country text,
+  employee_id text,
+  vip_number text,
+  
+  -- Contact preferences
   contact_method text,
   status text default 'active' check (status in ('active', 'inactive', 'archived')),
+  
+  -- Financial Settings
+  post_method text,
+  post_terms text,
+  primary_agent_assigned text,
+  secondary_agent_assigned text,
+  
+  -- Payment Information
+  credit_card_number text,
+  name_on_card text,
+  billing_address text,
+  billing_city text,
+  billing_state text,
+  billing_zip text,
+  billing_address_line2 text,
+  billing_country text,
+  exp_month text,
+  exp_year text,
+  cc_type text,
+  cvv text,
+  credit_card_notes text,
+  
+  -- Metadata
   notes text,
   created_by uuid references auth.users(id) on delete set null,
   updated_by uuid references auth.users(id) on delete set null,
@@ -79,7 +105,36 @@ create table if not exists public.accounts (
 alter table public.accounts enable row level security;
 
 -- ===================================
--- 4. ACCOUNT EMAILS TABLE (Alternative contacts)
+-- 4. ACCOUNT ADDRESSES TABLE (Stored addresses for accounts)
+-- ===================================
+
+create table if not exists public.account_addresses (
+  id uuid primary key default uuid_generate_v4(),
+  account_id uuid not null references public.accounts(id) on delete cascade,
+  organization_id uuid not null references public.organizations(id) on delete cascade,
+  address_type text check (address_type in ('primary', 'pickup', 'dropoff', 'waypoint', 'billing', 'home', 'other')),
+  address_name text,
+  address_line1 text not null,
+  address_line2 text,
+  city text,
+  state text,
+  zip_code text,
+  country text default 'United States',
+  latitude numeric,
+  longitude numeric,
+  use_count integer default 1,
+  last_used_at timestamp with time zone default now(),
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+alter table public.account_addresses enable row level security;
+
+create index idx_account_addresses_account_id on public.account_addresses(account_id);
+create index idx_account_addresses_address_type on public.account_addresses(address_type);
+
+-- ===================================
+-- 5. ACCOUNT EMAILS TABLE (Alternative contacts)
 -- ===================================
 
 create table if not exists public.account_emails (
@@ -95,7 +150,22 @@ create table if not exists public.account_emails (
 alter table public.account_emails enable row level security;
 
 -- ===================================
--- 5. DRIVERS TABLE
+-- 6. ACCOUNT BOOKING CONTACTS TABLE
+-- ===================================
+
+create table if not exists public.account_booking_contacts (
+  id uuid primary key default uuid_generate_v4(),
+  account_id uuid not null references public.accounts(id) on delete cascade,
+  organization_id uuid not null references public.organizations(id) on delete cascade,
+  contact_name text not null,
+  contact_info text,
+  created_at timestamp with time zone default now()
+);
+
+alter table public.account_booking_contacts enable row level security;
+
+-- ===================================
+-- 7. DRIVERS TABLE
 -- ===================================
 
 create table if not exists public.drivers (
@@ -136,7 +206,7 @@ create table if not exists public.drivers (
 alter table public.drivers enable row level security;
 
 -- ===================================
--- 6. VEHICLES TABLE
+-- 8. VEHICLES TABLE
 -- ===================================
 
 create table if not exists public.vehicles (
@@ -161,7 +231,7 @@ create table if not exists public.vehicles (
 alter table public.vehicles enable row level security;
 
 -- ===================================
--- 7. RESERVATIONS TABLE
+-- 9. RESERVATIONS TABLE
 -- ===================================
 
 create table if not exists public.reservations (
@@ -202,7 +272,7 @@ create table if not exists public.reservations (
 alter table public.reservations enable row level security;
 
 -- ===================================
--- 8. RESERVATION ROUTE STOPS TABLE
+-- 10. RESERVATION ROUTE STOPS TABLE
 -- ===================================
 
 create table if not exists public.reservation_route_stops (
@@ -225,7 +295,7 @@ create table if not exists public.reservation_route_stops (
 alter table public.reservation_route_stops enable row level security;
 
 -- ===================================
--- 9. RESERVATION ASSIGNMENTS TABLE
+-- 11. RESERVATION ASSIGNMENTS TABLE
 -- ===================================
 
 create table if not exists public.reservation_assignments (
@@ -246,7 +316,7 @@ create table if not exists public.reservation_assignments (
 alter table public.reservation_assignments enable row level security;
 
 -- ===================================
--- 10. RESERVATION EVENTS TABLE
+-- 12. RESERVATION EVENTS TABLE
 -- ===================================
 
 create table if not exists public.reservation_events (
@@ -301,6 +371,30 @@ using (organization_id in (
 -- Accounts: visible if user is in org
 create policy "accounts_visible_in_org"
 on public.accounts for select to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Account Addresses: visible if user is in org
+create policy "account_addresses_visible_in_org"
+on public.account_addresses for select to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Account Emails: visible if user is in org
+create policy "account_emails_visible_in_org"
+on public.account_emails for select to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Account Booking Contacts: visible if user is in org
+create policy "account_booking_contacts_visible_in_org"
+on public.account_booking_contacts for select to authenticated
 using (organization_id in (
   select organization_id from public.organization_members
   where user_id = auth.uid()

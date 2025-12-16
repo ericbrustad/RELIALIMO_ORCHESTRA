@@ -250,17 +250,27 @@ class ReservationForm {
       });
     }
 
-    // Copy Passenger to Account button
-    const copyPassengerBtn = document.getElementById('copyPassengerToAccountBtn');
-    console.log('🔍 Looking for copyPassengerToAccountBtn:', copyPassengerBtn);
-    if (copyPassengerBtn) {
-      copyPassengerBtn.addEventListener('click', () => {
-        console.log('✅ Copy to Account button clicked!');
-        this.copyPassengerToBillingAndOpenAccounts();
+    // Create Account button
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    console.log('🔍 Looking for createAccountBtn:', createAccountBtn);
+    if (createAccountBtn) {
+      createAccountBtn.addEventListener('click', () => {
+        console.log('✅ Create Account button clicked!');
+        this.createAccountFromBilling();
       });
-      console.log('✅ Copy to Account button listener attached');
+      console.log('✅ Create Account button listener attached');
     } else {
-      console.error('❌ copyPassengerToAccountBtn not found in DOM!');
+      console.error('❌ createAccountBtn not found in DOM!');
+    }
+
+    // Copy Passenger Info checkbox
+    const copyPassengerCheckbox = document.getElementById('copyPassengerInfoCheckbox');
+    if (copyPassengerCheckbox) {
+      copyPassengerCheckbox.addEventListener('change', () => {
+        if (copyPassengerCheckbox.checked) {
+          this.copyPassengerToBilling();
+        }
+      });
     }
 
     // Add Contact Modal
@@ -902,25 +912,58 @@ class ReservationForm {
   }
 
   createNewAccount(passengerInfo) {
-    // Get current billing information from Billing Accounts section
+    // Get data from modal form fields
+    const modal = document.getElementById('accountModal');
+    const firstName = modal.querySelector('#accountFirstName')?.value?.trim() || '';
+    const lastName = modal.querySelector('#accountLastName')?.value?.trim() || '';
+    const company = modal.querySelector('#accountCompany')?.value?.trim() || '';
+    const phone = modal.querySelector('#accountPhone')?.value?.trim() || '';
+    const email = modal.querySelector('#accountEmail')?.value?.trim() || '';
+
+    // Validate required fields
+    if (!firstName || !lastName || !email) {
+      alert('First Name, Last Name, and Email are required.');
+      return;
+    }
+
+    // Get next account number from localStorage or start at 30000
+    let nextAccountNumber = parseInt(localStorage.getItem('nextAccountNumber') || '30000');
+    
+    // Prepare account data for db module
     const accountData = {
-      firstName: document.getElementById('billingFirstName').value,
-      lastName: document.getElementById('billingLastName').value,
-      company: document.getElementById('billingCompany').value,
-      phone: document.getElementById('billingPhone').value,
-      email: document.getElementById('billingEmail').value
+      id: nextAccountNumber.toString(),
+      first_name: firstName,
+      last_name: lastName,
+      company_name: company,
+      phone: phone,
+      email: email,
+      type: 'individual',
+      status: 'active',
+      created_at: new Date().toISOString()
     };
 
-    // Create new account
-    const newAccount = this.accountManager.createAccount(accountData);
+    // Save account using db module
+    const saved = db.saveAccount(accountData);
+    
+    if (!saved) {
+      alert('Error saving account. Please try again.');
+      return;
+    }
 
-    // Update UI
-    document.getElementById('billingAccountSearch').value = `${newAccount.id} - ${newAccount.firstName} ${newAccount.lastName}`;
+    // Increment and save next account number
+    localStorage.setItem('nextAccountNumber', (nextAccountNumber + 1).toString());
+
+    // Update billing account search field with account number
+    const billingAccountSearch = document.getElementById('billingAccountSearch');
+    billingAccountSearch.value = nextAccountNumber.toString();
+    billingAccountSearch.setAttribute('readonly', true);
+    billingAccountSearch.style.backgroundColor = '#f5f5f5';
+    billingAccountSearch.style.cursor = 'not-allowed';
 
     this.closeModal();
 
     // Show success message
-    alert(`New account created successfully!\nAccount ID: ${newAccount.id}`);
+    alert(`New account created successfully!\nAccount Number: ${nextAccountNumber}`);
   }
 
   closeModal() {
@@ -947,6 +990,45 @@ class ReservationForm {
 
   closeAddContactModal() {
     document.getElementById('addContactModal').classList.remove('active');
+  }
+
+  openAddAccountModal() {
+    const modal = document.getElementById('accountModal');
+    const modalBody = document.getElementById('modalBody');
+    
+    // Build account form in modal
+    modalBody.innerHTML = `
+      <div class="form-section">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" id="accountFirstName" class="form-control" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" id="accountLastName" class="form-control" placeholder="Last name" required />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="accountCompany" class="form-control" placeholder="Company name (optional)" />
+        </div>
+        
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="accountPhone" class="form-control" placeholder="Phone number" />
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="accountEmail" class="form-control" placeholder="Email address" required />
+          </div>
+        </div>
+      </div>
+    `;
+    
+    modal.classList.add('active');
   }
 
   saveNewContact() {
@@ -1000,6 +1082,90 @@ class ReservationForm {
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Error saving contact: ' + error.message);
+    }
+  }
+
+  copyPassengerToBilling() {
+    console.log('🚀 copyPassengerToBilling() called');
+    
+    try {
+      // Get passenger data
+      const firstName = document.getElementById('passengerFirstName')?.value?.trim() || '';
+      const lastName = document.getElementById('passengerLastName')?.value?.trim() || '';
+      const phone = document.getElementById('passengerPhone')?.value?.trim() || '';
+      const email = document.getElementById('passengerEmail')?.value?.trim() || '';
+
+      console.log('📝 Passenger data:', { firstName, lastName, phone, email });
+
+      if (!firstName && !lastName && !phone && !email) {
+        console.warn('⚠️ No passenger data to copy');
+        return;
+      }
+
+      // Copy passenger → billing fields
+      const billingFirstName = document.getElementById('billingFirstName');
+      const billingLastName = document.getElementById('billingLastName');
+      const billingPhone = document.getElementById('billingPhone');
+      const billingEmail = document.getElementById('billingEmail');
+      const billingAccountSearch = document.getElementById('billingAccountSearch');
+
+      if (billingFirstName && firstName) billingFirstName.value = firstName;
+      if (billingLastName && lastName) billingLastName.value = lastName;
+      if (billingPhone && phone) billingPhone.value = phone;
+      if (billingEmail && email) billingEmail.value = email;
+      if (billingAccountSearch && (firstName || lastName)) {
+        billingAccountSearch.value = `${firstName} ${lastName}`.trim();
+      }
+
+      console.log('✅ Passenger → Billing fields copied');
+    } catch (error) {
+      console.error('❌ Error in copyPassengerToBilling:', error);
+    }
+  }
+
+  createAccountFromBilling() {
+    console.log('🚀 createAccountFromBilling() called');
+    
+    try {
+      // Get billing data
+      const firstName = document.getElementById('billingFirstName')?.value?.trim() || '';
+      const lastName = document.getElementById('billingLastName')?.value?.trim() || '';
+      const phone = document.getElementById('billingPhone')?.value?.trim() || '';
+      const email = document.getElementById('billingEmail')?.value?.trim() || '';
+      const company = document.getElementById('billingCompany')?.value?.trim() || '';
+
+      console.log('📝 Billing data:', { firstName, lastName, phone, email, company });
+
+      if (!firstName || !lastName || !email) {
+        alert('Please enter First Name, Last Name, and Email in the billing section before creating an account.');
+        return;
+      }
+
+      // Open the account modal for editing
+      this.openAddAccountModal();
+
+      // Pre-fill the modal with billing data
+      setTimeout(() => {
+        const modal = document.getElementById('accountModal');
+        if (modal) {
+          const modalFirstName = modal.querySelector('#accountFirstName');
+          const modalLastName = modal.querySelector('#accountLastName');
+          const modalPhone = modal.querySelector('#accountPhone');
+          const modalEmail = modal.querySelector('#accountEmail');
+          const modalCompany = modal.querySelector('#accountCompany');
+
+          if (modalFirstName) modalFirstName.value = firstName;
+          if (modalLastName) modalLastName.value = lastName;
+          if (modalPhone) modalPhone.value = phone;
+          if (modalEmail) modalEmail.value = email;
+          if (modalCompany) modalCompany.value = company;
+
+          console.log('✅ Account modal pre-filled with billing data');
+        }
+      }, 100);
+    } catch (error) {
+      console.error('❌ Error in createAccountFromBilling:', error);
+      alert('Error creating account: ' + error.message);
     }
   }
 
@@ -1605,6 +1771,37 @@ class ReservationForm {
       if (reservationData.routing.stops && reservationData.routing.stops.length > 0) {
         db.saveRouteStops(saved.id, reservationData.routing.stops);
         console.log('✅ Route stops saved to db');
+        
+        // Save addresses to account if account number exists
+        const accountNumber = reservationData.billingAccount.account;
+        if (accountNumber && accountNumber.trim()) {
+          // Find account by number
+          const account = db.getAllAccounts().find(a => a.id === accountNumber || a.account_number === accountNumber);
+          
+          if (account) {
+            console.log('📍 Saving addresses to account:', account.id);
+            
+            // Save each stop address to the account
+            reservationData.routing.stops.forEach(stop => {
+              if (stop.address1 && stop.city) {
+                const addressData = {
+                  address_type: stop.stopType || 'waypoint',
+                  address_name: stop.locationName || '',
+                  address_line1: stop.address1,
+                  address_line2: stop.address2 || '',
+                  city: stop.city,
+                  state: stop.state || '',
+                  zip_code: stop.zipCode || '',
+                  country: 'United States'
+                };
+                
+                db.saveAccountAddress(account.id, addressData);
+              }
+            });
+            
+            console.log('✅ Addresses saved to account');
+          }
+        }
       }
 
       // Try to also save via API for backup

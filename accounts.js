@@ -198,7 +198,31 @@ class Accounts {
       document.getElementById('accountInfoTab').style.display = 'block';
     } else if (tabName === 'financial') {
       document.getElementById('financialDataTab').style.display = 'block';
+    } else if (tabName === 'addresses') {
+      document.getElementById('addressesTab').style.display = 'block';
+      this.loadStoredAddresses();
+    } else if (tabName === 'booking') {
+      document.getElementById('bookingTab').style.display = 'block';
+      this.loadBookingContacts();
+    } else if (tabName === 'misc') {
+      document.getElementById('miscTab').style.display = 'block';
+      this.loadMiscInfo();
     }
+  }
+  
+  loadStoredAddresses() {
+    // TODO: Load stored addresses from db
+    console.log('Loading stored addresses...');
+  }
+  
+  loadBookingContacts() {
+    // TODO: Load booking contacts from db
+    console.log('Loading booking contacts...');
+  }
+  
+  loadMiscInfo() {
+    // TODO: Load misc info
+    console.log('Loading misc info...');
   }
 
   navigateToSection(section) {
