@@ -3,6 +3,23 @@
 -- Run this FIRST before supabase-setup.sql
 -- ===================================
 
+-- Drop everything first for clean slate
+drop table if exists public.reservation_events cascade;
+drop table if exists public.reservation_assignments cascade;
+drop table if exists public.reservation_route_stops cascade;
+drop table if exists public.reservations cascade;
+drop table if exists public.vehicles cascade;
+drop table if exists public.drivers cascade;
+drop table if exists public.booking_agents cascade;
+drop table if exists public.passengers cascade;
+drop table if exists public.account_booking_contacts cascade;
+drop table if exists public.account_emails cascade;
+drop table if exists public.account_addresses cascade;
+drop table if exists public.accounts cascade;
+drop table if exists public.organization_members cascade;
+drop table if exists public.organizations cascade;
+drop function if exists public.get_user_role_in_org(uuid);
+
 -- Enable required extensions
 create extension if not exists "uuid-ossp";
 create extension if not exists "pgcrypto";
@@ -424,6 +441,22 @@ using (organization_id in (
   where user_id = auth.uid()
 ));
 
+-- Accounts: allow insert if user is in org
+create policy "accounts_insert_in_org"
+on public.accounts for insert to authenticated
+with check (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Accounts: allow update if user is in org
+create policy "accounts_update_in_org"
+on public.accounts for update to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
 -- Account Addresses: visible if user is in org
 create policy "account_addresses_visible_in_org"
 on public.account_addresses for select to authenticated
@@ -456,9 +489,41 @@ using (organization_id in (
   where user_id = auth.uid()
 ));
 
+-- Passengers: allow insert if user is in org
+create policy "passengers_insert_in_org"
+on public.passengers for insert to authenticated
+with check (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Passengers: allow update if user is in org
+create policy "passengers_update_in_org"
+on public.passengers for update to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
 -- Booking Agents: visible if user is in org
 create policy "booking_agents_visible_in_org"
 on public.booking_agents for select to authenticated
+using (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Booking Agents: allow insert if user is in org
+create policy "booking_agents_insert_in_org"
+on public.booking_agents for insert to authenticated
+with check (organization_id in (
+  select organization_id from public.organization_members
+  where user_id = auth.uid()
+));
+
+-- Booking Agents: allow update if user is in org
+create policy "booking_agents_update_in_org"
+on public.booking_agents for update to authenticated
 using (organization_id in (
   select organization_id from public.organization_members
   where user_id = auth.uid()
