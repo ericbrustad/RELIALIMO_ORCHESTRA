@@ -427,6 +427,9 @@ export async function saveAccountToSupabase(accountData) {
     lastApiError = null;
     const { user, organizationId } = await getOrgContextOrThrow(client);
     
+    const financial = accountData?.financial_settings || {};
+    const payment = accountData?.payment_profile || {};
+
     // Prepare account data for Supabase
     const supabaseAccount = {
       organization_id: organizationId,
@@ -438,21 +441,42 @@ export async function saveAccountToSupabase(accountData) {
       phone: accountData.phone,
       cell_phone: accountData.cell_phone || accountData.phone,
       status: accountData.status || 'active',
-      post_method: accountData.post_method,
-      post_terms: accountData.post_terms,
+      post_method: accountData.post_method || financial.post_method,
+      post_terms: accountData.post_terms || financial.post_terms,
       primary_agent_assigned: accountData.primary_agent_assigned,
       secondary_agent_assigned: accountData.secondary_agent_assigned,
-      credit_card_number: accountData.credit_card_number,
-      name_on_card: accountData.name_on_card,
-      billing_address: accountData.billing_address,
-      billing_city: accountData.billing_city,
-      billing_state: accountData.billing_state,
-      billing_zip: accountData.billing_zip,
-      exp_month: accountData.exp_month,
-      exp_year: accountData.exp_year,
-      cc_type: accountData.cc_type,
-      cvv: accountData.cvv,
-      notes: accountData.notes,
+      credit_card_number: accountData.credit_card_number || payment.card_number,
+      name_on_card: accountData.name_on_card || payment.name_on_card,
+      billing_address: accountData.billing_address || payment.billing_address1,
+      billing_address2: accountData.billing_address2 || payment.billing_address2,
+      billing_city: accountData.billing_city || payment.billing_city,
+      billing_state: accountData.billing_state || payment.billing_state,
+      billing_zip: accountData.billing_zip || payment.billing_zip,
+      billing_country: accountData.billing_country || payment.billing_country,
+      exp_month: accountData.exp_month || payment.exp_month,
+      exp_year: accountData.exp_year || payment.exp_year,
+      cc_type: accountData.cc_type || payment.cc_type,
+
+      // New fields
+      department: accountData.department,
+      job_title: accountData.job_title,
+      primary_address1: accountData.primary_address1,
+      primary_address2: accountData.primary_address2,
+      primary_city: accountData.primary_city,
+      primary_state: accountData.primary_state,
+      primary_zip: accountData.primary_zip,
+      primary_country: accountData.primary_country,
+
+      account_types: accountData.account_types || accountData.types,
+      account_emails: accountData.account_emails,
+      account_notes: accountData.account_notes,
+      stored_addresses: accountData.stored_addresses,
+      financial_settings: accountData.financial_settings,
+      payment_profile: accountData.payment_profile,
+      credit_card_notes: payment.notes,
+
+      // Legacy notes column: keep something readable
+      notes: (accountData.account_notes?.internal_private || accountData.notes || '').toString(),
       created_by: user.id,
       updated_by: user.id
     };

@@ -22,9 +22,31 @@
       }
       
       /* Ensure only one header shows */
+      html,
       body {
         margin: 0;
         padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #app {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* Keep the shell from scrolling (prevents header "jitter" due to scrollbars).
+         The iframes handle their own scrolling. */
+      .app-main-section {
+        height: calc(100vh - 60px);
+        overflow: hidden;
+      }
+
+      .app-main-section iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: none !important;
+        display: block;
       }
     </style>
   </head>

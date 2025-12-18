@@ -144,6 +144,10 @@ body {
   margin: 0 auto;
 }
 
+body.embedded .main-content {
+  padding: 12px;
+}
+
 .accounts-section {
   display: none;
 }
@@ -158,6 +162,10 @@ body {
   grid-template-columns: 400px 1fr;
   gap: 20px;
   height: calc(100vh - 140px);
+}
+
+body.embedded .companies-layout {
+  height: calc(100vh - 60px);
 }
 
 /* Companies List Panel */
@@ -305,6 +313,10 @@ body {
   grid-template-columns: 220px 1fr;
   gap: 20px;
   height: calc(100vh - 140px);
+}
+
+body.embedded .accounts-layout {
+  height: calc(100vh - 60px);
 }
 
 /* Accounts Sidebar */
@@ -651,6 +663,10 @@ body {
   padding: 20px;
   height: calc(100vh - 140px);
   overflow-y: auto;
+}
+
+body.embedded .export-container {
+  height: calc(100vh - 60px);
 }
 
 .export-layout {

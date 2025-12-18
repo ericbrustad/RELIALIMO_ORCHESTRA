@@ -228,6 +228,21 @@ export const db = {
           existingAddr.last_used_at = new Date().toISOString();
           const key = `relia_account_${accountId}_addresses`;
           localStorage.setItem(key, JSON.stringify(addresses));
+
+          // Best-effort: also store on the account object for Supabase sync
+          try {
+            const accounts = this.getAllAccounts();
+            const idx = accounts.findIndex(a => (a?.id ?? '').toString() === (accountId ?? '').toString());
+            if (idx >= 0) {
+              accounts[idx] = { ...accounts[idx], stored_addresses: addresses };
+              localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
+              import('../api-service.js')
+                .then(apiModule => apiModule.saveAccountToSupabase?.(accounts[idx]))
+                .catch(() => {});
+            }
+          } catch {
+            // ignore
+          }
         }
         
         return existingAddr;
@@ -246,6 +261,21 @@ export const db = {
       addresses.push(newAddress);
       const key = `relia_account_${accountId}_addresses`;
       localStorage.setItem(key, JSON.stringify(addresses));
+
+      // Best-effort: also store on the account object for Supabase sync
+      try {
+        const accounts = this.getAllAccounts();
+        const idx = accounts.findIndex(a => (a?.id ?? '').toString() === (accountId ?? '').toString());
+        if (idx >= 0) {
+          accounts[idx] = { ...accounts[idx], stored_addresses: addresses };
+          localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
+          import('../api-service.js')
+            .then(apiModule => apiModule.saveAccountToSupabase?.(accounts[idx]))
+            .catch(() => {});
+        }
+      } catch {
+        // ignore
+      }
       
       return newAddress;
     } catch (error) {

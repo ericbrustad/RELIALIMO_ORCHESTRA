@@ -82,6 +82,9 @@ class ReservationForm {
           const accountId = (event.data.accountId || '').toString().trim();
           if (!accountId) return;
 
+          const savedAccount = event.data.account || null;
+          const savedTypes = event.data.types || null;
+
           // Prefer loading the saved account and applying it, so Billing is fully populated.
           try {
             const account = db.getAccountById?.(accountId) || db.getAllAccounts?.()?.find(a => {
@@ -101,6 +104,45 @@ class ReservationForm {
             const billingAccountSearch = document.getElementById('billingAccountSearch');
             if (billingAccountSearch) billingAccountSearch.value = accountId;
             this.setBillingAccountNumberDisplay(accountId);
+          }
+
+          // Also populate Passenger / Booking Contact sections based on selected Account Type tickers
+          // (sent from Accounts page when saving)
+          try {
+            const types = savedTypes || {};
+            const acct = savedAccount || null;
+
+            if (acct && types.passenger) {
+              const fn = acct.first_name || '';
+              const ln = acct.last_name || '';
+              const phone = acct.cell_phone || acct.phone || '';
+              const email = acct.email || '';
+              const elFn = document.getElementById('passengerFirstName');
+              const elLn = document.getElementById('passengerLastName');
+              const elPhone = document.getElementById('passengerPhone');
+              const elEmail = document.getElementById('passengerEmail');
+              if (elFn) elFn.value = fn;
+              if (elLn) elLn.value = ln;
+              if (elPhone) elPhone.value = phone;
+              if (elEmail) elEmail.value = email;
+            }
+
+            if (acct && types.booking) {
+              const fn = acct.first_name || '';
+              const ln = acct.last_name || '';
+              const phone = acct.cell_phone || acct.phone || '';
+              const email = acct.email || '';
+              const elFn = document.getElementById('bookedByFirstName');
+              const elLn = document.getElementById('bookedByLastName');
+              const elPhone = document.getElementById('bookedByPhone');
+              const elEmail = document.getElementById('bookedByEmail');
+              if (elFn) elFn.value = fn;
+              if (elLn) elLn.value = ln;
+              if (elPhone) elPhone.value = phone;
+              if (elEmail) elEmail.value = email;
+            }
+          } catch {
+            // ignore
           }
 
           // If we returned via same-window redirect, also clear the return URL
