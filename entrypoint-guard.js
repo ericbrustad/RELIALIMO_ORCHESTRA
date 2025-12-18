@@ -33,6 +33,34 @@ const FILE_TO_SECTION = {
   }
 })();
 
+// When a page is embedded inside the index.html shell, the shell already renders
+// the global header/nav. Many pages also include their own <header class="header">,
+// which causes a duplicated "double header" and can lead to duplicate navigation
+// actions (iframe posts + shell click handlers).
+(function hideEmbeddedPageHeader() {
+  try {
+    if (window.self === window.top) return;
+
+    const hide = () => {
+      try {
+        document.querySelectorAll('header.header').forEach((h) => {
+          h.style.display = 'none';
+        });
+      } catch {
+        // ignore
+      }
+    };
+
+    // Run ASAP to avoid a flash, and again after DOM is ready.
+    hide();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', hide, { once: true });
+    }
+  } catch {
+    // ignore
+  }
+})();
+
 function getCurrentFileName() {
   const p = String(window.location.pathname || '');
   const parts = p.split('/').filter(Boolean);

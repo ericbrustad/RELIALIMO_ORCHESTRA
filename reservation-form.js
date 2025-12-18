@@ -20,6 +20,8 @@ class ReservationForm {
     this.selectedFlight = null;
     this.selectedAffiliate = null;
 
+    this._storedAddressesCache = [];
+
     this._creatingAccountFromBilling = false;
 
     this.isEditMode = false;
@@ -251,6 +253,14 @@ class ReservationForm {
     const raw = (input.value || '').toString().trim();
     if (!raw) {
       this.setBillingAccountNumberDisplay('');
+      // Also clear stored-address dropdown options
+      try {
+        if (document.getElementById('storedAddress')?.checked) {
+          this.populateStoredAddressSelect();
+        }
+      } catch {
+        // ignore
+      }
       return;
     }
 
@@ -267,6 +277,13 @@ class ReservationForm {
         // Selecting/entering a billing account implies billing.
         // Also fill Passenger/Booking if the account tickers say so.
         this.applyAccountToReservationByTypes(account, { selectedRole: 'billing' });
+        try {
+          if (document.getElementById('storedAddress')?.checked) {
+            this.populateStoredAddressSelect();
+          }
+        } catch {
+          // ignore
+        }
         return;
       }
     } catch {
@@ -275,6 +292,13 @@ class ReservationForm {
 
     // If we can't resolve the account, show the candidate (still useful when user manually typed it)
     this.setBillingAccountNumberDisplay(candidate);
+    try {
+      if (document.getElementById('storedAddress')?.checked) {
+        this.populateStoredAddressSelect();
+      }
+    } catch {
+      // ignore
+    }
   }
   
   async loadDrivers() {
@@ -527,6 +551,15 @@ class ReservationForm {
           console.log('🔘 Location type changed to:', e.target.value);
           this.handleLocationTypeChange(e.target.value);
         });
+      });
+    }
+
+    // Stored address selection (Routing window)
+    const storedAddressSelect = document.getElementById('storedAddressSelect');
+    if (storedAddressSelect && !storedAddressSelect.dataset.bound) {
+      storedAddressSelect.dataset.bound = 'true';
+      storedAddressSelect.addEventListener('change', () => {
+        this.applySelectedStoredAddressToRoutingForm(storedAddressSelect.value);
       });
     }
 
@@ -953,6 +986,7 @@ class ReservationForm {
     if (locationType === 'stored') {
       console.log('Showing stored address dropdown');
       document.getElementById('storedAddressDropdown').style.display = 'block';
+      this.populateStoredAddressSelect();
     } else if (locationType === 'airport') {
       console.log('Showing airport dropdown and setting up autocomplete');
       document.getElementById('airportDropdown').style.display = 'block';
@@ -960,6 +994,113 @@ class ReservationForm {
     } else if (locationType === 'fbo') {
       console.log('Showing FBO dropdown');
       document.getElementById('fboDropdown').style.display = 'block';
+    }
+  }
+
+  getCurrentBillingAccountId() {
+    const display = document.getElementById('billingAccountNumberDisplay')?.textContent?.trim() || '';
+    if (display) return display;
+
+    const raw = document.getElementById('billingAccountSearch')?.value?.trim() || '';
+    const m = raw.match(/^\s*(\d{3,})\b/);
+    if (m) return m[1];
+    // Fallback: could be a typed number
+    if (/^\d{3,}$/.test(raw)) return raw;
+    return '';
+  }
+
+  populateStoredAddressSelect() {
+    try {
+      const select = document.getElementById('storedAddressSelect');
+      if (!select) return;
+
+      const accountId = this.getCurrentBillingAccountId();
+      const addresses = accountId ? (db.getAccountAddresses?.(accountId) || []) : [];
+      this._storedAddressesCache = Array.isArray(addresses) ? addresses : [];
+
+      // Preserve placeholder option
+      select.innerHTML = '<option value="">Choose an address...</option>';
+
+      this._storedAddressesCache.forEach((addr, idx) => {
+        const labelParts = [];
+        const name = (addr.address_name || '').toString().trim();
+        const line1 = (addr.address_line1 || '').toString().trim();
+        const city = (addr.city || '').toString().trim();
+        const state = (addr.state || '').toString().trim();
+        const zip = (addr.zip_code || '').toString().trim();
+
+        if (name) labelParts.push(name);
+        if (line1) labelParts.push(line1);
+        const cityStateZip = [city, state, zip].filter(Boolean).join(' ');
+        if (cityStateZip) labelParts.push(cityStateZip);
+
+        const option = document.createElement('option');
+        option.value = addr.id ? `id:${addr.id}` : `idx:${idx}`;
+        option.textContent = labelParts.join(' - ') || 'Stored Address';
+        select.appendChild(option);
+      });
+    } catch (e) {
+      console.warn('⚠️ populateStoredAddressSelect failed:', e);
+    }
+  }
+
+  applySelectedStoredAddressToRoutingForm(addressId) {
+    if (!addressId) return;
+    let addr = null;
+    const raw = (addressId || '').toString();
+
+    if (raw.startsWith('id:')) {
+      const id = raw.slice(3);
+      addr = (this._storedAddressesCache || []).find(a => (a?.id ?? '') === id) || null;
+    } else if (raw.startsWith('idx:')) {
+      const idx = parseInt(raw.slice(4), 10);
+      if (!Number.isNaN(idx)) addr = (this._storedAddressesCache || [])[idx] || null;
+    }
+
+    if (!addr) return;
+
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.value = value ?? '';
+    };
+
+    set('locationName', addr.address_name || '');
+    set('address1', addr.address_line1 || '');
+    set('address2', addr.address_line2 || '');
+    set('city', addr.city || '');
+    set('state', addr.state || '');
+    set('zipCode', addr.zip_code || '');
+    set('country', addr.country || 'US');
+
+    // If a user picked a stored address, ensure the Stored radio stays selected.
+    const storedRadio = document.getElementById('storedAddress');
+    if (storedRadio) storedRadio.checked = true;
+    document.getElementById('storedAddressDropdown').style.display = 'block';
+  }
+
+  saveStopToStoredAddresses(stopData) {
+    try {
+      const accountId = this.getCurrentBillingAccountId();
+      if (!accountId) return;
+
+      if (!stopData || typeof stopData !== 'object') return;
+      if (!stopData.address1 || !stopData.city) return;
+
+      const addressData = {
+        address_type: stopData.stopType || 'waypoint',
+        address_name: stopData.locationName || '',
+        address_line1: stopData.address1,
+        address_line2: stopData.address2 || '',
+        city: stopData.city,
+        state: stopData.state || '',
+        zip_code: stopData.zipCode || '',
+        country: stopData.country || 'US'
+      };
+
+      db.saveAccountAddress?.(accountId, addressData);
+      this.populateStoredAddressSelect();
+    } catch (e) {
+      console.warn('⚠️ saveStopToStoredAddresses failed:', e);
     }
   }
 
@@ -2480,7 +2621,7 @@ class ReservationForm {
       // Collect all form data
       const reservationData = {
         billingAccount: {
-          account: getValue('billingAccountSearch'),
+          account: this.getCurrentBillingAccountId() || getValue('billingAccountSearch'),
           company: getValue('billingCompany'),
           firstName: getValue('billingFirstName'),
           lastName: getValue('billingLastName'),
@@ -3270,5 +3411,14 @@ window.copyPassengerToBillingAndOpenAccounts = function() {
       console.log('🌐 Navigating to accounts.html');
       navigateToSection('accounts', { url: 'accounts.html?mode=new&from=reservation' });
     }, 800);
+  }
+};
+
+// Global wrappers for inline HTML attributes (legacy compatibility)
+window.handleLocationTypeChange = function(type) {
+  try {
+    window.reservationFormInstance?.handleLocationTypeChange?.(type);
+  } catch (e) {
+    console.warn('⚠️ handleLocationTypeChange wrapper failed:', e);
   }
 };

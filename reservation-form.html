@@ -400,10 +400,6 @@
                     <label>Select Stored Address</label>
                     <select id="storedAddressSelect" class="form-control">
                       <option value="">Choose an address...</option>
-                      <option value="home">Home Office - 123 Main St</option>
-                      <option value="warehouse">Warehouse - 456 Industrial Ave</option>
-                      <option value="hotel1">Beverly Hills Hotel - 9641 Sunset Blvd</option>
-                      <option value="hotel2">The Ritz-Carlton - 900 W Olympic Blvd</option>
                     </select>
                   </div>
                 </div>
@@ -2065,6 +2061,15 @@
           tripStops.push(stopData);
         }
         console.log('💾 Stop saved to tripStops:', tripStops);
+
+        // Save this routing address into the account's stored addresses (best-effort)
+        try {
+          if (window.reservationFormInstance && typeof window.reservationFormInstance.saveStopToStoredAddresses === 'function') {
+            window.reservationFormInstance.saveStopToStoredAddresses(stopData);
+          }
+        } catch (e) {
+          console.warn('⚠️ Could not save stop to stored addresses:', e);
+        }
 
         // Get table body
         const tableBody = document.getElementById('addressTableBody');
