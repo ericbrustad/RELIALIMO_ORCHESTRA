@@ -33,6 +33,18 @@
       #app {
         height: 100%;
         overflow: hidden;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+      }
+
+      /* Shell header must be stationary across all sections.
+         Some imported page CSS defines .header-content as centered (max-width + margin:auto),
+         so we hard-override for the shell header specifically. */
+      #app > header.header .header-content {
+        max-width: none !important;
+        width: 100% !important;
+        margin: 0 !important;
       }
 
       /* Keep the shell from scrolling (prevents header "jitter" due to scrollbars).
@@ -40,6 +52,18 @@
       .app-main-section {
         height: calc(100vh - 60px);
         overflow: hidden;
+      }
+
+      /* Wide sections: use full browser width (no centered max-width header) */
+      body.shell-wide .header-content {
+        max-width: none !important;
+        width: 100% !important;
+      }
+      body.shell-wide #app,
+      body.shell-wide .app-main-section,
+      body.shell-wide .app-main-section iframe {
+        width: 100% !important;
+        max-width: none !important;
       }
 
       .app-main-section iframe {
@@ -342,6 +366,28 @@
 
       function switchMainSection(section) {
         console.log('Switching to section:', section);
+
+        // Track active section on the shell
+        try {
+          document.body.dataset.activeSection = section;
+        } catch {
+          // ignore
+        }
+
+        // Wide certain sections (full width, keep header)
+        try {
+          const wideSections = new Set([
+            'new-reservation',
+            'reservations',
+            'accounts',
+            'office',
+            'quotes',
+            'receivables'
+          ]);
+          document.body.classList.toggle('shell-wide', wideSections.has(section));
+        } catch {
+          // ignore
+        }
         
         // Update nav button active state
         document.querySelectorAll('.nav-btn').forEach(btn => {

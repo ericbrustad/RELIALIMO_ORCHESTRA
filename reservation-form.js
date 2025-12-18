@@ -28,6 +28,76 @@ class ReservationForm {
     this.init();
   }
 
+  applyAccountToReservationByTypes(account, options = {}) {
+    if (!account) return;
+    const selectedRole = (options.selectedRole || '').toString().toLowerCase();
+    const types = account.account_types || account.types || {};
+
+    const shouldApplyBilling = selectedRole === 'billing' || !!types.billing;
+    const shouldApplyPassenger = selectedRole === 'passenger' || !!types.passenger;
+    const shouldApplyBooking = selectedRole === 'booking' || !!types.booking;
+
+    if (shouldApplyBilling) {
+      const acctNum = account.account_number || account.id;
+      const elSearch = document.getElementById('billingAccountSearch');
+      if (elSearch) elSearch.value = `${acctNum} - ${account.first_name || ''} ${account.last_name || ''}`.trim();
+      const elCompany = document.getElementById('billingCompany');
+      const elFn = document.getElementById('billingFirstName');
+      const elLn = document.getElementById('billingLastName');
+      const elPhone = document.getElementById('billingPhone');
+      const elEmail = document.getElementById('billingEmail');
+      if (elCompany) elCompany.value = account.company_name || '';
+      if (elFn) elFn.value = account.first_name || '';
+      if (elLn) elLn.value = account.last_name || '';
+      if (elPhone) elPhone.value = account.phone || account.cell_phone || '';
+      if (elEmail) elEmail.value = account.email || '';
+      this.updateBillingAccountNumberDisplay(account);
+    }
+
+    if (shouldApplyPassenger) {
+      const elFn = document.getElementById('passengerFirstName');
+      const elLn = document.getElementById('passengerLastName');
+      const elPhone = document.getElementById('passengerPhone');
+      const elEmail = document.getElementById('passengerEmail');
+      if (elFn) elFn.value = account.first_name || '';
+      if (elLn) elLn.value = account.last_name || '';
+      if (elPhone) elPhone.value = account.cell_phone || account.phone || '';
+      if (elEmail) elEmail.value = account.email || '';
+    }
+
+    if (shouldApplyBooking) {
+      const elFn = document.getElementById('bookedByFirstName');
+      const elLn = document.getElementById('bookedByLastName');
+      const elPhone = document.getElementById('bookedByPhone');
+      const elEmail = document.getElementById('bookedByEmail');
+      if (elFn) elFn.value = account.first_name || '';
+      if (elLn) elLn.value = account.last_name || '';
+      if (elPhone) elPhone.value = account.cell_phone || account.phone || '';
+      if (elEmail) elEmail.value = account.email || '';
+    }
+  }
+
+  resolveAccountByExactName(firstName, lastName) {
+    const fn = (firstName || '').toString().trim().toLowerCase();
+    const ln = (lastName || '').toString().trim().toLowerCase();
+    if (!fn || !ln) return null;
+
+    try {
+      const accounts = db.getAllAccounts?.() || [];
+      const matches = accounts.filter(a => {
+        const afn = (a?.first_name || '').toString().trim().toLowerCase();
+        const aln = (a?.last_name || '').toString().trim().toLowerCase();
+        return afn === fn && aln === ln;
+      });
+
+      // Only auto-apply when it's unambiguous
+      if (matches.length === 1) return matches[0];
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
   init() {
     console.log('🚀 ReservationForm initializing...');
     console.log('✅ this keyword available:', !!this);
@@ -194,7 +264,9 @@ class ReservationForm {
         return id === candidate || acct === candidate;
       });
       if (account) {
-        this.updateBillingAccountNumberDisplay(account);
+        // Selecting/entering a billing account implies billing.
+        // Also fill Passenger/Booking if the account tickers say so.
+        this.applyAccountToReservationByTypes(account, { selectedRole: 'billing' });
         return;
       }
     } catch {
@@ -498,6 +570,31 @@ class ReservationForm {
     // Passenger + Booking Agent autofill (3+ chars)
     this.setupPassengerDbAutocomplete();
     this.setupBookingAgentDbAutocomplete();
+
+    // Name-based account resolution for Passenger / Booked By
+    // If the typed name matches exactly one account, fill all sections
+    // according to that account's saved type tickers.
+    const wireNameResolve = (firstId, lastId, selectedRole) => {
+      const firstEl = document.getElementById(firstId);
+      const lastEl = document.getElementById(lastId);
+      if (!firstEl || !lastEl) return;
+
+      const handler = () => {
+        const firstName = firstEl.value;
+        const lastName = lastEl.value;
+        const account = this.resolveAccountByExactName(firstName, lastName);
+        if (!account) return;
+        this.applyAccountToReservationByTypes(account, { selectedRole });
+      };
+
+      firstEl.addEventListener('blur', handler);
+      lastEl.addEventListener('blur', handler);
+      firstEl.addEventListener('change', handler);
+      lastEl.addEventListener('change', handler);
+    };
+
+    wireNameResolve('passengerFirstName', 'passengerLastName', 'passenger');
+    wireNameResolve('bookedByFirstName', 'bookedByLastName', 'booking');
 
     // Setup address autocomplete for initial stops
     try {
@@ -1286,16 +1383,9 @@ class ReservationForm {
   }
 
   useExistingAccount(account) {
-    // Populate Billing Accounts section with existing account (using db field names)
-    const acctNum = account.account_number || account.id;
-    document.getElementById('billingAccountSearch').value = `${acctNum} - ${account.first_name} ${account.last_name}`;
-    document.getElementById('billingCompany').value = account.company_name || '';
-    document.getElementById('billingFirstName').value = account.first_name;
-    document.getElementById('billingLastName').value = account.last_name;
-    document.getElementById('billingPhone').value = account.phone;
-    document.getElementById('billingEmail').value = account.email;
-
-    this.updateBillingAccountNumberDisplay(account);
+    // Apply based on Account Type tickers stored on the account
+    // Selecting an account in Billing indicates it's the billing account.
+    this.applyAccountToReservationByTypes(account, { selectedRole: 'billing' });
 
     this.closeModal();
   }

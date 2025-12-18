@@ -307,8 +307,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1800px;
-  margin: 0 auto;
+  max-width: none;
+  width: 100%;
+  margin: 0;
   padding: 8px 20px;
   gap: 1rem;
 }
@@ -521,8 +522,9 @@ body {
 
 /* Main Content */
 .main-content {
-  max-width: 1800px;
-  margin: 0 auto;
+  max-width: none;
+  width: 100%;
+  margin: 0;
   padding: 0;
   display: flex;
 }

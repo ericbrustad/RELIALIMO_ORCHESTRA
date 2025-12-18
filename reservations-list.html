@@ -10,10 +10,9 @@
       // Hide main navigation if in iframe
       if (window.self !== window.top) {
         document.addEventListener('DOMContentLoaded', function() {
-          const headerContent = document.querySelector('.header-content');
-          if (headerContent) {
-            headerContent.style.display = 'none';
-          }
+          document.body.classList.add('embedded');
+          const header = document.querySelector('header.header');
+          if (header) header.style.display = 'none';
         });
       }
     </script>
@@ -41,27 +40,23 @@
             <button class="nav-btn" data-section="reports">📈 Reports</button>
           </div>
         </div>
-        
-        <!-- Reservation Tabs -->
-        <div class="window-tabs-bar">
-          <div class="window-tabs">
-            <button class="window-tab active" data-tab="new-reservations">New Reservations</button>
-            <button class="window-tab" data-tab="online-efarm-in">Online & eFarm-in</button>
-            <button class="window-tab" data-tab="unfinalized">Unfinalized</button>
-            <button class="window-tab" data-tab="deleted">Deleted Reservations</button>
-            <button class="window-tab" data-tab="import">Import/Res</button>
-          </div>
-        </div>
       </header>
+
+      <!-- Reservation Tabs -->
+      <div class="window-tabs-bar">
+        <div class="window-tabs">
+          <button class="window-tab active" data-tab="new-reservations">New Reservations</button>
+          <button class="window-tab" data-tab="online-efarm-in">Online & eFarm-in</button>
+          <button class="window-tab" data-tab="unfinalized">Unfinalized</button>
+          <button class="window-tab" data-tab="deleted">Deleted Reservations</button>
+          <button class="window-tab" data-tab="import">Import/Res</button>
+        </div>
+      </div>
 
       <!-- Main Content -->
       <main class="main-content">
         <!-- New Reservations Tab -->
         <div class="reservations-layout" id="newReservationsTab">
-          <aside class="reservations-sidebar">
-            <h3 class="sidebar-title">pretty</h3>
-          </aside>
-
           <div class="reservations-content">
             <!-- Search Section -->
             <div class="search-section">
