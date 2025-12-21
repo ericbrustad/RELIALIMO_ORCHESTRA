@@ -989,7 +989,7 @@ class MyOffice {
       'limoanywhere-pay': null,
       'digital-marketing': null,
       'appearance': 'appearance.html',
-      'utilities': 'utilities.html',
+      'utilities': 'utilities.html?v=' + Date.now(),
       'test-checklist': 'full-site-test-checklist.html',
       'supabase-integration-test': 'test-supabase-integration.html',
     };

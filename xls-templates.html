@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download XLS Templates</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { color: #333; }
+    .btn {
+      display: inline-block;
+      padding: 16px 32px;
+      margin: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+    }
+    .btn-accounts { background: #0288d1; }
+    .btn-accounts:hover { background: #0277bd; }
+    .btn-affiliates { background: #7b1fa2; }
+    .btn-affiliates:hover { background: #6a1b9a; }
+    .status {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 4px;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 XLS Templates</h1>
+  <p>Click to download import templates:</p>
+  
+  <button class="btn btn-accounts" onclick="downloadAccountsTemplate()">
+    📊 Accounts Template
+  </button>
+  
+  <button class="btn btn-affiliates" onclick="downloadAffiliatesTemplate()">
+    🤝 Affiliates Template
+  </button>
+  
+  <div id="status" class="status" style="display:none;"></div>
+
+  <script>
+    function downloadAccountsTemplate() {
+      const templateData = [
+        { firstName: 'John', lastName: 'Doe', company: 'ACME Corp', phone: '(555) 123-4567', email: 'john.doe@example.com' },
+        { firstName: 'Jane', lastName: 'Smith', company: '', phone: '(555) 987-6543', email: 'jane.smith@example.com' }
+      ];
+      
+      const ws = XLSX.utils.json_to_sheet(templateData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Accounts');
+      XLSX.writeFile(wb, 'accounts_template.xls');
+      
+      showStatus('✓ Downloaded accounts_template.xls');
+    }
+    
+    function downloadAffiliatesTemplate() {
+      const templateData = [
+        { company: 'Elite Limo Service', contact: 'John Smith', phone: '(310) 555-0100', email: 'john@elitelimo.com', location: 'Los Angeles, CA' },
+        { company: 'Premium Transportation', contact: 'Sarah Johnson', phone: '(310) 555-0101', email: 'sarah@premiumtrans.com', location: 'Beverly Hills, CA' }
+      ];
+      
+      const ws = XLSX.utils.json_to_sheet(templateData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Affiliates');
+      XLSX.writeFile(wb, 'affiliates_template.xls');
+      
+      showStatus('✓ Downloaded affiliates_template.xls');
+    }
+    
+    function showStatus(msg) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>

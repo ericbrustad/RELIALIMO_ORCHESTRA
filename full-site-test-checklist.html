@@ -6,11 +6,51 @@
   <title>RELIALIMO — Full Site Test Checklist</title>
   <link rel="stylesheet" href="./style.css" />
   <style>
+    /* Frozen Header */
+    .frozen-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      background: linear-gradient(135deg, #8B0000 0%, #a01515 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .frozen-header .logo {
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .frozen-header .logo img {
+      height: 24px;
+    }
+    .frozen-header .back-btn {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .frozen-header .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
     /* Minimal, layout-only styling; uses existing fonts/colors from style.css */
     .page {
       max-width: 1100px;
       margin: 0 auto;
       padding: 24px;
+      padding-top: 74px;
     }
 
     .page-header {
@@ -94,6 +134,12 @@
   </style>
 </head>
 <body>
+  <!-- Frozen Header -->
+  <header class="frozen-header">
+    <div class="logo">RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="bull">LIMO™</div>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back to App</button>
+  </header>
+
   <div class="page">
     <div class="page-header">
       <h1>Full Site Test Checklist</h1>

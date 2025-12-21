@@ -5,8 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Magic Link - RELIA🐂LIMO™</title>
     <link rel="stylesheet" href="magic-link.css" />
+    <style>
+      .frozen-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        background: linear-gradient(135deg, #8B0000 0%, #a01515 100%);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      .frozen-header .logo {
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .frozen-header .logo img {
+        height: 24px;
+      }
+      .frozen-header .back-btn {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .frozen-header .back-btn:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      body:not(.embedded) .magic-link-container {
+        padding-top: 50px;
+      }
+      .embedded .frozen-header {
+        display: none;
+      }
+    </style>
   </head>
   <body>
+    <!-- Frozen Header -->
+    <header class="frozen-header">
+      <div class="logo">RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="bull">LIMO™</div>
+      <button class="back-btn" onclick="window.location.href='index.html'">← Back to App</button>
+    </header>
     <script>
       if (window.self !== window.top) {
         document.documentElement.classList.add('embedded');

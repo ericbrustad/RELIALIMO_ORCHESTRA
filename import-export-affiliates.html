@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import/Export Affiliates</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="./env.js"></script>
+  <style>
+    .frozen-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      background: linear-gradient(135deg, #8B0000 0%, #a01515 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .frozen-header .logo {
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .frozen-header .logo img {
+      height: 24px;
+    }
+    .frozen-header .back-btn {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .frozen-header .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      padding-top: 70px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .section {
+      background: white;
+      padding: 24px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #7b1fa2;
+      margin-top: 0;
+      border-bottom: 2px solid #7b1fa2;
+      padding-bottom: 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #7b1fa2;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #6a1b9a;
+    }
+    .btn-success {
+      background: #2e7d32;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #1b5e20;
+    }
+    .btn-warning {
+      background: #f57c00;
+      color: white;
+    }
+    .btn-warning:hover {
+      background: #e65100;
+    }
+    .file-input-wrapper {
+      margin: 20px 0;
+    }
+    .file-input-wrapper input[type="file"] {
+      padding: 10px;
+      border: 2px dashed #ccc;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .status {
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-top: 16px;
+      display: none;
+    }
+    .status.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+      display: block;
+    }
+    .status.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+      display: block;
+    }
+    .status.info {
+      background: #f3e5f5;
+      color: #7b1fa2;
+      border: 1px solid #ce93d8;
+      display: block;
+    }
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    .preview-table th, .preview-table td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .preview-table th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+    .preview-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+    .template-info {
+      background: #fff3e0;
+      border: 1px solid #ffcc80;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .template-info h4 {
+      margin: 0 0 10px 0;
+      color: #e65100;
+    }
+    .template-info code {
+      background: #fff;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header class="frozen-header">
+    <div class="logo">RELIA<img src="https://rosebud.ai/assets/red-bull-logo.webp?5r88" alt="bull">LIMO™</div>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back to App</button>
+  </header>
+
+  <h1>🤝 Import/Export Affiliates</h1>
+
+  <!-- Export Section -->
+  <div class="section">
+    <h2>📤 Export Affiliates</h2>
+    <p>Export all affiliates from the system to an Excel (.xls) file.</p>
+    <button class="btn btn-primary" id="exportBtn">Export Affiliates to XLS</button>
+    <div id="exportStatus" class="status"></div>
+  </div>
+
+  <!-- Template Section -->
+  <div class="section">
+    <h2>📋 Download Template</h2>
+    <div class="template-info">
+      <h4>All Columns (required marked with *):</h4>
+      <p style="line-height:1.8;">
+        <code>company_name*</code>, 
+        <code>primary_address</code>, 
+        <code>address_line2</code>, 
+        <code>city</code>, 
+        <code>state</code>, 
+        <code>zip</code>, 
+        <code>country</code>, 
+        <code>school</code>, 
+        <code>tax_id_ssn</code>, 
+        <code>markets_serviced</code>, 
+        <code>first_name</code>, 
+        <code>last_name</code>, 
+        <code>phone</code>, 
+        <code>phone_ext</code>, 
+        <code>fax</code>, 
+        <code>fax_ext</code>, 
+        <code>email</code>, 
+        <code>website</code>, 
+        <code>send_trip_email</code>, 
+        <code>send_trip_sms</code>, 
+        <code>send_trip_fax</code>, 
+        <code>dont_send_auto_notifications</code>, 
+        <code>internal_notes</code>, 
+        <code>status</code>, 
+        <code>learned_priority</code>, 
+        <code>turnaround_monitor_code</code>, 
+        <code>web_username</code>, 
+        <code>web_password</code>, 
+        <code>rental_agreement</code>, 
+        <code>alt_first_name</code>, 
+        <code>alt_last_name</code>, 
+        <code>alt_phone</code>, 
+        <code>alt_phone_ext</code>, 
+        <code>alt_fax</code>, 
+        <code>alt_fax_ext</code>, 
+        <code>alt_cell_phone</code>, 
+        <code>alt_cell_provider</code>, 
+        <code>alt_email</code>, 
+        <code>alt_send_trip_email</code>, 
+        <code>alt_send_trip_sms</code>
+      </p>
+    </div>
+    <button class="btn btn-warning" id="templateBtn">Download Blank Template</button>
+    <div id="templateStatus" class="status"></div>
+  </div>
+
+  <!-- Import Section -->
+  <div class="section">
+    <h2>📥 Import Affiliates</h2>
+    <p>Import affiliates from an Excel (.xls/.xlsx) file. Make sure the file matches the template format.</p>
+    <div class="file-input-wrapper">
+      <input type="file" id="importFile" accept=".xls,.xlsx" />
+    </div>
+    <button class="btn btn-success" id="importBtn" disabled>Import Affiliates</button>
+    <div id="importStatus" class="status"></div>
+    <div id="previewSection" style="display:none;">
+      <h3>Preview (first 10 rows):</h3>
+      <table class="preview-table" id="previewTable"></table>
+    </div>
+  </div>
+
+  <!-- Current Affiliates Section -->
+  <div class="section">
+    <h2>📋 Current Affiliates in System</h2>
+    <button class="btn btn-primary" id="refreshBtn">Refresh List</button>
+    <div id="currentAffiliatesSection">
+      <table class="preview-table" id="currentAffiliatesTable"></table>
+    </div>
+  </div>
+
+<script type="module">
+import { getSupabaseClient, setupAPI } from './api-service.js';
+
+let importData = null;
+let supabaseClient = null;
+
+// Initialize
+async function init() {
+  await setupAPI();
+  supabaseClient = getSupabaseClient();
+  loadCurrentAffiliates();
+}
+
+// Load current affiliates from Supabase
+async function loadCurrentAffiliates() {
+  const table = document.getElementById('currentAffiliatesTable');
+  
+  if (!supabaseClient) {
+    table.innerHTML = '<tr><td>Supabase not initialized</td></tr>';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('affiliates')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) {
+    table.innerHTML = `<tr><td>Error loading affiliates: ${error.message}</td></tr>`;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    table.innerHTML = '<tr><td>No affiliates found</td></tr>';
+    return;
+  }
+
+  let html = `
+    <tr>
+      <th>ID</th>
+      <th>Company Name</th>
+      <th>Contact</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Status</th>
+    </tr>
+  `;
+  
+  data.forEach(aff => {
+    html += `
+      <tr>
+        <td>${aff.id}</td>
+        <td>${aff.company_name || aff.company || ''}</td>
+        <td>${aff.first_name || ''} ${aff.last_name || ''}</td>
+        <td>${aff.phone || ''}</td>
+        <td>${aff.email || ''}</td>
+        <td>${aff.city || ''}</td>
+        <td>${aff.state || ''}</td>
+        <td>${aff.status || 'ACTIVE'}</td>
+      </tr>
+    `;
+  });
+
+  table.innerHTML = html;
+}
+
+// Export affiliates to XLS
+async function exportAffiliates() {
+  const statusEl = document.getElementById('exportStatus');
+  
+  try {
+    statusEl.className = 'status info';
+    statusEl.textContent = 'Loading affiliates...';
+
+    const { data, error } = await supabaseClient
+      .from('affiliates')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      statusEl.className = 'status error';
+      statusEl.textContent = 'No affiliates to export';
+      return;
+    }
+
+    // Transform data for export - ALL columns
+    const exportData = data.map(aff => ({
+      id: aff.id,
+      company_name: aff.company_name || aff.company || '',
+      primary_address: aff.primary_address || '',
+      address_line2: aff.address_line2 || '',
+      city: aff.city || '',
+      state: aff.state || '',
+      zip: aff.zip || '',
+      country: aff.country || 'US',
+      school: aff.school || '',
+      tax_id_ssn: aff.tax_id_ssn || '',
+      markets_serviced: aff.markets_serviced || '',
+      first_name: aff.first_name || '',
+      last_name: aff.last_name || '',
+      phone: aff.phone || '',
+      phone_ext: aff.phone_ext || '',
+      fax: aff.fax || '',
+      fax_ext: aff.fax_ext || '',
+      email: aff.email || '',
+      website: aff.website || '',
+      send_trip_email: aff.send_trip_email || false,
+      send_trip_sms: aff.send_trip_sms || false,
+      send_trip_fax: aff.send_trip_fax || false,
+      dont_send_auto_notifications: aff.dont_send_auto_notifications || false,
+      internal_notes: aff.internal_notes || '',
+      status: aff.status || 'ACTIVE',
+      learned_priority: aff.learned_priority || '',
+      turnaround_monitor_code: aff.turnaround_monitor_code || '',
+      web_username: aff.web_username || '',
+      web_password: aff.web_password || '',
+      rental_agreement: aff.rental_agreement || '',
+      alt_first_name: aff.alt_first_name || '',
+      alt_last_name: aff.alt_last_name || '',
+      alt_phone: aff.alt_phone || '',
+      alt_phone_ext: aff.alt_phone_ext || '',
+      alt_fax: aff.alt_fax || '',
+      alt_fax_ext: aff.alt_fax_ext || '',
+      alt_cell_phone: aff.alt_cell_phone || '',
+      alt_cell_provider: aff.alt_cell_provider || '',
+      alt_email: aff.alt_email || '',
+      alt_send_trip_email: aff.alt_send_trip_email || false,
+      alt_send_trip_sms: aff.alt_send_trip_sms || false,
+      created_at: aff.created_at || ''
+    }));
+
+    // Create workbook
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Affiliates');
+
+    // Download
+    const filename = `affiliates_export_${new Date().toISOString().split('T')[0]}.xls`;
+    XLSX.writeFile(wb, filename);
+
+    statusEl.className = 'status success';
+    statusEl.textContent = `✓ Exported ${data.length} affiliates to ${filename}`;
+  } catch (err) {
+    statusEl.className = 'status error';
+    statusEl.textContent = `Error: ${err.message}`;
+  }
+}
+
+// Download blank template
+function downloadTemplate() {
+  const templateData = [
+    { 
+      company_name: 'Elite Limo Service',
+      primary_address: '123 Main St',
+      address_line2: 'Suite 100',
+      city: 'Los Angeles',
+      state: 'CA',
+      zip: '90001',
+      country: 'US',
+      school: '',
+      tax_id_ssn: '',
+      markets_serviced: 'Los Angeles, Orange County',
+      first_name: 'John',
+      last_name: 'Smith',
+      phone: '(310) 555-0100',
+      phone_ext: '',
+      fax: '',
+      fax_ext: '',
+      email: 'john@elitelimo.com',
+      website: 'www.elitelimo.com',
+      send_trip_email: true,
+      send_trip_sms: false,
+      send_trip_fax: false,
+      dont_send_auto_notifications: false,
+      internal_notes: '',
+      status: 'ACTIVE',
+      learned_priority: 'High',
+      turnaround_monitor_code: '',
+      web_username: '',
+      web_password: '',
+      rental_agreement: 'Standard Agreement',
+      alt_first_name: '',
+      alt_last_name: '',
+      alt_phone: '',
+      alt_phone_ext: '',
+      alt_fax: '',
+      alt_fax_ext: '',
+      alt_cell_phone: '',
+      alt_cell_provider: '',
+      alt_email: '',
+      alt_send_trip_email: false,
+      alt_send_trip_sms: false
+    },
+    { 
+      company_name: 'Premium Transportation',
+      primary_address: '456 Oak Ave',
+      address_line2: '',
+      city: 'Beverly Hills',
+      state: 'CA',
+      zip: '90210',
+      country: 'US',
+      school: '',
+      tax_id_ssn: '',
+      markets_serviced: 'Beverly Hills, Hollywood',
+      first_name: 'Sarah',
+      last_name: 'Johnson',
+      phone: '(310) 555-0101',
+      phone_ext: '',
+      fax: '',
+      fax_ext: '',
+      email: 'sarah@premiumtrans.com',
+      website: 'www.premiumtrans.com',
+      send_trip_email: true,
+      send_trip_sms: true,
+      send_trip_fax: false,
+      dont_send_auto_notifications: false,
+      internal_notes: '',
+      status: 'ACTIVE',
+      learned_priority: 'Medium',
+      turnaround_monitor_code: '',
+      web_username: '',
+      web_password: '',
+      rental_agreement: 'Premium Agreement',
+      alt_first_name: '',
+      alt_last_name: '',
+      alt_phone: '',
+      alt_phone_ext: '',
+      alt_fax: '',
+      alt_fax_ext: '',
+      alt_cell_phone: '',
+      alt_cell_provider: '',
+      alt_email: '',
+      alt_send_trip_email: false,
+      alt_send_trip_sms: false
+    }
+  ];
+
+  const ws = XLSX.utils.json_to_sheet(templateData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Affiliates');
+
+  XLSX.writeFile(wb, 'affiliates_template.xls');
+
+  const statusEl = document.getElementById('templateStatus');
+  statusEl.className = 'status success';
+  statusEl.textContent = '✓ Template downloaded: affiliates_template.xls';
+}
+
+// Handle file selection
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  const importBtn = document.getElementById('importBtn');
+  const statusEl = document.getElementById('importStatus');
+  const previewSection = document.getElementById('previewSection');
+  const previewTable = document.getElementById('previewTable');
+
+  if (!file) {
+    importBtn.disabled = true;
+    previewSection.style.display = 'none';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      importData = XLSX.utils.sheet_to_json(firstSheet);
+
+      if (importData.length === 0) {
+        statusEl.className = 'status error';
+        statusEl.textContent = 'No data found in file';
+        importBtn.disabled = true;
+        return;
+      }
+
+      // Validate required columns
+      const requiredCols = ['company_name'];
+      const headers = Object.keys(importData[0]);
+      const missing = requiredCols.filter(col => !headers.includes(col));
+
+      if (missing.length > 0) {
+        statusEl.className = 'status error';
+        statusEl.textContent = `Missing required columns: ${missing.join(', ')}`;
+        importBtn.disabled = true;
+        return;
+      }
+
+      // Show preview
+      let html = '<tr>';
+      headers.forEach(h => html += `<th>${h}</th>`);
+      html += '</tr>';
+
+      importData.slice(0, 10).forEach(row => {
+        html += '<tr>';
+        headers.forEach(h => html += `<td>${row[h] || ''}</td>`);
+        html += '</tr>';
+      });
+
+      previewTable.innerHTML = html;
+      previewSection.style.display = 'block';
+
+      statusEl.className = 'status info';
+      statusEl.textContent = `Found ${importData.length} affiliates to import`;
+      importBtn.disabled = false;
+
+    } catch (err) {
+      statusEl.className = 'status error';
+      statusEl.textContent = `Error reading file: ${err.message}`;
+      importBtn.disabled = true;
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+// Import affiliates
+async function importAffiliates() {
+  const statusEl = document.getElementById('importStatus');
+  const importBtn = document.getElementById('importBtn');
+
+  if (!importData || importData.length === 0) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'No data to import';
+    return;
+  }
+
+  importBtn.disabled = true;
+  statusEl.className = 'status info';
+  statusEl.textContent = 'Importing affiliates...';
+
+  let successCount = 0;
+  let errorCount = 0;
+  const errors = [];
+
+  for (const row of importData) {
+    try {
+      const affiliateData = {
+        company_name: row.company_name || '',
+        primary_address: row.primary_address || '',
+        address_line2: row.address_line2 || '',
+        city: row.city || '',
+        state: row.state || '',
+        zip: row.zip || '',
+        country: row.country || 'US',
+        school: row.school || '',
+        tax_id_ssn: row.tax_id_ssn || '',
+        markets_serviced: row.markets_serviced || '',
+        first_name: row.first_name || '',
+        last_name: row.last_name || '',
+        phone: row.phone || '',
+        phone_ext: row.phone_ext || '',
+        fax: row.fax || '',
+        fax_ext: row.fax_ext || '',
+        email: row.email || '',
+        website: row.website || '',
+        send_trip_email: row.send_trip_email === true || row.send_trip_email === 'true',
+        send_trip_sms: row.send_trip_sms === true || row.send_trip_sms === 'true',
+        send_trip_fax: row.send_trip_fax === true || row.send_trip_fax === 'true',
+        dont_send_auto_notifications: row.dont_send_auto_notifications === true || row.dont_send_auto_notifications === 'true',
+        internal_notes: row.internal_notes || '',
+        status: row.status || 'ACTIVE',
+        learned_priority: row.learned_priority || '',
+        turnaround_monitor_code: row.turnaround_monitor_code || '',
+        web_username: row.web_username || '',
+        web_password: row.web_password || '',
+        rental_agreement: row.rental_agreement || '',
+        alt_first_name: row.alt_first_name || '',
+        alt_last_name: row.alt_last_name || '',
+        alt_phone: row.alt_phone || '',
+        alt_phone_ext: row.alt_phone_ext || '',
+        alt_fax: row.alt_fax || '',
+        alt_fax_ext: row.alt_fax_ext || '',
+        alt_cell_phone: row.alt_cell_phone || '',
+        alt_cell_provider: row.alt_cell_provider || '',
+        alt_email: row.alt_email || '',
+        alt_send_trip_email: row.alt_send_trip_email === true || row.alt_send_trip_email === 'true',
+        alt_send_trip_sms: row.alt_send_trip_sms === true || row.alt_send_trip_sms === 'true',
+        created_at: new Date().toISOString()
+      };
+
+      const { error } = await supabaseClient
+        .from('affiliates')
+        .insert(affiliateData);
+
+      if (error) {
+        errorCount++;
+        errors.push(`${row.company_name}: ${error.message}`);
+      } else {
+        successCount++;
+      }
+    } catch (err) {
+      errorCount++;
+      errors.push(`${row.company_name}: ${err.message}`);
+    }
+  }
+
+  if (errorCount === 0) {
+    statusEl.className = 'status success';
+    statusEl.textContent = `✓ Successfully imported ${successCount} affiliates`;
+  } else {
+    statusEl.className = 'status error';
+    statusEl.textContent = `Imported ${successCount} affiliates, ${errorCount} errors: ${errors.slice(0, 3).join('; ')}`;
+  }
+
+  // Refresh the affiliates list
+  loadCurrentAffiliates();
+  importBtn.disabled = false;
+}
+
+// Event listeners
+document.getElementById('exportBtn').addEventListener('click', exportAffiliates);
+document.getElementById('templateBtn').addEventListener('click', downloadTemplate);
+document.getElementById('importFile').addEventListener('change', handleFileSelect);
+document.getElementById('importBtn').addEventListener('click', importAffiliates);
+document.getElementById('refreshBtn').addEventListener('click', loadCurrentAffiliates);
+
+// Initialize on load
+init();
+</script>
+</body>
+</html>
