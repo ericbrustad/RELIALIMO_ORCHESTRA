@@ -262,7 +262,8 @@
     </div>
 
     <script type="module">
-      import { db } from './assets/db.js';
+      import supabaseDb from './supabase-db.js';
+      const db = supabaseDb;
 
       let currentConf = null;
 

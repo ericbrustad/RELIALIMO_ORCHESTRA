@@ -257,22 +257,24 @@ class Accounts {
   
   async loadDbModule() {
     try {
-      const module = await import('./assets/db.js');
-      this.db = module.db;
-      console.log('✅ Database module loaded');
+      const module = await import('./supabase-db.js');
+      this.db = module.default;
+      console.log('✅ Supabase database module loaded');
     } catch (error) {
       console.error('❌ Failed to load database module:', error);
+      alert('⚠️ DATABASE CONNECTION FAILED\n\nPlease check your connection and reload.');
     }
   }
   
-  loadAccount(accountId) {
+  async loadAccount(accountId) {
     if (!this.db) {
       console.warn('⚠️ Database module not loaded yet');
       return;
     }
     
     try {
-      const account = this.db.getAccountById(accountId);
+      const accounts = await this.db.getAllAccounts();
+      const account = accounts.find(a => a.id === accountId);
       if (!account) {
         console.warn('⚠️ Account not found:', accountId);
         return;

@@ -55,11 +55,12 @@ class Calendar {
 
   async loadDbModule() {
     try {
-      const module = await import('./assets/db.js');
-      this.db = module.db;
-      console.log('✅ Calendar database module loaded');
+      const module = await import('./supabase-db.js');
+      this.db = module.default;
+      console.log('✅ Calendar Supabase database module loaded');
     } catch (error) {
       console.error('❌ Failed to load database module for calendar:', error);
+      alert('⚠️ DATABASE CONNECTION FAILED\n\nPlease check your connection and reload.');
       this.db = null;
     }
   }
@@ -271,7 +272,7 @@ class Calendar {
     this.currentDate = new Date(year, monthIndex, 1);
   }
 
-  render() {
+  async render() {
     this.closeTooltip();
     this.closeModal();
 
@@ -363,7 +364,7 @@ class Calendar {
     }
 
     // Add reservations
-    const reservations = this.getReservationsForMonth(year, monthIndex);
+    const reservations = await this.getReservationsForMonth(year, monthIndex);
     for (const res of reservations) {
       const el = this.createReservationEventEl(res);
       const container = dayCellMap.get(el.dataset.dateKey);
@@ -810,11 +811,11 @@ class Calendar {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
 
-  getReservationsForMonth(year, monthIndex) {
+  async getReservationsForMonth(year, monthIndex) {
     if (!this.db) return [];
     let all = [];
     try {
-      all = this.db.getAllReservations() || [];
+      all = await this.db.getAllReservations() || [];
     } catch (e) {
       console.error('❌ Failed to load reservations from db:', e);
       return [];

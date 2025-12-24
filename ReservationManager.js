@@ -1,3 +1,101 @@
+const ENV_CONFIG = (typeof window !== 'undefined' && window.ENV) ? window.ENV : {};
+
+function toTrimmedString(value) {
+  if (value === undefined || value === null) {
+    return null;
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? String(value) : null;
+  }
+  if (typeof value === 'object') {
+    const nested = value.id || value.value;
+    return toTrimmedString(nested);
+  }
+  const fallback = String(value).trim();
+  return fallback.length > 0 ? fallback : null;
+}
+
+const ACTIVE_ORGANIZATION_ID = (() => {
+  const candidates = [
+    ENV_CONFIG.SUPABASE_UUID,
+    ENV_CONFIG.SUPABASE_ORGANIZATION_ID,
+    ENV_CONFIG.ORGANIZATION_ID,
+    ENV_CONFIG.ORG_ID
+  ];
+  for (const candidate of candidates) {
+    const normalized = toTrimmedString(candidate);
+    if (normalized) {
+      return normalized;
+    }
+  }
+  return null;
+})();
+
+function resolveReservationOrg(reservation) {
+  if (!reservation || typeof reservation !== 'object') {
+    return null;
+  }
+
+  const candidates = [
+    reservation.organization_id,
+    reservation.organizationId,
+    reservation.organization?.id,
+    reservation.org_id,
+    reservation.orgId,
+    reservation.org?.id,
+    reservation.raw?.organization_id,
+    reservation.raw?.organizationId,
+    reservation.raw?.organization?.id,
+    reservation.form_snapshot?.organization_id,
+    reservation.form_snapshot?.organizationId,
+    reservation.form_snapshot?.organization?.id,
+    reservation.form_snapshot?.details?.organization_id,
+    reservation.form_snapshot?.details?.organizationId,
+    reservation.form_snapshot?.details?.organization?.id,
+    reservation.details?.organization_id,
+    reservation.details?.organizationId
+  ];
+
+  for (const candidate of candidates) {
+    const normalized = toTrimmedString(candidate);
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  return null;
+}
+
+function preferReservation(existing, incoming) {
+  if (!existing) return incoming;
+  if (!incoming) return existing;
+
+  const existingOrg = resolveReservationOrg(existing);
+  const incomingOrg = resolveReservationOrg(incoming);
+
+  if (ACTIVE_ORGANIZATION_ID) {
+    const incomingMatches = incomingOrg === ACTIVE_ORGANIZATION_ID;
+    const existingMatches = existingOrg === ACTIVE_ORGANIZATION_ID;
+
+    if (incomingMatches && !existingMatches) {
+      return incoming;
+    }
+
+    if (!incomingMatches && existingMatches) {
+      return existing;
+    }
+  }
+
+  const existingUpdated = Date.parse(existing.updatedAt || existing.updated_at || existing.modified_at || existing.modifiedAt || existing.createdAt || existing.created_at || 0) || 0;
+  const incomingUpdated = Date.parse(incoming.updatedAt || incoming.updated_at || incoming.modified_at || incoming.modifiedAt || incoming.createdAt || incoming.created_at || 0) || 0;
+
+  return incomingUpdated > existingUpdated ? incoming : existing;
+}
+
 const FARMOUT_STATUS_ALIASES = {
   '': '',
   farm_out_unassigned: 'unassigned',
@@ -191,8 +289,14 @@ export class ReservationManager {
   }
 
   addReservation(reservationData) {
+    const baseId = toTrimmedString(reservationData?.id)
+      || toTrimmedString(reservationData?.confirmationNumber)
+      || toTrimmedString(reservationData?.confirmation_number);
+
+    const assignedId = baseId || toTrimmedString(this.nextId);
+
     const reservation = {
-      id: this.nextId++,
+      id: assignedId || this.nextId,
       createdAt: new Date().toISOString(),
       status: reservationData.status || 'pending',
       farmoutStatus: 'unassigned',
@@ -201,6 +305,20 @@ export class ReservationManager {
       driverSnapshot: null,
       ...reservationData
     };
+
+    const resolvedOrg = resolveReservationOrg(reservation) || ACTIVE_ORGANIZATION_ID;
+    if (resolvedOrg) {
+      reservation.organization_id = resolvedOrg;
+    }
+
+    const identifier = toTrimmedString(reservation.id) || toTrimmedString(reservation.confirmationNumber) || toTrimmedString(reservation.confirmation_number);
+    let existingIndex = -1;
+    if (identifier) {
+      existingIndex = this.reservations.findIndex(r => {
+        const existingId = toTrimmedString(r.id) || toTrimmedString(r.confirmationNumber) || toTrimmedString(r.confirmation_number);
+        return existingId && existingId === identifier;
+      });
+    }
 
     const initialStatusCandidate = reservation.farmoutStatus || reservation.farmout_status || reservationData.farmout_status;
     const initialModeCandidate = reservation.farmoutMode || reservation.farmout_mode || reservationData.farmout_mode;
@@ -215,16 +333,68 @@ export class ReservationManager {
       reservation.driverSnapshot = null;
     }
 
+    if (existingIndex >= 0) {
+      const merged = preferReservation(this.reservations[existingIndex], reservation);
+      merged.farmoutStatus = canonicalizeFarmoutStatus(merged.farmoutStatus || merged.farmout_status || 'unassigned') || 'unassigned';
+      merged.farmoutMode = canonicalizeFarmoutMode(merged.farmoutMode || merged.farmout_mode || 'manual');
+      applyFarmoutMetadata(merged, merged.farmoutStatus, merged.farmoutMode);
+      if (typeof merged.driverId === 'undefined') {
+        merged.driverId = null;
+      }
+      if (!merged.driverSnapshot) {
+        merged.driverSnapshot = null;
+      }
+      this.reservations[existingIndex] = merged;
+      return merged;
+    }
+
+    if (!baseId) {
+      this.nextId += 1;
+    }
+
     this.reservations.push(reservation);
     return reservation;
   }
 
   getReservationById(id) {
-    return this.reservations.find(r => String(r.id) === String(id));
+    const key = toTrimmedString(id);
+    if (!key) {
+      return this.reservations.find(r => String(r.id) === String(id));
+    }
+
+    for (let i = this.reservations.length - 1; i >= 0; i--) {
+      const candidate = this.reservations[i];
+      const candidateKey = toTrimmedString(candidate?.id) || toTrimmedString(candidate?.confirmationNumber) || toTrimmedString(candidate?.confirmation_number);
+      if (candidateKey && candidateKey === key) {
+        return candidate;
+      }
+    }
+
+    return null;
   }
 
   getAllReservations() {
-    return [...this.reservations];
+    const map = new Map();
+    const ordered = [];
+
+    this.reservations.forEach(reservation => {
+      if (!reservation) return;
+      const key = toTrimmedString(reservation.id) || toTrimmedString(reservation.confirmationNumber) || toTrimmedString(reservation.confirmation_number);
+      if (!key) {
+        ordered.push(reservation);
+        return;
+      }
+
+      if (!map.has(key)) {
+        map.set(key, reservation);
+        return;
+      }
+
+      const preferred = preferReservation(map.get(key), reservation);
+      map.set(key, preferred);
+    });
+
+    return [...map.values(), ...ordered];
   }
 
   getReservationsByStatus(status) {

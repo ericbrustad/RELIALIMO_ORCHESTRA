@@ -12,6 +12,131 @@ const STORAGE_KEYS = {
   NEXT_CONFIRMATION_NUMBER: 'nextConfirmationNumber'
 };
 
+const ENV_CONFIG = (typeof window !== 'undefined' && window.ENV) ? window.ENV : {};
+
+function toTrimmedString(value) {
+  if (value === undefined || value === null) {
+    return null;
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? String(value) : null;
+  }
+  if (typeof value === 'object') {
+    const idCandidate = value.id || value.value;
+    return toTrimmedString(idCandidate);
+  }
+  const fallback = String(value).trim();
+  return fallback.length > 0 ? fallback : null;
+}
+
+const ACTIVE_ORGANIZATION_ID = (() => {
+  const candidates = [
+    ENV_CONFIG.SUPABASE_UUID,
+    ENV_CONFIG.SUPABASE_ORGANIZATION_ID,
+    ENV_CONFIG.ORGANIZATION_ID,
+    ENV_CONFIG.ORGANISATION_ID,
+    ENV_CONFIG.ORG_ID
+  ];
+  for (const candidate of candidates) {
+    const normalized = toTrimmedString(candidate);
+    if (normalized) {
+      return normalized;
+    }
+  }
+  return null;
+})();
+
+function resolveOrganizationId(record) {
+  if (!record || typeof record !== 'object') {
+    return null;
+  }
+
+  const candidates = [
+    record.organization_id,
+    record.org_id,
+    record.organizationId,
+    record.organization?.id,
+    record.org?.id,
+    record.raw?.organization_id,
+    record.raw?.organizationId,
+    record.raw?.organization?.id,
+    record.form_snapshot?.organization_id,
+    record.form_snapshot?.organizationId,
+    record.form_snapshot?.organization?.id,
+    record.form_snapshot?.details?.organization_id,
+    record.form_snapshot?.details?.organizationId,
+    record.form_snapshot?.details?.organization?.id,
+    record.details?.organization_id,
+    record.details?.organizationId
+  ];
+
+  for (const candidate of candidates) {
+    const normalized = toTrimmedString(candidate);
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  return null;
+}
+
+function dedupeReservations(records) {
+  if (!Array.isArray(records) || records.length === 0) {
+    return [];
+  }
+
+  const map = new Map();
+  const spill = [];
+
+  records.forEach((record) => {
+    if (!record || typeof record !== 'object') {
+      return;
+    }
+
+    const key = toTrimmedString(record.confirmation_number) || toTrimmedString(record.id);
+    if (!key) {
+      spill.push(record);
+      return;
+    }
+
+    if (!map.has(key)) {
+      map.set(key, record);
+      return;
+    }
+
+    const existing = map.get(key);
+    const existingOrg = resolveOrganizationId(existing);
+    const recordOrg = resolveOrganizationId(record);
+
+    if (ACTIVE_ORGANIZATION_ID) {
+      const recordMatches = recordOrg === ACTIVE_ORGANIZATION_ID;
+      const existingMatches = existingOrg === ACTIVE_ORGANIZATION_ID;
+
+      if (recordMatches && !existingMatches) {
+        map.set(key, record);
+        return;
+      }
+
+      if (!recordMatches && existingMatches) {
+        return;
+      }
+    }
+
+    const existingTs = Date.parse(existing.updated_at || existing.updatedAt || existing.modified_at || existing.modifiedAt || 0) || 0;
+    const recordTs = Date.parse(record.updated_at || record.updatedAt || record.modified_at || record.modifiedAt || 0) || 0;
+
+    if (recordTs > existingTs) {
+      map.set(key, record);
+    }
+  });
+
+  return [...map.values(), ...spill];
+}
+
 export const db = {
   // ===================================
   // ACCOUNTS
@@ -236,23 +361,31 @@ export const db = {
   
   saveReservation(reservationData) {
     try {
+      const normalizedReservation = { ...reservationData };
+      const resolvedOrgId = resolveOrganizationId(normalizedReservation) || ACTIVE_ORGANIZATION_ID;
+      if (resolvedOrgId) {
+        normalizedReservation.organization_id = resolvedOrgId;
+      }
+
       const reservations = this.getAllReservations();
-      
+
       // Check if reservation exists
-      const existingIndex = reservations.findIndex(r => 
-        r.id === reservationData.id || r.confirmation_number === reservationData.confirmation_number
+      const existingIndex = reservations.findIndex(r =>
+        (r.id !== undefined && r.id === normalizedReservation.id) ||
+        (r.confirmation_number !== undefined && r.confirmation_number === normalizedReservation.confirmation_number)
       );
-      
+
       if (existingIndex >= 0) {
         // Update existing
-        reservations[existingIndex] = { ...reservations[existingIndex], ...reservationData };
+        reservations[existingIndex] = { ...reservations[existingIndex], ...normalizedReservation };
       } else {
         // Add new
-        reservations.push(reservationData);
+        reservations.push(normalizedReservation);
       }
-      
-      localStorage.setItem(STORAGE_KEYS.RESERVATIONS, JSON.stringify(reservations));
-      return reservationData;
+
+      const cleanedReservations = dedupeReservations(reservations);
+      localStorage.setItem(STORAGE_KEYS.RESERVATIONS, JSON.stringify(cleanedReservations));
+      return normalizedReservation;
     } catch (error) {
       console.error('Error saving reservation:', error);
       return null;
@@ -262,7 +395,46 @@ export const db = {
   getAllReservations() {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.RESERVATIONS);
-      return stored ? JSON.parse(stored) : [];
+      const parsed = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        return [];
+      }
+
+      let mutated = false;
+
+      const normalized = parsed
+        .filter(item => item && typeof item === 'object')
+        .map(item => {
+          const orgId = resolveOrganizationId(item);
+          if (orgId && item.organization_id !== orgId) {
+            item.organization_id = orgId;
+            mutated = true;
+          }
+          return item;
+        });
+
+      let filtered = normalized;
+      if (ACTIVE_ORGANIZATION_ID) {
+        filtered = normalized.filter(item => {
+          const orgId = resolveOrganizationId(item);
+          if (!orgId) {
+            return true;
+          }
+          if (orgId === ACTIVE_ORGANIZATION_ID) {
+            return true;
+          }
+          mutated = true;
+          return false;
+        });
+      }
+
+      const deduped = dedupeReservations(filtered);
+
+      if (mutated || deduped.length !== parsed.length) {
+        localStorage.setItem(STORAGE_KEYS.RESERVATIONS, JSON.stringify(deduped));
+      }
+
+      return deduped;
     } catch (error) {
       console.error('Error loading reservations:', error);
       return [];

@@ -4,7 +4,10 @@ import { UIManager } from './UIManager.js';
 import { MapboxService } from './MapboxService.js';
 import { DriverTracker } from './DriverTracker.js';
 import { FarmoutAutomationService } from './FarmoutAutomationService.js';
-import { db } from './assets/db.js';
+import supabaseDb from './supabase-db.js';
+
+// Use Supabase-only database (no localStorage)
+const db = supabaseDb;
 
 const FARMOUT_STATUS_ALIASES = {
   '': '',
@@ -275,7 +278,7 @@ class LimoReservationSystem {
     }
   }
 
-  findReservationRecord(reservation) {
+  async findReservationRecord(reservation) {
     try {
       if (!reservation || !db || typeof db.getAllReservations !== 'function') {
         return null;
@@ -302,7 +305,7 @@ class LimoReservationSystem {
         return null;
       }
 
-      const allReservations = db.getAllReservations();
+      const allReservations = await db.getAllReservations();
       if (!Array.isArray(allReservations) || allReservations.length === 0) {
         return null;
       }
@@ -320,13 +323,13 @@ class LimoReservationSystem {
     }
   }
 
-  syncFarmoutToStorage(reservation) {
+  async syncFarmoutToStorage(reservation) {
     try {
       if (!reservation) {
         return;
       }
 
-      const record = this.findReservationRecord(reservation);
+      const record = await this.findReservationRecord(reservation);
       if (!record) {
         return;
       }
@@ -371,13 +374,74 @@ class LimoReservationSystem {
         details.farmoutMode = canonicalMode;
       }
 
-      db.saveReservation(record);
+      await db.saveReservation(record);
     } catch (error) {
       console.warn('syncFarmoutToStorage failed:', error);
     }
   }
 
+  /**
+   * Purge ghost reservations that don't belong to the current organization.
+   * This runs once on startup to clean any leaked data from other orgs.
+   */
+  purgeGhostReservations() {
+    try {
+      const STORAGE_KEY = 'relia_reservations';
+      const PURGE_FLAG = 'relia_ghost_purge_v1';
+      
+      // Only run once per session
+      if (sessionStorage.getItem(PURGE_FLAG)) {
+        return;
+      }
+      
+      // Get current organization ID
+      const orgId = window.SUPABASE_UUID || 
+                    localStorage.getItem('organization_id') || 
+                    sessionStorage.getItem('organization_id');
+      
+      if (!orgId) {
+        console.log('[GhostPurge] No organization ID found, skipping purge');
+        return;
+      }
+      
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) {
+        sessionStorage.setItem(PURGE_FLAG, 'done');
+        return;
+      }
+      
+      let reservations = JSON.parse(stored);
+      if (!Array.isArray(reservations)) {
+        sessionStorage.setItem(PURGE_FLAG, 'done');
+        return;
+      }
+      
+      const originalCount = reservations.length;
+      
+      // Filter to only keep reservations matching current org
+      reservations = reservations.filter(r => {
+        const resOrgId = r.organization_id || r.org_id;
+        // Keep if no org ID (legacy) or matches current org
+        return !resOrgId || resOrgId === orgId;
+      });
+      
+      const purgedCount = originalCount - reservations.length;
+      
+      if (purgedCount > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+        console.log(`[GhostPurge] Removed ${purgedCount} ghost reservations from other organizations`);
+      }
+      
+      sessionStorage.setItem(PURGE_FLAG, 'done');
+    } catch (error) {
+      console.warn('[GhostPurge] Error during purge:', error);
+    }
+  }
+
   async init() {
+    // One-time purge of ghost reservations from other organizations
+    this.purgeGhostReservations();
+
     // Check for startup page setting and navigate if needed
     if (this.shouldNavigateToStartupPage()) {
       return; // Page navigation will happen, don't continue init
@@ -650,11 +714,10 @@ class LimoReservationSystem {
     await this.updateListViewsFromDb();
 
     const center = this.companyLocation || [44.8848, -93.2223];
-    const loadedLiveReservations = await this.loadReservationsFromStorage();
+    await this.loadReservationsFromStorage();
 
-    if (!loadedLiveReservations) {
-      this.seedSampleReservations(center);
-    }
+    // REMOVED: Sample reservation seeding - production apps should not seed demo data
+    // Sample data was causing ghost reservations to appear in the farmout dashboard
 
     // Update all views
     this.uiManager.updateAllViews();
@@ -667,7 +730,7 @@ class LimoReservationSystem {
         return 0;
       }
 
-      const rawReservations = db.getAllReservations() || [];
+      const rawReservations = await db.getAllReservations() || [];
       if (!Array.isArray(rawReservations) || rawReservations.length === 0) {
         return 0;
       }
@@ -684,7 +747,6 @@ class LimoReservationSystem {
       this.reservationManager.nextId = 1;
 
       let highestId = 0;
-
       canonicalReservations.forEach(reservation => {
         this.reservationManager.addReservation(reservation);
         const numericId = Number(reservation.id || reservation.confirmationNumber || reservation.confirmation_number);
@@ -705,123 +767,11 @@ class LimoReservationSystem {
     }
   }
 
+  // REMOVED: seedSampleReservations - demo seeding caused ghost entries in production
+  // If demo mode is needed in the future, it should be behind an explicit flag
   seedSampleReservations(center) {
-    const [baseLat, baseLng] = Array.isArray(center) ? center : [44.8848, -93.2223];
-
-    this.reservationManager.reservations = [];
-    this.reservationManager.nextId = 1;
-
-    const sampleReservations = [
-      {
-        passengerName: 'John Smith',
-        phone: '(555) 123-4567',
-        email: 'john.smith@example.com',
-        pickupLocation: 'Minneapolis-St Paul Airport, MN',
-        dropoffLocation: 'Downtown Minneapolis, MN',
-        pickupDate: '2024-01-15',
-        pickupTime: '14:30',
-        vehicleType: 'stretch',
-        passengers: 4,
-        specialInstructions: 'VIP client, provide champagne',
-        status: 'pending',
-        farmoutStatus: 'unassigned',
-        farmoutMode: 'manual',
-        pickupCoords: [baseLat - 0.05, baseLng - 0.06],
-        dropoffCoords: [baseLat + 0.02, baseLng + 0.01]
-      },
-      {
-        passengerName: 'Sarah Johnson',
-        phone: '(555) 234-5678',
-        email: 'sarah.j@example.com',
-        pickupLocation: 'Mall of America, Bloomington, MN',
-        dropoffLocation: 'Target Center, Minneapolis, MN',
-        pickupDate: '2024-01-15',
-        pickupTime: '09:00',
-        vehicleType: 'suv',
-        passengers: 6,
-        specialInstructions: 'Family trip, child seats needed',
-        status: 'accepted',
-        driverName: 'Mike Driver',
-        driverId: 1,
-        farmoutStatus: 'assigned',
-        farmoutMode: 'automatic',
-        driverSnapshot: {
-          id: 1,
-          name: 'Mike Driver',
-          affiliate: 'RELIA Fleet',
-          phone: '(555) 200-1001',
-          vehicleType: 'SUV Limousine'
-        },
-        pickupCoords: [baseLat - 0.03, baseLng - 0.02],
-        dropoffCoords: [baseLat + 0.01, baseLng]
-      },
-      {
-        passengerName: 'Robert Williams',
-        phone: '(555) 345-6789',
-        email: 'r.williams@example.com',
-        pickupLocation: 'St. Paul Hotel, St. Paul, MN',
-        dropoffLocation: 'Minneapolis Convention Center, MN',
-        pickupDate: '2024-01-14',
-        pickupTime: '18:00',
-        vehicleType: 'luxury',
-        passengers: 2,
-        specialInstructions: 'Anniversary celebration',
-        status: 'completed',
-        driverName: 'Lisa Driver',
-        driverId: 2,
-        farmoutStatus: 'completed',
-        farmoutMode: 'manual',
-        driverSnapshot: {
-          id: 2,
-          name: 'Lisa Driver',
-          affiliate: 'RELIA Fleet',
-          phone: '(555) 200-1002',
-          vehicleType: 'SUV Limousine'
-        },
-        pickupCoords: [baseLat, baseLng + 0.04],
-        dropoffCoords: [baseLat + 0.01, baseLng - 0.01]
-      },
-      {
-        passengerName: 'Emily Davis',
-        phone: '(555) 456-7890',
-        email: 'emily.d@example.com',
-        pickupLocation: 'University of Minnesota, Minneapolis, MN',
-        dropoffLocation: 'Walker Art Center, Minneapolis, MN',
-        pickupDate: '2024-01-15',
-        pickupTime: '11:00',
-        vehicleType: 'sedan',
-        passengers: 2,
-        specialInstructions: 'Tourist sightseeing tour',
-        status: 'pending',
-        farmoutStatus: 'offered',
-        farmoutMode: 'manual',
-        pickupCoords: [baseLat + 0.03, baseLng - 0.02],
-        dropoffCoords: [baseLat + 0.01, baseLng - 0.01]
-      },
-      {
-        passengerName: 'Michael Brown',
-        phone: '(555) 567-8901',
-        email: 'm.brown@example.com',
-        pickupLocation: 'Edina Galleria, Edina, MN',
-        dropoffLocation: 'US Bank Stadium, Minneapolis, MN',
-        pickupDate: '2024-01-15',
-        pickupTime: '16:45',
-        vehicleType: 'suv',
-        passengers: 5,
-        specialInstructions: 'Group tour, flexible schedule',
-        status: 'pending',
-        farmoutStatus: 'unassigned',
-        farmoutMode: 'automatic',
-        pickupCoords: [baseLat - 0.02, baseLng - 0.03],
-        dropoffCoords: [baseLat, baseLng]
-      }
-    ];
-
-    sampleReservations.forEach(reservation => {
-      this.reservationManager.addReservation(reservation);
-    });
-
-    console.log('[LiveReservations] No stored reservations found; seeded sample data for demo purposes');
+    console.log('[LiveReservations] Sample reservation seeding is disabled in production mode');
+    // No-op: sample data seeding has been disabled to prevent ghost reservations
   }
 
   setupEventListeners() {
@@ -1092,18 +1042,29 @@ class LimoReservationSystem {
         return;
       }
 
-      const rawReservations = db.getAllReservations() || [];
+      const rawReservations = await db.getAllReservations() || [];
       const mappedReservations = rawReservations
         .map(reservation => this.mapReservationForDashboard(reservation))
         .filter(Boolean);
 
       const farmOutReservations = mappedReservations.filter(item => {
         if (!item) return false;
+        
+        // A reservation should appear in farmout ONLY if explicitly marked as farm_out
+        // The farmOption field determines this - NOT the status
         const optionNormalized = item.farmOptionNormalized || normalizeFarmoutKey(item.farmOption || '');
-        const status = canonicalizeFarmoutStatus(item.farmoutStatus || item.statusDetailCode || '');
-        const optionIndicatesFarmOut = optionNormalized === 'farm_out' || optionNormalized === 'farmout';
-        const statusIndicatesFarmOut = isFarmOutStatus(status);
-        return optionIndicatesFarmOut || statusIndicatesFarmOut;
+        const isFarmOutOption = optionNormalized === 'farm_out' || optionNormalized === 'farmout';
+        
+        // Also check if raw data explicitly has farm_out indicators
+        const raw = item.raw || {};
+        const rawFarmOption = normalizeFarmoutKey(raw.farm_option || raw.farmOption || '');
+        const detailsFarmOption = normalizeFarmoutKey(raw.form_snapshot?.details?.farmOption || '');
+        const hasExplicitFarmoutOption = 
+          rawFarmOption === 'farm_out' || rawFarmOption === 'farmout' ||
+          detailsFarmOption === 'farm_out' || detailsFarmOption === 'farmout';
+        
+        // Only include if farmOption explicitly indicates farmout
+        return isFarmOutOption || hasExplicitFarmoutOption;
       });
 
       this.uiManager.renderReservationsFromDb(mappedReservations, farmOutReservations);
@@ -1599,5 +1560,13 @@ class LimoReservationSystem {
 
 // Initialize the system when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  new LimoReservationSystem();
+  window.limoSystem = new LimoReservationSystem();
 });
+
+// Expose utility for manual ghost purge from console
+window.purgeAllGhostReservations = function() {
+  localStorage.removeItem('relia_reservations');
+  sessionStorage.removeItem('relia_ghost_purge_v1');
+  console.log('[ManualPurge] Cleared all cached reservations. Reload to fetch fresh data.');
+  location.reload();
+};

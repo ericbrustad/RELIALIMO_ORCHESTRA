@@ -419,6 +419,14 @@
           }, 100);
         }
       });
+      
+      // Utility to purge ghost reservations from localStorage
+      window.purgeAllGhostReservations = function() {
+        localStorage.removeItem('relia_reservations');
+        sessionStorage.removeItem('relia_ghost_purge_v1');
+        console.log('[ManualPurge] Cleared all cached reservations. Reloading...');
+        location.reload();
+      };
     </script>
 
     <!-- Authentication Protection & User Menu -->

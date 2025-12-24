@@ -3,8 +3,11 @@ import { CostCalculator } from './CostCalculator.js';
 import { MapboxService } from './MapboxService.js';
 import { AirlineService } from './AirlineService.js';
 import { AffiliateService } from './AffiliateService.js';
-import { db } from './assets/db.js';
+import supabaseDb from './supabase-db.js';
 import { wireMainNav } from './navigation.js';
+
+// Use Supabase-only database (no localStorage)
+const db = supabaseDb;
 
 const FARMOUT_STATUS_ALIASES = {
   '': '',
@@ -2950,50 +2953,9 @@ class ReservationForm {
       
       const formSnapshot = this.collectReservationSnapshot();
 
-      // Save to LocalStorage via db module
-      const saved = db.saveReservation({
-        id: currentConfNumber,
-        status: statusValue,
-        status_detail_code: statusValue,
-        status_detail_label: statusLabel,
-        status_detail: statusValue,
-        account_id: accountId, // Link reservation to account
-        passenger_name: `${reservationData.passenger.firstName} ${reservationData.passenger.lastName}`,
-        company_name: reservationData.billingAccount.company,
-        confirmation_number: currentConfNumber,
-        stops: reservationData.routing.stops,
-        form_snapshot: formSnapshot,
-        service_type: document.getElementById("serviceType")?.value || "",
-        vehicle_type: document.getElementById("vehicleTypeRes")?.value || "",
-        pickup_at: pickupAt,
-        pickup_time: puTime,
-        dropoff_time: doTime,
-        spot_time: spotTime,
-        gar_out_time: garOutTime,
-        gar_in_time: garInTime,
-        driver_arrive_time: driverArriveTime,
-        time_zone: "America/Chicago",
-        currency_abbr: "USD",
-        passengers_count: parseInt(document.getElementById("numPax")?.value || "1") || 1,
-        luggage_count: parseInt(document.getElementById("luggage")?.value || "0") || 0,
-        is_accessible: document.getElementById("accessible")?.checked || false,
-        grand_total: parseFloat(document.getElementById("grandTotal")?.textContent || "0") || 0,
-        trip_notes: reservationData.routing.tripNotes || "",
-        bill_pax_notes: reservationData.routing.billPaxNotes || "",
-        dispatch_notes: reservationData.routing.dispatchNotes || "",
-        farm_option: farmOptionValue,
-        efarm_status: eFarmStatusValue,
-        efarmStatus: eFarmStatusValue,
-        farmout_status: eFarmStatusCanonical,
-        farmoutStatus: eFarmStatusCanonical,
-        efarm_out_selection: eFarmOutCanonical,
-        eFarmOut: eFarmOutCanonical,
-        farmout_mode: eFarmOutCanonical,
-        farmoutMode: eFarmOutCanonical,
-        affiliate_reference: reservationData.details.affiliate || "",
-      });
-
-      console.log('💾 Reservation saved to db:', saved);
+      // NO localStorage save for reservations - Supabase is the source of truth
+      // (localStorage save removed to prevent ghost data issues)
+      console.log('📋 Reservation data prepared, will save to Supabase only');
       
       // Save passenger to passengers database (with Supabase sync)
       if (reservationData.passenger.firstName || reservationData.passenger.lastName) {
@@ -3079,44 +3041,76 @@ class ReservationForm {
         }
       }
 
-      // Try to also save via API for backup
+      // SAVE TO SUPABASE (PRIMARY) - No localStorage for reservations
+      let supabaseSaveSuccess = false;
+      let supabaseError = null;
       try {
         const { setupAPI, createReservation } = await import('./api-service.js');
         await setupAPI();
-        await createReservation(reservationData);
-        console.log('✅ Reservation also synced to API');
-      } catch (apiError) {
-        console.warn('⚠️ API sync failed, but local save succeeded:', apiError);
-      }
-      
-      if (saved) {
-        console.log('✅ Reservation saved successfully:', saved);
-        saveButtons.forEach(btn => {
-          btn.textContent = '✓ Saved!';
-          btn.style.background = '#28a745';
-          btn.style.color = 'white';
+        const supabaseResult = await createReservation({
+          ...reservationData,
+          confirmationNumber: currentConfNumber,
+          confirmation_number: currentConfNumber,
+          accountId: accountId,
+          account_id: accountId,
+          status: statusValue,
+          pickupDateTime: pickupAt,
+          pickup_datetime: pickupAt,
+          passengerCount: parseInt(document.getElementById("numPax")?.value || "1") || 1,
+          grandTotal: parseFloat(document.getElementById("grandTotal")?.textContent || "0") || 0
         });
         
-        // Wait and redirect to reservations list
-        setTimeout(() => {
-          if (confirm('Reservation saved! View reservations list?')) {
-            window.location.href = 'reservations-list.html';
-          } else {
-            // Reset button and initialize new confirmation number for next reservation
-            if (!this.isEditMode) {
-              this.initializeConfirmationNumber();
-            }
-            originalButtonState.forEach(s => {
-              s.btn.disabled = s.disabled;
-              s.btn.textContent = s.text;
-              s.btn.style.background = s.background;
-              s.btn.style.color = s.color;
-            });
-          }
-        }, 1500);
-      } else {
-        throw new Error('Failed to save reservation');
+        if (supabaseResult && supabaseResult.length > 0) {
+          supabaseSaveSuccess = true;
+          console.log('✅ Reservation saved to Supabase:', supabaseResult);
+        } else {
+          throw new Error('Supabase returned empty result');
+        }
+      } catch (apiError) {
+        supabaseError = apiError;
+        console.error('❌ Supabase save FAILED:', apiError);
       }
+      
+      // Show clear error if Supabase save failed
+      if (!supabaseSaveSuccess) {
+        const errorMsg = supabaseError?.message || 'Unknown database error';
+        alert(`⚠️ RESERVATION NOT SAVED TO DATABASE!\n\nError: ${errorMsg}\n\nPlease check your connection and try again.`);
+        
+        // Reset buttons
+        originalButtonState.forEach(s => {
+          s.btn.disabled = s.disabled;
+          s.btn.textContent = s.text;
+          s.btn.style.background = s.background;
+          s.btn.style.color = s.color;
+        });
+        return; // Don't proceed if Supabase save failed
+      }
+      
+      // Success - update UI
+      console.log('✅ Reservation saved successfully to Supabase');
+      saveButtons.forEach(btn => {
+        btn.textContent = '✓ Saved!';
+        btn.style.background = '#28a745';
+        btn.style.color = 'white';
+      });
+      
+      // Wait and redirect to reservations list
+      setTimeout(() => {
+        if (confirm('Reservation saved! View reservations list?')) {
+          window.location.href = 'reservations-list.html';
+        } else {
+          // Reset button and initialize new confirmation number for next reservation
+          if (!this.isEditMode) {
+            this.initializeConfirmationNumber();
+          }
+          originalButtonState.forEach(s => {
+            s.btn.disabled = s.disabled;
+            s.btn.textContent = s.text;
+            s.btn.style.background = s.background;
+            s.btn.style.color = s.color;
+          });
+        }
+      }, 1500);
     } catch (error) {
       const message = error?.message || (typeof error === 'string' ? error : 'Unknown error');
       console.error('❌ Error saving reservation:', error);

@@ -42,15 +42,165 @@ function loadStoredSession() {
   }
 }
 
+function base64UrlDecode(segment) {
+  try {
+    const padded = segment.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(segment.length / 4) * 4, '=');
+
+    if (typeof atob === 'function') {
+      return atob(padded);
+    }
+
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(padded, 'base64').toString('utf8');
+    }
+  } catch (error) {
+    console.warn('⚠️ base64 decode failed:', error);
+  }
+
+  return null;
+}
+
+function decodeJwt(token) {
+  if (typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+
+  const payload = base64UrlDecode(parts[1]);
+  if (!payload) return null;
+
+  try {
+    return JSON.parse(payload);
+  } catch (error) {
+    console.warn('⚠️ Failed to parse JWT payload:', error);
+    return null;
+  }
+}
+
+function computeExpiryTimestamp(session) {
+  if (!session) return null;
+
+  if (typeof session.expires_at === 'number' && Number.isFinite(session.expires_at)) {
+    return session.expires_at;
+  }
+
+  if (session.expires_in != null) {
+    const expiresInMs = Number(session.expires_in) * 1000;
+    if (Number.isFinite(expiresInMs)) {
+      return Date.now() + expiresInMs;
+    }
+  }
+
+  const decoded = decodeJwt(session.access_token);
+  if (decoded?.exp) {
+    return decoded.exp * 1000;
+  }
+
+  return null;
+}
+
+function normalizeSession(session) {
+  if (!session) return session;
+
+  const normalized = { ...session };
+  const expiresAt = computeExpiryTimestamp(normalized);
+
+  if (expiresAt) {
+    normalized.expires_at = expiresAt;
+  }
+
+  if (!normalized.user && normalized.session?.user) {
+    normalized.user = normalized.session.user;
+  }
+
+  return normalized;
+}
+
 function persistSession(session) {
   if (!session) return;
-  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 
-  if (session.access_token) {
-    localStorage.setItem('supabase_access_token', session.access_token);
+  const normalized = normalizeSession(session);
+  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(normalized));
+
+  if (normalized.access_token) {
+    localStorage.setItem('supabase_access_token', normalized.access_token);
   }
 
   notifySessionChange();
+}
+
+function sessionNeedsRefresh(session, thresholdMs = 60_000) {
+  if (!session) return false;
+
+  const token = session.access_token;
+  if (!token || token.startsWith('offline-')) {
+    return false;
+  }
+
+  const expiresAt = computeExpiryTimestamp(session);
+  if (!expiresAt) return false;
+
+  const timeRemaining = expiresAt - Date.now();
+  return timeRemaining <= thresholdMs;
+}
+
+async function performTokenRefresh(currentSession) {
+  const refreshToken = currentSession?.refresh_token;
+
+  if (!refreshToken || refreshToken.startsWith('offline-')) {
+    return { success: false, error: 'No refresh token available' };
+  }
+
+  try {
+    const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey
+      },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => null);
+      const message = `Token refresh failed (${response.status})`;
+      return { success: false, error: message, details };
+    }
+
+    const data = await response.json();
+    const merged = normalizeSession({
+      ...currentSession,
+      ...data,
+      access_token: data.access_token || currentSession.access_token,
+      refresh_token: data.refresh_token || currentSession.refresh_token,
+      user: data.user || currentSession.user
+    });
+
+    persistSession(merged);
+    return { success: true, session: merged };
+  } catch (error) {
+    console.error('❌ Token refresh exception:', error);
+    return { success: false, error: error.message || error };
+  }
+}
+
+export async function refreshSessionIfNeeded(options = {}) {
+  const { force = false, minimumRemainingMs = 60_000 } = options;
+  const session = loadStoredSession();
+
+  if (!session) {
+    return { success: false, reason: 'no-session' };
+  }
+
+  if (!force && !sessionNeedsRefresh(session, minimumRemainingMs)) {
+    return { success: true, refreshed: false, session };
+  }
+
+  const result = await performTokenRefresh(session);
+  if (result.success) {
+    return { success: true, refreshed: true, session: result.session };
+  }
+
+  return { success: false, error: result.error, details: result.details };
 }
 
 function notifySessionChange() {
@@ -218,8 +368,6 @@ class PostgrestQuery {
   }
 
   async execute() {
-    const token = localStorage.getItem('supabase_access_token') || supabaseAnonKey;
-
     const url = new URL(`${supabaseUrl}/rest/v1/${this.table}`);
 
     if (this.selectColumns) {
@@ -238,53 +386,77 @@ class PostgrestQuery {
       url.searchParams.append(f.column, `${f.op}.${f.value}`);
     });
 
-    const headers = {
-      apikey: supabaseAnonKey,
-      Authorization: `Bearer ${token}`
-    };
-
-    if (this.expectSingle) {
-      headers.Accept = 'application/vnd.pgrst.object+json';
-    }
-
-    if (this.returnRepresentation) {
-      headers.Prefer = 'return=representation';
-    }
-
     const hasBody = this.method === 'POST' || this.method === 'PATCH';
-    if (hasBody) {
-      headers['Content-Type'] = 'application/json';
-    }
+    const bodyPayload = hasBody ? JSON.stringify(this.body ?? {}) : undefined;
 
-    const response = await fetch(url.toString(), {
-      method: this.method,
-      headers,
-      body: hasBody ? JSON.stringify(this.body ?? {}) : undefined
-    });
+    let attempt = 0;
+    let lastError = null;
 
-    const contentType = response.headers.get('content-type') || '';
-    const isJson = contentType.includes('application/json') || contentType.includes('+json');
+    while (attempt < 2) {
+      if (attempt === 0) {
+        await refreshSessionIfNeeded({ minimumRemainingMs: 2 * 60_000 });
+      } else {
+        const refreshOutcome = await refreshSessionIfNeeded({ force: true });
+        if (!refreshOutcome.success) {
+          break;
+        }
+      }
 
-    const payload = response.status === 204
-      ? null
-      : (isJson ? await response.json().catch(() => null) : await response.text().catch(() => null));
+      const token = localStorage.getItem('supabase_access_token') || supabaseAnonKey;
 
-    if (!response.ok) {
+      const headers = {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${token}`
+      };
+
+      if (this.expectSingle) {
+        headers.Accept = 'application/vnd.pgrst.object+json';
+      }
+
+      if (this.returnRepresentation) {
+        headers.Prefer = 'return=representation';
+      }
+
+      if (hasBody) {
+        headers['Content-Type'] = 'application/json';
+      }
+
+      const response = await fetch(url.toString(), {
+        method: this.method,
+        headers,
+        body: bodyPayload
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      const isJson = contentType.includes('application/json') || contentType.includes('+json');
+
+      const payload = response.status === 204
+        ? null
+        : (isJson ? await response.json().catch(() => null) : await response.text().catch(() => null));
+
+      if (response.ok) {
+        return { data: payload, error: null };
+      }
+
       const message = (payload && typeof payload === 'object' && (payload.message || payload.error_description || payload.error))
         ? (payload.message || payload.error_description || payload.error)
         : `Supabase request failed (${response.status})`;
 
-      return {
-        data: null,
-        error: {
-          status: response.status,
-          message,
-          details: payload
-        }
+      lastError = {
+        status: response.status,
+        message,
+        details: payload
       };
+
+      if (response.status === 401 && /jwt expired/i.test(message || '') && attempt === 0) {
+        attempt += 1;
+        continue;
+      }
+
+      break;
     }
 
-    return { data: payload, error: null };
+    return { data: null, error: lastError };
   }
 
   then(onFulfilled, onRejected) {

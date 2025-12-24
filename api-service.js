@@ -767,31 +767,56 @@ export async function createReservation(reservationData) {
   if (!client) return null;
   
   try {
+    const { organizationId, userId } = await getOrgContextOrThrow(client);
+    
+    // Generate confirmation number
+    const confirmationNumber = reservationData.confirmationNumber || 
+                               reservationData.confirmation_number ||
+                               `${Date.now()}`;
+    
+    // Parse pickup/dropoff from routing stops
+    const stops = reservationData.routing?.stops || [];
+    const pickup = stops[0] || {};
+    const dropoff = stops[1] || stops[stops.length - 1] || {};
+    
     const { data, error } = await client
       .from('reservations')
       .insert([{
-        pickup_location: reservationData.routing?.stops?.[0]?.address || '',
-        dropoff_location: reservationData.routing?.stops?.[1]?.address || '',
-        passenger_first_name: reservationData.passenger?.firstName || '',
-        passenger_last_name: reservationData.passenger?.lastName || '',
-        passenger_phone: reservationData.passenger?.phone || '',
-        passenger_email: reservationData.passenger?.email || '',
-        billing_account: reservationData.billingAccount?.account || '',
-        booked_by_name: `${reservationData.bookedBy?.firstName} ${reservationData.bookedBy?.lastName}`.trim(),
-        booked_by_email: reservationData.bookedBy?.email || '',
-        trip_notes: reservationData.routing?.tripNotes || '',
-        billing_notes: reservationData.routing?.billPaxNotes || '',
-        dispatch_notes: reservationData.routing?.dispatchNotes || '',
-        total_cost: reservationData.grandTotal || 0,
-        status: 'pending',
-        affiliate_id: reservationData.affiliateId || reservationData.affiliate_id || null
-      }]);
+        organization_id: organizationId,
+        confirmation_number: confirmationNumber,
+        booked_by_user_id: userId,
+        account_id: reservationData.accountId || reservationData.account_id || null,
+        status: reservationData.status || 'pending',
+        trip_type: reservationData.tripType || reservationData.trip_type || null,
+        pickup_address: pickup.address || reservationData.pickup_location || '',
+        pickup_city: pickup.city || '',
+        pickup_state: pickup.state || '',
+        pickup_zip: pickup.zip || '',
+        pickup_lat: pickup.lat || null,
+        pickup_lon: pickup.lng || pickup.lon || null,
+        pickup_datetime: reservationData.pickupDateTime || reservationData.pickup_datetime || null,
+        dropoff_address: dropoff.address || reservationData.dropoff_location || '',
+        dropoff_city: dropoff.city || '',
+        dropoff_state: dropoff.state || '',
+        dropoff_zip: dropoff.zip || '',
+        dropoff_lat: dropoff.lat || null,
+        dropoff_lon: dropoff.lng || dropoff.lon || null,
+        dropoff_datetime: reservationData.dropoffDateTime || reservationData.dropoff_datetime || null,
+        passenger_count: reservationData.passengerCount || reservationData.passenger_count || 1,
+        special_instructions: reservationData.routing?.tripNotes || reservationData.special_instructions || '',
+        notes: reservationData.routing?.dispatchNotes || reservationData.notes || '',
+        rate_type: reservationData.rateType || reservationData.rate_type || null,
+        rate_amount: reservationData.grandTotal || reservationData.rate_amount || 0,
+        currency: reservationData.currency || 'USD',
+        timezone: reservationData.timezone || null
+      }])
+      .select();
     
     if (error) throw error;
-    console.log('✅ Reservation created:', data);
+    console.log('✅ Reservation created in Supabase:', data);
     return data;
   } catch (error) {
-    console.error('Error creating reservation:', error);
+    console.error('Error creating reservation in Supabase:', error);
     return null;
   }
 }
@@ -804,28 +829,47 @@ export async function updateReservation(reservationId, reservationData) {
   if (!client) return null;
   
   try {
+    const { organizationId, userId } = await getOrgContextOrThrow(client);
+    
+    // Parse pickup/dropoff from routing stops
+    const stops = reservationData.routing?.stops || [];
+    const pickup = stops[0] || {};
+    const dropoff = stops[1] || stops[stops.length - 1] || {};
+    
     const { data, error } = await client
       .from('reservations')
       .update({
-        pickup_location: reservationData.routing?.stops?.[0]?.address || '',
-        dropoff_location: reservationData.routing?.stops?.[1]?.address || '',
-        passenger_first_name: reservationData.passenger?.firstName || '',
-        passenger_last_name: reservationData.passenger?.lastName || '',
-        passenger_phone: reservationData.passenger?.phone || '',
-        passenger_email: reservationData.passenger?.email || '',
-        trip_notes: reservationData.routing?.tripNotes || '',
-        billing_notes: reservationData.routing?.billPaxNotes || '',
-        dispatch_notes: reservationData.routing?.dispatchNotes || '',
-        total_cost: reservationData.grandTotal || 0,
-        affiliate_id: reservationData.affiliateId || reservationData.affiliate_id || null
+        status: reservationData.status || undefined,
+        trip_type: reservationData.tripType || reservationData.trip_type || undefined,
+        pickup_address: pickup.address || reservationData.pickup_location || undefined,
+        pickup_city: pickup.city || undefined,
+        pickup_state: pickup.state || undefined,
+        pickup_zip: pickup.zip || undefined,
+        pickup_lat: pickup.lat || undefined,
+        pickup_lon: pickup.lng || pickup.lon || undefined,
+        pickup_datetime: reservationData.pickupDateTime || reservationData.pickup_datetime || undefined,
+        dropoff_address: dropoff.address || reservationData.dropoff_location || undefined,
+        dropoff_city: dropoff.city || undefined,
+        dropoff_state: dropoff.state || undefined,
+        dropoff_zip: dropoff.zip || undefined,
+        dropoff_lat: dropoff.lat || undefined,
+        dropoff_lon: dropoff.lng || dropoff.lon || undefined,
+        dropoff_datetime: reservationData.dropoffDateTime || reservationData.dropoff_datetime || undefined,
+        passenger_count: reservationData.passengerCount || reservationData.passenger_count || undefined,
+        special_instructions: reservationData.routing?.tripNotes || reservationData.special_instructions || undefined,
+        notes: reservationData.routing?.dispatchNotes || reservationData.notes || undefined,
+        rate_amount: reservationData.grandTotal || reservationData.rate_amount || undefined,
+        updated_by: userId
       })
-      .eq('id', reservationId);
+      .eq('id', reservationId)
+      .eq('organization_id', organizationId)
+      .select();
     
     if (error) throw error;
-    console.log('✅ Reservation updated:', data);
+    console.log('✅ Reservation updated in Supabase:', data);
     return data;
   } catch (error) {
-    console.error('Error updating reservation:', error);
+    console.error('Error updating reservation in Supabase:', error);
     return null;
   }
 }
@@ -838,9 +882,11 @@ export async function fetchReservations() {
   if (!client) return null;
   
   try {
+    const { organizationId } = await getOrgContextOrThrow(client);
     const { data, error } = await client
       .from('reservations')
       .select('*')
+      .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
     
     if (error) throw error;
@@ -859,10 +905,12 @@ export async function getReservation(reservationId) {
   if (!client) return null;
   
   try {
+    const { organizationId } = await getOrgContextOrThrow(client);
     const { data, error } = await client
       .from('reservations')
       .select('*')
       .eq('id', reservationId)
+      .eq('organization_id', organizationId)
       .single();
     
     if (error) throw error;

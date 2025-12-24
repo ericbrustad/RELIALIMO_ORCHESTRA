@@ -15,11 +15,12 @@ class ReservationsList {
   
   async loadDbModule() {
     try {
-      const module = await import('./assets/db.js');
-      this.db = module.db;
-      console.log('✅ Database module loaded');
+      const module = await import('./supabase-db.js');
+      this.db = module.default;
+      console.log('✅ Supabase database module loaded');
     } catch (error) {
       console.error('❌ Failed to load database module:', error);
+      alert('⚠️ DATABASE CONNECTION FAILED\n\nPlease check your connection and reload.');
     }
   }
   
@@ -30,7 +31,7 @@ class ReservationsList {
     }
     
     try {
-      const reservations = this.db.getAllReservations();
+      const reservations = await this.db.getAllReservations();
       console.log('📋 Loaded reservations:', reservations);
       
       if (reservations && reservations.length > 0) {
